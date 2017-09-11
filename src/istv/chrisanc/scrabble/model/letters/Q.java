@@ -1,0 +1,18 @@
+package istv.chrisanc.scrabble.model.letters;
+
+import istv.chrisanc.scrabble.model.Letter;
+
+/**
+ * @author Christopher Anciaux
+ */
+public class Q extends Letter {
+    @Override
+    public char getLetter() {
+        return 'Q';
+    }
+
+    @Override
+    public byte getValue() {
+        return 8;
+    }
+}

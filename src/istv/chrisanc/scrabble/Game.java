@@ -1,8 +1,10 @@
 package istv.chrisanc.scrabble;
 
-import istv.chrisanc.scrabble.interfaces.BagInterface;
-import istv.chrisanc.scrabble.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.Bag;
+import istv.chrisanc.scrabble.model.Board;
+import istv.chrisanc.scrabble.model.interfaces.BagInterface;
+import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 
 /**
  * This class represents the "main" class of the ScrabbleGame. It starts, manages and ends the game.
