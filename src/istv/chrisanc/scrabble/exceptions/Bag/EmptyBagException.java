@@ -1,7 +1,7 @@
 package istv.chrisanc.scrabble.exceptions.Bag;
 
-import istv.chrisanc.scrabble.interfaces.BagInterface;
-import istv.chrisanc.scrabble.Player;
+import istv.chrisanc.scrabble.model.interfaces.BagInterface;
+import istv.chrisanc.scrabble.model.Player;
 
 /**
  * This {@link Exception} should be thrown when a {@link Player} tries to draw a letter when the {@link BagInterface} is empty.
@@ -10,6 +10,6 @@ import istv.chrisanc.scrabble.Player;
  */
 public class EmptyBagException extends Exception {
     public EmptyBagException() {
-        super("Le sac est vide.");
+        super("exceptions.bag.emptyBag");
     }
 }
