@@ -4,6 +4,9 @@ import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * <p>
  * This class represents the board used during the Scrabble. It has {@link Square} where pieces ({@link LetterInterface}) can be placed on.
@@ -14,14 +17,16 @@ public class Board implements BoardInterface {
     /**
      * All the {@link SquareInterface} of the {@link Board}. The Indexes represent the position of the {@link SquareInterface} on the {@link Board}.
      * The first index represents the lines, the second the columns.
+     * There are 15 lines, and 15 columns.
      */
-    protected SquareInterface[][] squares = new SquareInterface[15][15];
+    protected ObservableList<SquareInterface> squares = FXCollections.observableArrayList();
 
     /**
      * All the {@link LetterInterface} placed on the {@link SquareInterface}. The indexes represent the position of the {@link LetterInterface} on the {@link Board}.
      * The first index represents the lines, the second the columns.
+     * There are 15 lines, and 15 columns.
      */
-    protected LetterInterface[][] letters = new LetterInterface[15][15];
+    protected ObservableList<LetterInterface> letters = FXCollections.observableArrayList();
 
     public Board() {
         // TODO: construct the Board, that is to say placing all the squares correctly, according the Scrabble rules.

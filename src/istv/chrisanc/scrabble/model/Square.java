@@ -3,6 +3,8 @@ package istv.chrisanc.scrabble.model;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 /**
  * <p>
@@ -25,7 +27,7 @@ public class Square implements SquareInterface {
     /**
      * This boolean states whether the multiplier has already been used or not
      */
-    protected boolean multiplierUsed = false;
+    protected BooleanProperty multiplierUsed = new SimpleBooleanProperty(false);
 
     @Override
     public byte getLetterMultiplier() {
@@ -39,12 +41,12 @@ public class Square implements SquareInterface {
 
     @Override
     public boolean isMultiplierUsed() {
-        return multiplierUsed;
+        return multiplierUsed.get();
     }
 
     @Override
     public SquareInterface setMultiplierUsed(boolean multiplierUsed) {
-        this.multiplierUsed = multiplierUsed;
+        this.multiplierUsed.set(multiplierUsed);
 
         return this;
     }

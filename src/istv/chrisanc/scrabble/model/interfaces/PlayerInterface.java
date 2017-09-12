@@ -11,9 +11,9 @@ import java.util.List;
 public interface PlayerInterface {
     String getName();
 
-    short getScore();
+    int getScore();
 
-    PlayerInterface increaseScore(short increment);
+    PlayerInterface increaseScore(int increment);
 
     List<LetterInterface> getLetters();
 

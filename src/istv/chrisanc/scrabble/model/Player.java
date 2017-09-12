@@ -3,8 +3,12 @@ package istv.chrisanc.scrabble.model;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.util.List;
 
 /**
@@ -17,35 +21,35 @@ public class Player implements PlayerInterface {
     /**
      * The name of the player
      */
-    protected String name;
+    protected StringProperty name;
 
     /**
      * The score of the player. The default value is 0, as a player begins the game without any point
      */
-    protected short score = 0;
+    protected IntegerProperty score = new SimpleIntegerProperty(0);
 
     /**
      * The letters owned by the player in his rack/hands during the game. He can't has more than 7 letters.
      */
-    protected List<LetterInterface> letters = new ArrayList<>();
+    protected ObservableList<LetterInterface> letters = FXCollections.observableArrayList();
 
     /**
      * @param name The {@link Player}'s name
      */
     public Player(String name) {
-        this.name = name;
+        this.name = new SimpleStringProperty(name);
     }
 
     public String getName() {
-        return name;
+        return name.get();
     }
 
-    public short getScore() {
-        return score;
+    public int getScore() {
+        return score.get();
     }
 
-    public PlayerInterface increaseScore(short increment) {
-        this.score += increment;
+    public PlayerInterface increaseScore(int increment) {
+        this.score.set(this.score.get() + increment);
 
         return this;
     }
@@ -54,7 +58,7 @@ public class Player implements PlayerInterface {
      * @return a read-only list of the owned {@link LetterInterface} by the player
      */
     public List<LetterInterface> getLetters() {
-        return Collections.unmodifiableList(this.letters);
+        return FXCollections.unmodifiableObservableList(this.letters);
     }
 
     /**
