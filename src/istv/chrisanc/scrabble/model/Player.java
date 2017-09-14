@@ -29,12 +29,12 @@ public class Player implements PlayerInterface {
     protected IntegerProperty score = new SimpleIntegerProperty(0);
 
     /**
-     * The letters owned by the player in his rack/hands during the game. He can't has more than 7 letters.
+     * The letters owned by the player in his rack/hands during the game. He can't have more than 7 letters.
      */
     protected ObservableList<LetterInterface> letters = FXCollections.observableArrayList();
 
     /**
-     * @param name The {@link Player}'s name
+     * @param name The player's name
      */
     public Player(String name) {
         this.name = new SimpleStringProperty(name);
@@ -62,30 +62,27 @@ public class Player implements PlayerInterface {
     }
 
     /**
-     * @param letter the {@link LetterInterface} to be added in the rack of the {@link Player}
-     * @return the {@link Player}
+     * @param letter the {@link LetterInterface} to be added in the rack of the player
      */
-    public PlayerInterface addLetter(LetterInterface letter) {
+    public void addLetter(LetterInterface letter) {
         // TODO
 
         return this;
     }
 
     /**
-     * @param letter the {@link LetterInterface} to be removed from the rack of the {@link Player}
-     * @return the {@link Player}
+     * @param letter the {@link LetterInterface} to be removed from the rack of the player
      */
-    public PlayerInterface removeLetter(LetterInterface letter) {
+    public void removeLetter(LetterInterface letter) {
         // TODO
 
         return this;
     }
 
     /**
-     * @param index the index of the {@link LetterInterface} to be removed from the rack of the {@link Player}
-     * @return the {@link Player}
+     * @param index the index of the {@link LetterInterface} to be removed from the rack of the player
      */
-    public PlayerInterface removeLetter(short index) {
+    public void removeLetter(short index) {
         // TODO
 
         return this;

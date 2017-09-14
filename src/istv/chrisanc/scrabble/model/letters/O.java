@@ -1,11 +1,11 @@
 package istv.chrisanc.scrabble.model.letters;
 
-import istv.chrisanc.scrabble.model.Letter;
+import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 
 /**
  * @author Christopher Anciaux
  */
-public class O extends Letter {
+public class O implements LetterInterface {
     @Override
     public char getLetter() {
         return 'O';

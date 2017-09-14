@@ -13,13 +13,13 @@ public interface PlayerInterface {
 
     int getScore();
 
-    PlayerInterface increaseScore(int increment);
+    void increaseScore(int increment);
 
     List<LetterInterface> getLetters();
 
-    PlayerInterface addLetter(LetterInterface letter);
+    void addLetter(LetterInterface letter);
 
-    PlayerInterface removeLetter(LetterInterface letter);
+    void removeLetter(LetterInterface letter);
 
-    PlayerInterface removeLetter(short index);
+    void removeLetter(short index);
 }

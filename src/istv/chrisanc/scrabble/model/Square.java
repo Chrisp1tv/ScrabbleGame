@@ -45,8 +45,8 @@ public class Square implements SquareInterface {
     }
 
     @Override
-    public SquareInterface setMultiplierUsed(boolean multiplierUsed) {
-        this.multiplierUsed.set(multiplierUsed);
+    public SquareInterface makeMultiplierUsed() {
+        this.multiplierUsed.set(true);
 
         return this;
     }

@@ -14,5 +14,5 @@ public interface SquareInterface {
 
     boolean isMultiplierUsed();
 
-    SquareInterface setMultiplierUsed(boolean multiplierUsed);
+    SquareInterface makeMultiplierUsed();
 }
