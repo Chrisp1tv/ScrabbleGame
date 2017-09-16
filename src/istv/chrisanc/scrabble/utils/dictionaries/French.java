@@ -1,26 +1,32 @@
 package istv.chrisanc.scrabble.utils.dictionaries;
 
-import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
-
-import java.util.List;
+import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 
 /**
  * @author Christopher Anciaux
  */
-public class French implements DictionaryInterface {
+public class French extends SerializedDictionary {
+    private static French instance = null;
+
+    private French() throws ErrorLoadingDictionaryException {
+        super();
+    }
+
+    public static French getInstance() throws ErrorLoadingDictionaryException {
+        if (null == instance) {
+            instance = new French();
+        }
+
+        return instance;
+    }
+
     @Override
     public String getName() {
         return "utils.dictionaries.french";
     }
 
     @Override
-    public boolean wordExists(String word) {
-        // TODO
-    }
-
-    @Override
-    public List<String> findWordsByLetters(List<LetterInterface> letters) {
-        // TODO
+    protected String getSourceFileName() {
+        return "French.dictionary";
     }
 }

@@ -1,6 +1,6 @@
 package istv.chrisanc.scrabble.model;
 
-import istv.chrisanc.scrabble.exceptions.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 
