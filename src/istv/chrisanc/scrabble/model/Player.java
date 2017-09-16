@@ -48,10 +48,8 @@ public class Player implements PlayerInterface {
         return score.get();
     }
 
-    public PlayerInterface increaseScore(int increment) {
+    public void increaseScore(int increment) {
         this.score.set(this.score.get() + increment);
-
-        return this;
     }
 
     /**
@@ -66,8 +64,6 @@ public class Player implements PlayerInterface {
      */
     public void addLetter(LetterInterface letter) {
         // TODO
-
-        return this;
     }
 
     /**
@@ -75,8 +71,6 @@ public class Player implements PlayerInterface {
      */
     public void removeLetter(LetterInterface letter) {
         // TODO
-
-        return this;
     }
 
     /**
@@ -84,7 +78,5 @@ public class Player implements PlayerInterface {
      */
     public void removeLetter(short index) {
         // TODO
-
-        return this;
     }
 }
