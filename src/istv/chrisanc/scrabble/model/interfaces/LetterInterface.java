@@ -9,11 +9,6 @@ package istv.chrisanc.scrabble.model.interfaces;
  */
 public interface LetterInterface {
     /**
-     * @return the represented letter
-     */
-    char getLetter();
-
-    /**
      * @return the value, the amount of points the {@link LetterInterface} can give to the player
      */
     byte getValue();

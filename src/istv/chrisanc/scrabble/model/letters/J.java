@@ -1,16 +1,11 @@
 package istv.chrisanc.scrabble.model.letters;
 
-import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.Letter;
 
 /**
  * @author Christopher Anciaux
  */
-public class J implements LetterInterface {
-    @Override
-    public char getLetter() {
-        return 'J';
-    }
-
+public class J extends Letter {
     @Override
     public byte getValue() {
         return 8;

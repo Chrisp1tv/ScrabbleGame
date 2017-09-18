@@ -1,14 +1,14 @@
 package istv.chrisanc.scrabble.model.letters;
 
-import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.Letter;
 
 /**
  * @author Christopher Anciaux
  */
-public class Joker implements LetterInterface {
+public class Joker extends Letter {
     @Override
-    public char getLetter() {
-        return ' ';
+    public String toString() {
+        return " ";
     }
 
     @Override
