@@ -28,5 +28,5 @@ public interface DictionaryInterface {
      *
      * @return a list of the found words
      */
-    List<String> findWordsByLetters(List<LetterInterface> letters);
+    List<String> findWordsHavingLetters(List<LetterInterface> letters);
 }
