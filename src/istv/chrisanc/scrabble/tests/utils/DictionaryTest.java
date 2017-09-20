@@ -24,6 +24,10 @@ public class DictionaryTest {
 
     private static List<LetterInterface> lettersWithJoker;
 
+    private static List<LetterInterface> startingLetters;
+
+    private static List<LetterInterface> endingLetters;
+
     @Test
     public void wordExists() throws Exception {
         assertTrue(DictionaryTest.dictionary.wordExists("BONJOUR"));
@@ -44,6 +48,20 @@ public class DictionaryTest {
         assertEquals(104, foundWords.size());
     }
 
+    @Test
+    public void findWordsStartingWithAndHavingLetters() {
+        List<String> foundWords = DictionaryTest.dictionary.findWordsStartingWithAndHavingLetters(3, 10, DictionaryTest.startingLetters, DictionaryTest.lettersWithoutJoker);
+
+        assertEquals(16, foundWords.size());
+    }
+
+    @Test
+    public void findWordsEndingWithAndHavingLetters() {
+        List<String> foundWords = DictionaryTest.dictionary.findWordsEndingWithAndHavingLetters(3, 10, DictionaryTest.endingLetters, DictionaryTest.lettersWithoutJoker);
+
+        assertEquals(10, foundWords.size());
+    }
+
     @BeforeClass
     public static void setUp() throws Exception {
         DictionaryFactory dictionaryFactory = new DictionaryFactory();
@@ -51,5 +69,8 @@ public class DictionaryTest {
 
         DictionaryTest.lettersWithoutJoker = Arrays.asList(new A(), new H(), new C(), new N(), new E(), new D(), new I());
         DictionaryTest.lettersWithJoker = Arrays.asList(new A(), new H(), new C(), new J(), new Joker(), new D());
+
+        DictionaryTest.startingLetters = Arrays.asList(new C(), new H(), new I());
+        DictionaryTest.endingLetters = Arrays.asList(new E(), new U(), new R());
     }
 }

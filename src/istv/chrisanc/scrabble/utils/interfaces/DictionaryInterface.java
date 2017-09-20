@@ -29,4 +29,24 @@ public interface DictionaryInterface {
      * @return a list of the found words
      */
     List<String> findWordsHavingLetters(List<LetterInterface> letters);
+
+    /**
+     * @param minLength        The minimum number of letters in the searched words
+     * @param maxLength        The maximum number of letters in the searched words
+     * @param startingLetters  The letters starting the searched words
+     * @param availableLetters The letters available to begin the search words
+     *
+     * @return the found words, having length between minLength and maxLength, starting with startingLetters and containing availableLetters
+     */
+    List<String> findWordsStartingWithAndHavingLetters(int minLength, int maxLength, List<LetterInterface> startingLetters, List<LetterInterface> availableLetters);
+
+    /**
+     * @param minLength        The minimum number of letters in the searched words
+     * @param maxLength        The maximum number of letters in the searched words
+     * @param endingLetters    The letters ending the searched words
+     * @param availableLetters The letters available to begin the search words
+     *
+     * @return the found words, having length between minLength and maxLength, ending with endingLetters and containing availableLetters
+     */
+    List<String> findWordsEndingWithAndHavingLetters(int minLength, int maxLength, List<LetterInterface> endingLetters, List<LetterInterface> availableLetters);
 }
