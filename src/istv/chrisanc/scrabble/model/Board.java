@@ -4,12 +4,17 @@ import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.model.squares.DarkBlue;
+import istv.chrisanc.scrabble.model.squares.Pink;
+import istv.chrisanc.scrabble.model.squares.Red;
+import istv.chrisanc.scrabble.model.squares.SkyBlue;
+import istv.chrisanc.scrabble.model.squares.Star;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
  * <p>
- * This class represents the board used during the Scrabble. It has {@link Square} where pieces ({@link LetterInterface}) can be placed on.
+ * This class represents the board used during the Scrabble. It has {@link SquareInterface} where pieces ({@link LetterInterface}) can be placed on.
  *
  * @author Christopher Anciaux
  */
@@ -55,28 +60,341 @@ public class Board implements BoardInterface {
      * @return a read-only list of the board's squares
      */
     public ObservableList<ObservableList<SquareInterface>> getSquares() {
-        return FXCollections.unmodifiableObservableList(squares);
+        return FXCollections.unmodifiableObservableList(this.squares);
     }
 
     /**
      * @return a read-only list of the board's letters
      */
     public ObservableList<ObservableList<LetterInterface>> getLetters() {
-        return FXCollections.unmodifiableObservableList(letters);
+        return FXCollections.unmodifiableObservableList(this.letters);
     }
 
     /**
      * @return a read-only list of the played {@link WordInterface}
      */
     public ObservableList<WordInterface> getPlayedWords() {
-        return FXCollections.unmodifiableObservableList(playedWords);
+        return FXCollections.unmodifiableObservableList(this.playedWords);
     }
 
+    /**
+     * Builds the {@link SquareInterface}'s list according to the Scrabble rules.
+     */
     protected void buildSquaresList() {
-        // TODO: Place all the squares correctly, according to the Scrabble rules.
+        this.squares.addAll(
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList(),
+                FXCollections.observableArrayList()
+        );
+
+        // Line 1
+        this.squares.get(0).addAll(
+                new Red(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Red(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Red()
+        );
+
+        // Line 2
+        this.squares.get(1).addAll(
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square()
+        );
+
+        // Line 3
+        this.squares.get(2).addAll(
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 4
+        this.squares.get(3).addAll(
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new SkyBlue()
+        );
+
+        // Line 5
+        this.squares.get(4).addAll(
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 6
+        this.squares.get(5).addAll(
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square()
+        );
+
+        // Line 7
+        this.squares.get(6).addAll(
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 8
+        this.squares.get(7).addAll(
+                new Red(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Star(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Red()
+        );
+
+        // Line 9
+        this.squares.get(8).addAll(
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 10
+        this.squares.get(9).addAll(
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square()
+        );
+
+        // Line 11
+        this.squares.get(10).addAll(
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 12
+        this.squares.get(11).addAll(
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new SkyBlue()
+        );
+
+        // Line 13
+        this.squares.get(12).addAll(
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square()
+        );
+
+        // Line 14
+        this.squares.get(13).addAll(
+                new Square(),
+                new Pink(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new DarkBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Pink(),
+                new Square()
+        );
+
+        // Line 15
+        this.squares.get(14).addAll(
+                new Red(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new Red(),
+                new Square(),
+                new Square(),
+                new Square(),
+                new SkyBlue(),
+                new Square(),
+                new Square(),
+                new Red()
+        );
     }
 
+    /**
+     * Builds the {@link LetterInterface}'s list according to the Scrabble rules.
+     */
     protected void buildLettersList() {
-        // TODO @AC: Create the letters ArrayList with a fixed size of 15*15
+        for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
+            this.letters.add(i, FXCollections.observableArrayList());
+
+            for (int j = 0; j < BoardInterface.BOARD_SIZE; j++) {
+                this.letters.get(i).add(null);
+            }
+        }
     }
 }

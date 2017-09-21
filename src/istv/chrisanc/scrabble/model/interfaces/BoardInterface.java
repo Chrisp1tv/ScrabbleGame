@@ -11,6 +11,11 @@ import javafx.collections.ObservableList;
  */
 public interface BoardInterface {
     /**
+     * The number of lines and columns of a Scrabble board.
+     */
+    short BOARD_SIZE = 15;
+
+    /**
      * Add the given {@link WordInterface} to the board.
      *
      * @param word The {@link WordInterface} to add to the board
