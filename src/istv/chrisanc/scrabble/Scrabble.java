@@ -13,7 +13,7 @@ import javafx.stage.Stage;
  *
  * @author Christopher Anciaux
  */
-public class Game extends Application {
+public class Scrabble extends Application {
     protected BoardInterface board = new Board();
 
     protected PlayerInterface[] players = new PlayerInterface[4];
