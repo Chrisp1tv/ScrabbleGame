@@ -2,8 +2,6 @@ package istv.chrisanc.scrabble.tests.model;
 
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
-import javafx.collections.ObservableList;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
