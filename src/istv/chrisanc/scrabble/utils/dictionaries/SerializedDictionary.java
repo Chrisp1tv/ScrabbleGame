@@ -83,7 +83,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         // We define the regular expression pattern, which depends on joker's presence
         String pattern = LetterListToStringTransformer.transform(startingLetters) + "[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+";
 
-        words.addAll(this.words.stream().filter(word -> word.length() > minLength && word.length() < maxLength && word.matches(pattern)).collect(Collectors.toList()));
+        words.addAll(this.words.stream().filter(word -> word.length() >= minLength && word.length() <= maxLength && word.matches(pattern)).collect(Collectors.toList()));
 
         // Now, we must check that each letter in each found word isn't present more times than it is in the given letters
         Iterator<String> wordsIterator = words.iterator();
@@ -109,7 +109,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         // We define the regular expression pattern, which depends on joker's presence
         String pattern = "[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+" + LetterListToStringTransformer.transform(endingLetters);
 
-        words.addAll(this.words.stream().filter(word -> word.length() > minLength && word.length() < maxLength && word.matches(pattern)).collect(Collectors.toList()));
+        words.addAll(this.words.stream().filter(word -> word.length() >= minLength && word.length() <= maxLength && word.matches(pattern)).collect(Collectors.toList()));
 
         // Now, we must check that each letter in each found word isn't present more times than it is in the given letters
         Iterator<String> wordsIterator = words.iterator();
