@@ -2,14 +2,19 @@ package istv.chrisanc.scrabble.model;
 
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -17,7 +22,7 @@ import java.util.List;
  *
  * @author Christopher Anciaux
  */
-public class Player implements PlayerInterface {
+public class Player implements PlayerInterface, Serializable {
     /**
      * The name of the player
      */
@@ -26,18 +31,19 @@ public class Player implements PlayerInterface {
     /**
      * The score of the player. The default value is 0, as a player begins the game without any point
      */
-    protected IntegerProperty score = new SimpleIntegerProperty(0);
+    protected IntegerProperty score;
 
     /**
      * The letters owned by the player in his rack/hands during the game. He can't have more than 7 letters.
      */
-    protected ObservableList<LetterInterface> letters = FXCollections.observableArrayList();
+    protected ObservableList<LetterInterface> letters;
 
     /**
      * @param name The player's name
      */
     public Player(String name) {
-        this.name = new SimpleStringProperty(name);
+        this.initialize();
+        this.name.set(name);
     }
 
     public String getName() {
@@ -78,5 +84,35 @@ public class Player implements PlayerInterface {
      */
     public void removeLetter(short index) {
         // TODO
+    }
+
+    protected void setName(String name) {
+        this.name.set(name);
+    }
+
+    protected void setScore(int score) {
+        this.score.set(score);
+    }
+
+    protected void initialize() {
+        this.name = new SimpleStringProperty();
+        this.score = new SimpleIntegerProperty(0);
+        this.letters = FXCollections.observableArrayList();
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        objectOutputStream.writeObject(this.name.getValue());
+        objectOutputStream.writeInt(this.score.getValue());
+        objectOutputStream.writeObject(this.letters.stream().collect(Collectors.toList()));
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        this.initialize();
+
+        this.setName((String) objectInputStream.readObject());
+        this.setScore(objectInputStream.readInt());
+
+        List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
+        this.letters.addAll(letters);
     }
 }

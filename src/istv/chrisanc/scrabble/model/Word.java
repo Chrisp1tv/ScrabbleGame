@@ -1,10 +1,11 @@
 package istv.chrisanc.scrabble.model;
 
-import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author Christopher Anciaux
  */
-public class Word implements WordInterface {
+public class Word implements WordInterface, Serializable {
     protected PlayerInterface player;
 
     protected List<LetterInterface> letters = new ArrayList<>();

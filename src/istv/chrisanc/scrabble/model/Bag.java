@@ -33,7 +33,13 @@ import istv.chrisanc.scrabble.model.letters.Z;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,13 +48,14 @@ import java.util.Collections;
  *
  * @author Christopher Anciaux
  */
-public class Bag implements BagInterface {
+public class Bag implements BagInterface, Serializable {
     /**
      * The letters that the bag contain
      */
-    protected ObservableList<LetterInterface> letters = FXCollections.observableArrayList();
+    protected ObservableList<LetterInterface> letters;
 
     public Bag() {
+        this.initialize();
         this.buildLettersList();
     }
 
@@ -94,5 +101,20 @@ public class Bag implements BagInterface {
         );
 
         Collections.shuffle(this.letters);
+    }
+
+    protected void initialize() {
+        this.letters = FXCollections.observableArrayList();
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        objectOutputStream.writeObject(this.letters.stream().collect(Collectors.toList()));
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        this.initialize();
+
+        List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
+        this.letters.addAll(letters);
     }
 }

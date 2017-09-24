@@ -12,33 +12,41 @@ import istv.chrisanc.scrabble.model.squares.Star;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  * This class represents the board used during the Scrabble. It has {@link SquareInterface} where pieces ({@link LetterInterface}) can be placed on.
  *
  * @author Christopher Anciaux
  */
-public class Board implements BoardInterface {
+public class Board implements BoardInterface, Serializable {
     /**
      * All the {@link SquareInterface} of the {@link Board}. The Indexes represent the position of the {@link SquareInterface} on the {@link Board}.
      * The first index represents the lines, the second the columns.
      * There are 15 lines, and 15 columns.
      */
-    protected ObservableList<ObservableList<SquareInterface>> squares = FXCollections.observableArrayList();
+    protected ObservableList<ObservableList<SquareInterface>> squares;
 
     /**
      * All the {@link LetterInterface} placed on the {@link SquareInterface}. The indexes represent the position of the {@link LetterInterface} on the {@link Board}.
      * The first index represents the lines, the second the columns.
      * There are 15 lines, and 15 columns.
      */
-    protected ObservableList<ObservableList<LetterInterface>> letters = FXCollections.observableArrayList();
+    protected ObservableList<ObservableList<LetterInterface>> letters;
 
     /**
      * All the {@link WordInterface} placed on the {@link Board}.
      */
-    protected ObservableList<WordInterface> playedWords = FXCollections.observableArrayList();
+    protected ObservableList<WordInterface> playedWords;
 
     public Board() {
+        this.initialize();
         this.buildSquaresList();
         this.buildLettersList();
     }
@@ -75,6 +83,12 @@ public class Board implements BoardInterface {
      */
     public ObservableList<WordInterface> getPlayedWords() {
         return FXCollections.unmodifiableObservableList(this.playedWords);
+    }
+
+    protected void initialize() {
+        this.squares = FXCollections.observableArrayList();
+        this.letters = FXCollections.observableArrayList();
+        this.playedWords = FXCollections.observableArrayList();
     }
 
     /**
@@ -396,5 +410,36 @@ public class Board implements BoardInterface {
                 this.letters.get(i).add(null);
             }
         }
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        SquareInterface[][] squares = new SquareInterface[BoardInterface.BOARD_SIZE][BoardInterface.BOARD_SIZE];
+        LetterInterface[][] letters = new LetterInterface[BoardInterface.BOARD_SIZE][BoardInterface.BOARD_SIZE];
+
+        for(int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
+            for (int j = 0; j < BoardInterface.BOARD_SIZE; j++) {
+                squares[i][j] = this.squares.get(i).get(j);
+                letters[i][j] = this.letters.get(i).get(j);
+            }
+        }
+
+        objectOutputStream.writeObject(squares);
+        objectOutputStream.writeObject(letters);
+        objectOutputStream.writeObject(this.playedWords.stream().collect(Collectors.toList()));
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        this.initialize();
+
+        SquareInterface[][] squares = (SquareInterface[][]) objectInputStream.readObject();
+        LetterInterface[][] letters = (LetterInterface[][]) objectInputStream.readObject();
+
+        for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
+            this.squares.add(i, FXCollections.observableArrayList(squares[i]));
+            this.letters.add(i, FXCollections.observableArrayList(letters[i]));
+        }
+
+        List<WordInterface> playedWords = (List<WordInterface>) objectInputStream.readObject();
+        this.playedWords.addAll(playedWords);
     }
 }

@@ -2,6 +2,8 @@ package istv.chrisanc.scrabble.model;
 
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * This class defines a letter piece used in the Scrabble, represented by the letter itself,
@@ -9,7 +11,7 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
  *
  * @author Christopher Anciaux
  */
-abstract public class Letter implements LetterInterface {
+abstract public class Letter implements LetterInterface, Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) {
