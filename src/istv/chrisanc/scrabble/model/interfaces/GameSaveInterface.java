@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * This class represents a save of a Scrabble game.
@@ -8,15 +9,15 @@ import java.util.Calendar;
  * @author Christopher Anciaux
  */
 public interface GameSaveInterface {
-    public Calendar getSaveDate();
+    Calendar getSaveDate();
 
     BoardInterface getBoard();
 
     void setBoard(BoardInterface board);
 
-    PlayerInterface[] getPlayers();
+    List<PlayerInterface> getPlayers();
 
-    void setPlayers(PlayerInterface[] players);
+    void setPlayers(List<PlayerInterface> players);
 
     BagInterface getBag();
 

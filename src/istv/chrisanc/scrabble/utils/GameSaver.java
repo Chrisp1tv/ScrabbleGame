@@ -51,7 +51,6 @@ public class GameSaver {
             objectOutputStream.writeObject(gameSave);
             objectOutputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new UnableToWriteSaveException();
         }
     }
@@ -94,7 +93,6 @@ public class GameSaver {
 
             return gameSave;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
             throw new UnableToLoadSaveException();
         }
     }

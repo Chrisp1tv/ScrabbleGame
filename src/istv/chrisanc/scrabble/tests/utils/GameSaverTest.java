@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,13 +45,13 @@ public class GameSaverTest {
 
         GameSaveInterface gameSave = GameSaver.loadGameSave(saveFile);
 
-        assertEquals("Christopher Anciaux", gameSave.getPlayers()[0].getName());
+        assertEquals("Christopher Anciaux", gameSave.getPlayers().get(0).getName());
 
         GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSavePath));
     }
 
     @BeforeClass
     public static void setUp() throws Exception {
-        GameSaverTest.gameSave = new GameSave(new Board(), new Player[]{new Player("Christopher Anciaux")}, new Bag());
+        GameSaverTest.gameSave = new GameSave(new Board(), Collections.singletonList(new Player("Christopher Anciaux")), new Bag());
     }
 }

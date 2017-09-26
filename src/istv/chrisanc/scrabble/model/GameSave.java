@@ -7,6 +7,7 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * This class represents a save of a Scrabble game.
@@ -18,11 +19,11 @@ public class GameSave implements Serializable, GameSaveInterface {
 
     protected BoardInterface board;
 
-    protected PlayerInterface[] players = new PlayerInterface[4];
+    protected List<PlayerInterface> players;
 
     protected BagInterface bag;
 
-    public GameSave(BoardInterface board, PlayerInterface[] players, BagInterface bag) {
+    public GameSave(BoardInterface board, List<PlayerInterface> players, BagInterface bag) {
         this.saveDate = Calendar.getInstance();
         this.board = board;
         this.players = players;
@@ -41,11 +42,11 @@ public class GameSave implements Serializable, GameSaveInterface {
         this.board = board;
     }
 
-    public PlayerInterface[] getPlayers() {
+    public List<PlayerInterface> getPlayers() {
         return players;
     }
 
-    public void setPlayers(PlayerInterface[] players) {
+    public void setPlayers(List<PlayerInterface> players) {
         this.players = players;
     }
 

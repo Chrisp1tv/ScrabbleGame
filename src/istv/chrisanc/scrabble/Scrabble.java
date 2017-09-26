@@ -1,20 +1,24 @@
 package istv.chrisanc.scrabble;
 
 import istv.chrisanc.scrabble.controllers.HomeController;
+import istv.chrisanc.scrabble.controllers.LoadGameController;
 import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -25,13 +29,13 @@ import java.util.ResourceBundle;
 public class Scrabble extends Application {
     protected ResourceBundle i18nMessages;
 
-    private Stage primaryStage;
+    protected Stage primaryStage;
 
-    private BorderPane rootLayout;
+    protected BorderPane rootLayout;
 
-    protected BoardInterface board = new Board();
+    protected BoardInterface board;
 
-    protected PlayerInterface[] players = new PlayerInterface[4];
+    protected List<PlayerInterface> players;
 
     protected BagInterface bag = new Bag();
 
@@ -43,9 +47,12 @@ public class Scrabble extends Application {
         return i18nMessages;
     }
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        // TODO
         this.i18nMessages = ResourceBundle.getBundle("translations/MessagesBundle");
 
         this.primaryStage = primaryStage;
@@ -75,6 +82,7 @@ public class Scrabble extends Application {
             HomeController controller = loader.getController();
             controller.setScrabble(this);
         } catch (IOException e) {
+            // TODO: Manages the error in a more user-friendly way
             e.printStackTrace();
         }
     }
@@ -90,7 +98,22 @@ public class Scrabble extends Application {
      * Shows the LoadGame wizard, allowing the player to load an externally saved game or choose one save between the stored ones
      */
     public void showLoadGame() {
-        // TODO @Anciaux Christopher
+        try {
+            // Load home
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.i18nMessages);
+            loader.setLocation(Scrabble.class.getResource("view/LoadGame.fxml"));
+            AnchorPane loadGame = loader.load();
+
+            // Set home into the center of the root layout
+            rootLayout.setCenter(loadGame);
+
+            LoadGameController controller = loader.getController();
+            controller.setScrabble(this);
+        } catch (IOException e) {
+            // TODO Manages the error in a more user-friendly way
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -98,6 +121,17 @@ public class Scrabble extends Application {
      */
     public void showGame() {
         // TODO @Anciaux Christopher @Bouaggad Abdessamade
+    }
+
+    /**
+     * Resumes a game, according to the data present in the {@link GameSaveInterface}.
+     *
+     * @param gameSave The {@link GameSaveInterface} to use to construct the Scrabble and resume the game
+     */
+    public void resumeGameFromSaveAndShowGame(GameSaveInterface gameSave) {
+        this.initializeScrabbleGame(gameSave.getBoard(), gameSave.getPlayers(), gameSave.getBag());
+
+        this.showGame();
     }
 
     /**
@@ -130,6 +164,29 @@ public class Scrabble extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Initializes the ScrabbleGame with the given players only.
+     *
+     * @param players The players
+     * @see #initializeScrabbleGame(BoardInterface, List, BagInterface)
+     */
+    protected void initializeScrabbleGame(List<PlayerInterface> players) {
+        this.initializeScrabbleGame(new Board(), players, new Bag());
+    }
+
+    /**
+     * Initializes the ScrabbleGame with all the needed information
+     *
+     * @param board   The board
+     * @param players The players
+     * @param bag     The bag
+     */
+    protected void initializeScrabbleGame(BoardInterface board, List<PlayerInterface> players, BagInterface bag) {
+        this.board = board;
+        this.players = players;
+        this.bag = bag;
     }
 }
 
