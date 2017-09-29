@@ -1,9 +1,16 @@
 package istv.chrisanc.scrabble.controllers;
 
+import java.util.Dictionary;
+
+import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
+import istv.chrisanc.scrabble.utils.dictionaries.French;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +22,8 @@ import javafx.scene.layout.HBox;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
+	private French dictionnary = new French();
+
     /**
      * The view representation of the Scrabble {@link BoardInterface}
      */
@@ -49,9 +58,13 @@ public class GameController extends BaseController {
      * Validates the word played by the player. This method is triggered when the user clicks on the "Validate the played
      * word". This method must verify the played word's validity, call the ScoreManager etc.
      */
+
     @FXML
-    protected void handleValidatePlayedWord() {
+    protected void handleValidatePlayedWord(Board board,DictionaryFactory dictionary) {
         // TODO
+    	ObservableList<WordInterface> playedWords = board.getPlayedWords();
+    	String stringPlayedWords = playedWords.toString();
+
     }
 
     /**
