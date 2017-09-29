@@ -10,6 +10,7 @@ import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -29,6 +30,8 @@ import java.util.ResourceBundle;
  */
 public class Scrabble extends Application {
     protected ResourceBundle i18nMessages;
+
+    protected DictionaryInterface dictionary;
 
     protected Stage primaryStage;
 
