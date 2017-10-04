@@ -3,6 +3,7 @@ package istv.chrisanc.scrabble;
 import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.controllers.HomeController;
 import istv.chrisanc.scrabble.controllers.LoadGameController;
+import istv.chrisanc.scrabble.controllers.NewGameController;
 import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
@@ -97,23 +98,23 @@ public class Scrabble extends Application {
     public void showNewGame() {
         // TODO @Bouaggad Abdessamade
 
-    	 try {
-    		 AnchorPane root = FXMLLoader.load(getClass().getResource("view/NewGame.fxml"));
-             // Load home
-             FXMLLoader loader = new FXMLLoader();
-             /**loader.setResources(this.i18nMessages);
-             loader.setLocation(Scrabble.class.getResource("view/NewGame.fxml"));
-             AnchorPane home = loader.load();**/
+        // TODO @Anciaux Christopher @Bouaggad Abdessamade
+        try {
+            // Load game
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.i18nMessages);
+            loader.setLocation(Scrabble.class.getResource("view/NewGame.fxml"));
+            AnchorPane game = loader.load();
 
-             // Set home into the center of the root layout
-             rootLayout.setCenter(root);
+            // Set home into the center of the root layout
+            rootLayout.setCenter(game);
 
-             HomeController controller = loader.getController();
-             controller.setScrabble(this);
-         } catch (IOException e) {
-             // TODO: Manages the error in a more user-friendly way
-             e.printStackTrace();
-         }
+            NewGameController controller = loader.getController();
+            controller.setScrabble(this);
+        } catch (IOException e) {
+            // TODO Manages the error in a more user-friendly way
+            e.printStackTrace();
+        }
 
     }
 
