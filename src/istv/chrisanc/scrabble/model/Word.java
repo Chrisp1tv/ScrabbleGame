@@ -72,6 +72,7 @@ public class Word implements WordInterface, Serializable {
      * @return the line's index of the first word's {@link LetterInterface}
      */
     public short getEndLine() {
+		return 0;
         // TODO
     }
 
@@ -86,6 +87,7 @@ public class Word implements WordInterface, Serializable {
      * @return the column's index of the last word's {@link LetterInterface}
      */
     public short getEndColumn() {
+		return 0;
         // TODO
     }
 }

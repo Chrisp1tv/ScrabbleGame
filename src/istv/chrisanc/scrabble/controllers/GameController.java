@@ -22,7 +22,7 @@ import javafx.scene.layout.HBox;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
-	private French dictionnary = new French();
+
 
     /**
      * The view representation of the Scrabble {@link BoardInterface}
@@ -60,10 +60,20 @@ public class GameController extends BaseController {
      */
 
     @FXML
-    protected void handleValidatePlayedWord(Board board,DictionaryFactory dictionary) {
+    protected void handleValidatePlayedWord(Board board,French dictionary) {
         // TODO
     	ObservableList<WordInterface> playedWords = board.getPlayedWords();
     	String stringPlayedWords = playedWords.toString();
+
+    	boolean motExiste = dictionary.wordExists(stringPlayedWords);
+
+    	if(!motExiste) {
+
+    	} else {
+
+    	}
+
+
 
     }
 

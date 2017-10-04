@@ -60,10 +60,12 @@ public class Bag implements BagInterface, Serializable {
     }
 
     public LetterInterface drawLetter() throws EmptyBagException {
+		return null;
         // TODO
     }
 
     public LetterInterface exchangeLetters(LetterInterface letterToPutBackInTheBag) throws EmptyBagException {
+		return letterToPutBackInTheBag;
         // TODO
     }
 
