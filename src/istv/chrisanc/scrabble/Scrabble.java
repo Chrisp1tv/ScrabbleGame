@@ -96,6 +96,25 @@ public class Scrabble extends Application {
      */
     public void showNewGame() {
         // TODO @Bouaggad Abdessamade
+
+    	 try {
+    		 AnchorPane root = FXMLLoader.load(getClass().getResource("view/NewGame.fxml"));
+             // Load home
+             FXMLLoader loader = new FXMLLoader();
+             /**loader.setResources(this.i18nMessages);
+             loader.setLocation(Scrabble.class.getResource("view/NewGame.fxml"));
+             AnchorPane home = loader.load();**/
+
+             // Set home into the center of the root layout
+             rootLayout.setCenter(root);
+
+             HomeController controller = loader.getController();
+             controller.setScrabble(this);
+         } catch (IOException e) {
+             // TODO: Manages the error in a more user-friendly way
+             e.printStackTrace();
+         }
+
     }
 
     /**
