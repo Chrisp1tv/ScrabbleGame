@@ -6,6 +6,4 @@ package istv.chrisanc.scrabble.controllers;
  */
 public class NewGameController extends BaseController{
 
-
-
 }
