@@ -1,19 +1,20 @@
 package istv.chrisanc.scrabble.controllers;
 
-import java.util.Dictionary;
-
+import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.model.Board;
-import istv.chrisanc.scrabble.model.interfaces.BagInterface;
-import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.model.interfaces.*;
 import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
-import istv.chrisanc.scrabble.utils.dictionaries.French;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * This is the controller handling all the Game logic, managing the Scrabble itself. All game-relative actions are done
@@ -22,8 +23,6 @@ import javafx.scene.layout.HBox;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
-	private French dictionnary = new French();
-
     /**
      * The view representation of the Scrabble {@link BoardInterface}
      */
@@ -73,7 +72,32 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleExchangeLetterWithBag() {
-        // TODO
+        try {
+            // Load letters exchanging view
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.scrabble.getI18nMessages());
+            loader.setLocation(Scrabble.class.getResource("view/ExchangeLetter.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog stage
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle(this.scrabble.getI18nMessages().getString("exchangeLettersWithTheBag"));
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(this.scrabble.getPrimaryStage());
+
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            ExchangeLettersController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setScrabble(this.scrabble);
+            controller.initializeInterface();
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            // TODO Manages the error in a more user-friendly way
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -81,7 +105,7 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleSkipTurn() {
-        // TODO
+        // TODO @Bouaggad Abdessamade
     }
 
     /**
@@ -89,6 +113,30 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleSaveGame() {
-        // TODO @Anciaux Christopher
+        try {
+            // Load game saving view
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.scrabble.getI18nMessages());
+            loader.setLocation(Scrabble.class.getResource("view/SaveGame.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog stage
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle(this.scrabble.getI18nMessages().getString("save"));
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(this.scrabble.getPrimaryStage());
+
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            SaveGameController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setScrabble(this.scrabble);
+
+            dialogStage.showAndWait();
+        } catch (IOException e) {
+            // TODO Manages the error in a more user-friendly way
+            e.printStackTrace();
+        }
     }
 }

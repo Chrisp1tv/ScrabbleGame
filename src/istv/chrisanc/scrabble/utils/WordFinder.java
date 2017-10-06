@@ -11,7 +11,6 @@ import istv.chrisanc.scrabble.model.interfaces.WordInterface;
  */
 public class WordFinder {
     public static WordInterface findWord(BoardInterface board) {
-		return null;
         // TODO
         // TODO: Check if a word is playable on the board here, if not, throw an exception
     }

@@ -23,7 +23,6 @@ public class HomeController extends BaseController {
     @FXML
     protected void handleLoadGame() {
         this.scrabble.showLoadGame();
-
     }
 
     /**
