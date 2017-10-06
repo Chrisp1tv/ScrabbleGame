@@ -208,5 +208,24 @@ public class Scrabble extends Application {
         this.players = players;
         this.bag = bag;
     }
+
+    public BoardInterface getBoard() {
+        return this.board;
+    }
+
+    public List<PlayerInterface> getPlayers() {
+        return this.players;
+    }
+
+    /**
+     * @return The {@link PlayerInterface} who should play this turn
+     */
+    public PlayerInterface getCurrentPlayer() {
+        // TODO
+    }
+
+    public BagInterface getBag() {
+        return this.bag;
+    }
 }
 

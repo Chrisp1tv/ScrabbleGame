@@ -72,6 +72,10 @@ public class Player implements PlayerInterface, Serializable {
         // TODO
     }
 
+    public void addLetters(List<LetterInterface> letters) {
+        // TODO
+    }
+
     /**
      * @param letter the {@link LetterInterface} to be removed from the rack of the player
      */

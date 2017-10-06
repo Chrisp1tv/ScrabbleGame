@@ -2,6 +2,8 @@ package istv.chrisanc.scrabble.model.interfaces;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 
+import java.util.List;
+
 /**
  * <p>
  * This class represents the bag used in a Scrabble game. It holds in all the pieces ({@link LetterInterface}) at the start
@@ -12,5 +14,5 @@ import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 public interface BagInterface {
     LetterInterface drawLetter() throws EmptyBagException;
 
-    LetterInterface exchangeLetters(LetterInterface letterToPutBackInTheBag) throws EmptyBagException;
+    List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException;
 }

@@ -19,6 +19,8 @@ public interface PlayerInterface {
 
     void addLetter(LetterInterface letter);
 
+    void addLetters(List<LetterInterface> letters);
+
     void removeLetter(LetterInterface letter);
 
     void removeLetter(short index);

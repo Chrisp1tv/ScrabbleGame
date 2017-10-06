@@ -4,14 +4,7 @@ import istv.chrisanc.scrabble.exceptions.utils.GameSaver.UnableToLoadSaveExcepti
 import istv.chrisanc.scrabble.exceptions.utils.GameSaver.UnableToWriteSaveException;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.nio.file.Files;
 
 /**
@@ -31,22 +24,22 @@ public class GameSaver {
      * @see #saveGame
      */
     public static void saveGameToGameSavesDirectory(GameSaveInterface gameSave, String fileName) throws UnableToWriteSaveException {
-        GameSaver.saveGame(gameSave, GAME_SAVES_DIRECTORY + File.separator + fileName);
+        GameSaver.saveGame(gameSave, new File(GAME_SAVES_DIRECTORY + File.separator + fileName));
     }
 
     /**
      * Saves the given {@link GameSaveInterface} into the file having the given file path
      *
      * @param gameSave         The GameSave to store into a file
-     * @param completeFilePath The filename where to store the file
+     * @param file The filename where to store the file
      *
      * @throws UnableToWriteSaveException if the Save can't be wrote on the file system because of a writing problem
      */
-    public static void saveGame(GameSaveInterface gameSave, String completeFilePath) throws UnableToWriteSaveException {
+    public static void saveGame(GameSaveInterface gameSave, File file) throws UnableToWriteSaveException {
         // We try to save the game in the file located at the given path, completeFilePath
         try {
             createGameSavesDirectoryIfNotExists();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(completeFilePath))));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
             objectOutputStream.writeObject(gameSave);
             objectOutputStream.close();
