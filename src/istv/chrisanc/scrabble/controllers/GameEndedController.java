@@ -5,11 +5,14 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import istv.chrisanc.scrabble.Scrabble;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.VBox;
+import test.cont.model.Person;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -49,6 +52,13 @@ public class GameEndedController extends BaseController {
 		}
 
 		//System.exit(0);
+
+	}
+
+	protected void showWinner() {
+
+		//ObservableList<Person> personData = FXCollections.observableArrayList();
+
 
 	}
 }

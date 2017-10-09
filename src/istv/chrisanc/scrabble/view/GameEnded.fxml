@@ -7,12 +7,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.GameEndedController">
    <children>
       <HBox layoutY="-2.0" prefHeight="432.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TableView prefHeight="200.0" prefWidth="700.0">
+            <TableView fx:id="myTableView" prefHeight="200.0" prefWidth="700.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Player 1" />
                 <TableColumn prefWidth="75.0" text="IA" />
@@ -25,17 +24,17 @@
       </HBox>
       <HBox alignment="CENTER" layoutY="436.0" prefHeight="66.0" prefWidth="700.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleHomeButton" text="Accueil">
+            <Button mnemonicParsing="false" onAction="handleA" text="Accueil">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleNewGameButton" text="Nouvelle Partie">
+            <Button mnemonicParsing="false" text="Nouvelle Partie">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleQuitButton" text="Quitter">
+            <Button mnemonicParsing="false" text="Quitter">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
