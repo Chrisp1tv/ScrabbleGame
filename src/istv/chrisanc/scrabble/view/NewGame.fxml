@@ -34,7 +34,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="username" onAction="#handleStartGame"/>
+                  <TextField fx:id="username" onAction="#handleStartGame" />
                </children>
                <padding>
                   <Insets top="20.0" />
