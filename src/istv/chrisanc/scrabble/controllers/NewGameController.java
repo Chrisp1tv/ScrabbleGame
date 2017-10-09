@@ -34,6 +34,8 @@ public class NewGameController extends BaseController {
 	 */
 	@FXML
 	protected void handleStartGame() throws ErrorLoadingDictionaryException, EmptyBagException {
+		int i=0;
+
 		// this.scrabble.showNewGame();
 		if (username.getText().trim().isEmpty()) {
 			 Alert fail= new Alert(AlertType.INFORMATION);
@@ -58,6 +60,10 @@ public class NewGameController extends BaseController {
 
 			for (Player player : myPlayersList) {
 				player.addLetter(myBag.drawLetter());
+				i++;
+				if(i==7){
+				       break;
+				}
 			}
 
 			this.scrabble.showGame();
