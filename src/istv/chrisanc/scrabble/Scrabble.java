@@ -41,6 +41,7 @@ public class Scrabble extends Application {
     protected BagInterface bag;
 
     public static void main(String[] args) {
+    	//System.exit(0);
         launch(args);
     }
 
@@ -175,6 +176,28 @@ public class Scrabble extends Application {
         // TODO @Bouaggad Abdessamade
     }
 
+    public void cancelGame() {
+
+        // TODO @Anciaux Christopher @Bouaggad Abdessamade
+        try {
+            // Load game
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.i18nMessages);
+            loader.setLocation(Scrabble.class.getResource("view/Home.fxml"));
+            VBox game = loader.load();
+
+            // Set home into the center of the root layout
+            rootLayout.setCenter(game);
+
+            HomeController controller = loader.getController();
+            controller.setScrabble(this);
+        } catch (IOException e) {
+            // TODO Manages the error in a more user-friendly way
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Initializes the root layout and tries to load the last opened
      * person file.
@@ -235,6 +258,7 @@ public class Scrabble extends Application {
      * @return The {@link PlayerInterface} who should play this turn
      */
     public PlayerInterface getCurrentPlayer() {
+    	return null;
         // TODO
     }
 
