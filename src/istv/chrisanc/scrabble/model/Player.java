@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * This class represents a player of the Scrabble. The player has {@link LetterInterface} in his rack/hands, a score, a name etc.
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public class Player implements PlayerInterface, Serializable {
     /**
@@ -69,21 +70,29 @@ public class Player implements PlayerInterface, Serializable {
      * @param letter the {@link LetterInterface} to be added in the rack of the player
      */
     public void addLetter(LetterInterface letter) {
-        // TODO
+        this.letters.add(letter);
+    }
+    
+    public void addLetters(List<LetterInterface> lettersToAdd){
+    	int i;
+    	for(i=0;i<lettersToAdd.size();i++){
+    		this.letters.add(lettersToAdd.get(0));
+    		lettersToAdd.remove(0);
+    	}
     }
 
     /**
      * @param letter the {@link LetterInterface} to be removed from the rack of the player
      */
     public void removeLetter(LetterInterface letter) {
-        // TODO
+        this.letters.remove(letter);
     }
 
     /**
      * @param index the index of the {@link LetterInterface} to be removed from the rack of the player
      */
     public void removeLetter(short index) {
-        // TODO
+        this.letters.remove(index);
     }
 
     protected void setName(String name) {

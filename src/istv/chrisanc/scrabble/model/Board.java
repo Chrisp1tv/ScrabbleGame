@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  * This class represents the board used during the Scrabble. It has {@link SquareInterface} where pieces ({@link LetterInterface}) can be placed on.
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public class Board implements BoardInterface, Serializable {
     /**
@@ -57,11 +58,7 @@ public class Board implements BoardInterface, Serializable {
      * @param word The {@link WordInterface} to add to the board
      */
     public void addWord(WordInterface word) {
-        /* TODO:
-            - Check if the word exists and is correct (good length, good positions,...)
-            - Add all the word's letters in the letters attribute at the good positions
-            - Add the word to the played words
-        */
+        this.playedWords.add(word);
     }
 
     /**
