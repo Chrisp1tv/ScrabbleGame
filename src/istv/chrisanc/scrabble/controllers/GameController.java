@@ -73,7 +73,7 @@ public class GameController extends BaseController {
      * The button used to validate a played word (the letters placed on the board)
      */
     @FXML
-    protected Button validatePlayedWordButton;
+    protected Button validatePlayedLettersButton;
 
     /**
      * The button used to cancel the current turn and take back the letters disposed on the Board that aren't validated by

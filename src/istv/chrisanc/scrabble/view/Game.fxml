@@ -56,7 +56,7 @@
             <ButtonBar fx:id="controlButtons" prefHeight="40.0" prefWidth="200.0">
                 <buttons>
                     <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag" text="%exchangeLettersWithTheBag" ButtonBar.buttonData="LEFT" />
-                    <Button fx:id="validatePlayedWordButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters" text="%validatePlayedWord" ButtonBar.buttonData="LEFT" />
+                    <Button fx:id="validatePlayedLettersButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters" text="%validatePlayedLetters" ButtonBar.buttonData="LEFT" />
                     <Button fx:id="takeBackLettersButton" mnemonicParsing="false" onAction="#handleTakeBackLetters" text="%takeBackLetters" ButtonBar.buttonData="LEFT" />
                     <Button mnemonicParsing="false" onAction="#handleSaveGame" text="%save" ButtonBar.buttonData="LEFT" />
                     <Button mnemonicParsing="false" onAction="#handleSkipTurn" text="%skipMyTurn" ButtonBar.buttonData="LEFT" />
