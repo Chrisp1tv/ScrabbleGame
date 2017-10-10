@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
@@ -73,7 +74,7 @@ public class ExchangeLettersController extends BaseController {
         try {
             this.scrabble.exchangeLetters(this.lettersToPutBackInTheBag);
             this.closeExchangeLettersDialog();
-        } catch (EmptyBagException e) {
+        } catch (EmptyBagException|NotEnoughLettersException e) {
             this.scrabble.showErrorDrawingLetterFromBagAlert(e);
             this.closeExchangeLettersDialog();
         }

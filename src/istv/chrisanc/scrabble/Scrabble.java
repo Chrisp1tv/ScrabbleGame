@@ -8,6 +8,7 @@ import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.exceptions.NonExistentWordException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
@@ -212,7 +213,7 @@ public class Scrabble extends Application {
      *
      * @param e EmptyBagException The exepction to be managed
      */
-    public void showErrorDrawingLetterFromBagAlert(EmptyBagException e) {
+    public void showErrorDrawingLetterFromBagAlert(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(this.getI18nMessages().getString("error"));
         alert.setHeaderText(this.getI18nMessages().getString("errorWhileDrawingLetterFromBag"));
@@ -248,7 +249,7 @@ public class Scrabble extends Application {
      *
      * @throws EmptyBagException if the bag is empty
      */
-    public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException {
+    public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException, NotEnoughLettersException {
         this.getCurrentPlayer().addLetters(this.getBag().exchangeLetters(letters));
 
         this.nextTurn();
