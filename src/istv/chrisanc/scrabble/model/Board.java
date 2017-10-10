@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,7 @@ public class Board implements BoardInterface, Serializable {
      * The first index represents the lines, the second the columns.
      * There are 15 lines, and 15 columns.
      */
-    protected ObservableList<ObservableList<LetterInterface>> letters;
+    protected List<List<LetterInterface>> letters;
 
     /**
      * All the {@link WordInterface} placed on the {@link Board}.
@@ -51,38 +52,42 @@ public class Board implements BoardInterface, Serializable {
         this.buildLettersList();
     }
 
-    /**
-     * Add the given {@link WordInterface} to the board.
-     *
-     * @param word The {@link WordInterface} to add to the board
-     */
-    public void addWord(WordInterface word) {
-        /* TODO:
-            - Check if the word exists and is correct (good length, good positions,...)
-            - Add all the word's letters in the letters attribute at the good positions
-            - Add the word to the played words
-        */
-    }
-
-    /**
-     * @return a read-only list of the board's squares
-     */
+    @Override
     public ObservableList<ObservableList<SquareInterface>> getSquares() {
         return FXCollections.unmodifiableObservableList(this.squares);
     }
 
-    /**
-     * @return a read-only list of the board's letters
-     */
-    public ObservableList<ObservableList<LetterInterface>> getLetters() {
-        return FXCollections.unmodifiableObservableList(this.letters);
+    @Override
+    public List<List<LetterInterface>> getLetters() {
+        return Collections.unmodifiableList(this.letters);
     }
 
-    /**
-     * @return a read-only list of the played {@link WordInterface}
-     */
+    @Override
+    public void addLetters(List<List<LetterInterface>> letters) {
+        for (int i = 0, lettersLineSize = letters.size(); i < lettersLineSize; i++) {
+            for (int j = 0, lettersColumnSize = letters.get(j).size(); j < lettersColumnSize; j++) {
+                if (letters.get(i).get(j) != this.letters.get(i).get(j)) {
+                    this.letters.get(i).set(j, letters.get(i).get(j));
+                }
+            }
+        }
+    }
+
+    @Override
     public ObservableList<WordInterface> getPlayedWords() {
         return FXCollections.unmodifiableObservableList(this.playedWords);
+    }
+
+    @Override
+    public void addWord(WordInterface word) {
+        /* TODO:
+            - Add the word to the played words
+        */
+    }
+
+    @Override
+    public void addWords(List<WordInterface> words) {
+        this.playedWords.addAll(words);
     }
 
     protected void initialize() {
@@ -211,19 +216,19 @@ public class Board implements BoardInterface, Serializable {
         // Line 6
         this.squares.get(5).addAll(
                 new Square(),
-                new SkyBlue(),
+                new DarkBlue(),
                 new Square(),
                 new Square(),
                 new Square(),
-                new SkyBlue(),
+                new DarkBlue(),
                 new Square(),
                 new Square(),
                 new Square(),
-                new SkyBlue(),
+                new DarkBlue(),
                 new Square(),
                 new Square(),
                 new Square(),
-                new SkyBlue(),
+                new DarkBlue(),
                 new Square()
         );
 

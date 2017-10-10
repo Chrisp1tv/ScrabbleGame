@@ -5,12 +5,13 @@ import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.GameSave;
 import istv.chrisanc.scrabble.model.Player;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.GameSaver;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -52,6 +53,8 @@ public class GameSaverTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        GameSaverTest.gameSave = new GameSave(new Board(), Collections.singletonList(new Player("Christopher Anciaux")), new Bag());
+        PlayerInterface player = new Player("Christopher Anciaux");
+        PlayerInterface player2 = new Player("AI");
+        GameSaverTest.gameSave = new GameSave((short) 0, new Board(), Arrays.asList(player, player2), player, new Bag());
     }
 }

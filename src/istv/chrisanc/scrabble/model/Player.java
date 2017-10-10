@@ -50,12 +50,19 @@ public class Player implements PlayerInterface, Serializable {
         return name.get();
     }
 
+    @Override
     public int getScore() {
         return score.get();
     }
 
+    @Override
     public void increaseScore(int increment) {
         this.score.set(this.score.get() + increment);
+    }
+
+    @Override
+    public IntegerProperty scoreProperty() {
+        return score;
     }
 
     /**
@@ -88,6 +95,11 @@ public class Player implements PlayerInterface, Serializable {
      */
     public void removeLetter(short index) {
         // TODO
+    }
+
+    @Override
+    public ObservableList<LetterInterface> lettersProperty() {
+        return letters;
     }
 
     protected void setName(String name) {

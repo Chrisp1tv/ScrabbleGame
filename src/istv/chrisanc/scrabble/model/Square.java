@@ -20,16 +20,6 @@ import java.io.Serializable;
  */
 public class Square implements SquareInterface, Serializable {
     /**
-     * This number represents the multiplier applied to the won points (of the current square only !) when a letter of the word is placed on the actual square
-     */
-    protected byte letterMultiplier = 1;
-
-    /**
-     * This number represents the multiplier applied to the won points (of the newly formed word) when a letter of the word is placed on the actual square
-     */
-    protected byte wordMultiplier = 1;
-
-    /**
      * This boolean states whether the multiplier has already been used or not
      */
     protected BooleanProperty multiplierUsed;
@@ -38,14 +28,36 @@ public class Square implements SquareInterface, Serializable {
         this.initialize();
     }
 
+    /**
+     * This number represents the multiplier applied to the won points (of the current square only !) when a letter of the word is placed on the actual square
+     */
     @Override
     public byte getLetterMultiplier() {
-        return letterMultiplier;
+        return 1;
     }
 
+    /**
+     * This number represents the multiplier applied to the won points (of the newly formed word) when a letter of the word is placed on the actual square
+     */
     @Override
     public byte getWordMultiplier() {
-        return wordMultiplier;
+        return 1;
+    }
+
+    /**
+     * This string represents the key translation of the information displayed about the board, like "Word double" for example
+     */
+    @Override
+    public String getInformation() {
+        return null;
+    }
+
+    /**
+     * This string represents the CSS class used to stylise the square of the board
+     */
+    @Override
+    public String getCssClass() {
+        return "square";
     }
 
     @Override
@@ -70,16 +82,11 @@ public class Square implements SquareInterface, Serializable {
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        objectOutputStream.writeByte(this.letterMultiplier);
-        objectOutputStream.writeByte(this.wordMultiplier);
         objectOutputStream.writeBoolean(this.multiplierUsed.get());
     }
 
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         this.initialize();
-
-        this.letterMultiplier = objectInputStream.readByte();
-        this.wordMultiplier = objectInputStream.readByte();
         this.setMultiplierUsed(objectInputStream.readBoolean());
     }
 }

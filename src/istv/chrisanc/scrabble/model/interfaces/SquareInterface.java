@@ -12,6 +12,10 @@ public interface SquareInterface {
 
     byte getWordMultiplier();
 
+    String getInformation();
+
+    String getCssClass();
+
     boolean isMultiplierUsed();
 
     SquareInterface makeMultiplierUsed();

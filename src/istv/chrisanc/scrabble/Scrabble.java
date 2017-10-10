@@ -1,16 +1,31 @@
 package istv.chrisanc.scrabble;
 
-import istv.chrisanc.scrabble.controllers.*;
+import istv.chrisanc.scrabble.controllers.GameController;
+import istv.chrisanc.scrabble.controllers.HomeController;
+import istv.chrisanc.scrabble.controllers.LoadGameController;
+import istv.chrisanc.scrabble.controllers.NewGameController;
+import istv.chrisanc.scrabble.controllers.RootLayoutController;
+import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
+import istv.chrisanc.scrabble.exceptions.NonExistentWordException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
+import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.utils.PlayedWordsValidityManager;
+import istv.chrisanc.scrabble.utils.ScoreManager;
+import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
 import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
 import javafx.application.Application;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -28,15 +43,17 @@ import java.util.ResourceBundle;
 public class Scrabble extends Application {
     protected ResourceBundle i18nMessages;
 
-    protected DictionaryInterface dictionary;
-
     protected Stage primaryStage;
 
     protected BorderPane rootLayout;
 
+    protected DictionaryInterface dictionary;
+
     protected BoardInterface board;
 
     protected List<PlayerInterface> players;
+
+    protected SimpleObjectProperty<PlayerInterface> currentPlayer;
 
     protected BagInterface bag;
 
@@ -83,8 +100,7 @@ public class Scrabble extends Application {
             HomeController controller = loader.getController();
             controller.setScrabble(this);
         } catch (IOException e) {
-            // TODO: Manages the error in a more user-friendly way
-            e.printStackTrace();
+            this.showGeneralApplicationError(e);
         }
     }
 
@@ -106,8 +122,7 @@ public class Scrabble extends Application {
             NewGameController controller = loader.getController();
             controller.setScrabble(this);
         } catch (IOException e) {
-            // TODO Manages the error in a more user-friendly way
-            e.printStackTrace();
+            this.showGeneralApplicationError(e);
         }
 
     }
@@ -129,8 +144,7 @@ public class Scrabble extends Application {
             LoadGameController controller = loader.getController();
             controller.setScrabble(this);
         } catch (IOException e) {
-            // TODO Manages the error in a more user-friendly way
-            e.printStackTrace();
+            this.showGeneralApplicationError(e);
         }
     }
 
@@ -138,7 +152,6 @@ public class Scrabble extends Application {
      * Shows the Game, that is to say the Scrabble Game itself. It opens the main controller, dealing with all the Scrabble logic
      */
     public void showGame() {
-        // TODO @Anciaux Christopher @Bouaggad Abdessamade
         try {
             // Load game
             FXMLLoader loader = new FXMLLoader();
@@ -151,9 +164,9 @@ public class Scrabble extends Application {
 
             GameController controller = loader.getController();
             controller.setScrabble(this);
+            controller.initializeInterface();
         } catch (IOException e) {
-            // TODO Manages the error in a more user-friendly way
-            e.printStackTrace();
+            this.showGeneralApplicationError(e);
         }
     }
 
@@ -163,9 +176,16 @@ public class Scrabble extends Application {
      * @param gameSave The {@link GameSaveInterface} to use to construct the Scrabble and resume the game
      */
     public void resumeGameFromSaveAndShowGame(GameSaveInterface gameSave) {
-        this.initializeScrabbleGame(gameSave.getBoard(), gameSave.getPlayers(), gameSave.getBag());
+        try {
+            DictionaryFactory dictionaryFactory = new DictionaryFactory();
+            DictionaryInterface dictionary = dictionaryFactory.getDictionary(gameSave.getDictionaryIdentifier());
 
-        this.showGame();
+            this.initializeScrabbleGame(dictionary, gameSave.getPlayers(), gameSave.getCurrentPlayer(), gameSave.getBag(), gameSave.getBoard());
+
+            this.showGame();
+        } catch (ErrorLoadingDictionaryException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -176,8 +196,108 @@ public class Scrabble extends Application {
     }
 
     /**
+     * Shows an alert when a general / no handled error happens in the application
+     */
+    public void showGeneralApplicationError(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(this.getI18nMessages().getString("error"));
+        alert.setHeaderText(this.getI18nMessages().getString("generalError"));
+        alert.setContentText(this.getI18nMessages().getString(e.getMessage()));
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows an alert when a letter's drawing happens
+     *
+     * @param e EmptyBagException The exepction to be managed
+     */
+    public void showErrorDrawingLetterFromBagAlert(EmptyBagException e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(this.getI18nMessages().getString("error"));
+        alert.setHeaderText(this.getI18nMessages().getString("errorWhileDrawingLetterFromBag"));
+        alert.setContentText(this.getI18nMessages().getString(e.getMessage()));
+
+        alert.showAndWait();
+    }
+
+    /**
+     * Plays the given letters on the board, after checking all the placed letters respect the Scrabble rules
+     *
+     * @param playedLetters All the letters of the board, with the new letters placed by the user
+     */
+    public void playLetters(List<List<LetterInterface>> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
+        if (!PlayedWordsValidityManager.playedWordsAreValid(this.board.getLetters(), playedLetters)) {
+            throw new InvalidPlayedTurnException();
+        }
+
+        this.board.addLetters(playedLetters);
+
+        List<WordInterface> playedWords = PlayedWordsValidityManager.findPlayedWords(this.board.getLetters(), playedLetters, this.getCurrentPlayer());
+        this.board.addWords(playedWords);
+
+        ScoreManager.updateScore(this.board, playedWords);
+
+        this.nextTurn();
+    }
+
+    /**
+     * Handles the logic of letters exchanging
+     *
+     * @param letters The letters to be exchanged
+     *
+     * @throws EmptyBagException if the bag is empty
+     */
+    public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException {
+        this.getCurrentPlayer().addLetters(this.getBag().exchangeLetters(letters));
+
+        this.nextTurn();
+    }
+
+    /**
+     * Skips the turn
+     */
+    public void skipTurn() {
+        // TODO @Bouaggad Abdessamade
+    }
+
+    /**
+     * Goes to the next turn of the game
+     */
+    public void nextTurn() {
+        if (this.gameIsFinished()) {
+            this.showEndGame();
+
+            return;
+        }
+
+        int currentPlayerIndex = this.getPlayers().indexOf(this.getCurrentPlayer()) + 1;
+
+        if (this.players.size() == currentPlayerIndex) {
+            currentPlayerIndex = 0;
+        }
+
+        this.currentPlayer.setValue(this.getPlayers().get(currentPlayerIndex));
+        System.out.println(this.getCurrentPlayer());
+
+        if (this.getHumanPlayer() != this.getCurrentPlayer()) {
+            // TODO: ask IA to play
+        }
+    }
+
+    /**
+     * Tells if the game is finished or not, according to the Scrabble rules
+     *
+     * @return true if the game is finished, false otherwise
+     */
+    public boolean gameIsFinished() {
+        // TODO
+        return false;
+    }
+
+    /**
      * Initializes the root layout and tries to load the last opened
-     * person file.
+     * person file
      */
     protected void initializeRootLayout() {
         try {
@@ -201,26 +321,30 @@ public class Scrabble extends Application {
     }
 
     /**
-     * Initializes the ScrabbleGame with the given players only.
-     *
-     * @param players The players
-     * @see #initializeScrabbleGame(BoardInterface, List, BagInterface)
+     * @see #initializeScrabbleGame(DictionaryInterface, List, PlayerInterface, BagInterface, BoardInterface)
      */
-    protected void initializeScrabbleGame(List<PlayerInterface> players) {
-        this.initializeScrabbleGame(new Board(), players, new Bag());
+    protected void initializeScrabbleGame(DictionaryInterface dictionary, List<PlayerInterface> players, PlayerInterface currentPlayer) {
+        this.initializeScrabbleGame(dictionary, players, currentPlayer, new Bag(), new Board());
     }
 
     /**
      * Initializes the ScrabbleGame with all the needed information
      *
-     * @param board   The board
-     * @param players The players
-     * @param bag     The bag
+     * @param dictionary The dictionary to be used during the game
+     * @param players    The players
+     * @param bag        The bag
+     * @param board      The board
      */
-    protected void initializeScrabbleGame(BoardInterface board, List<PlayerInterface> players, BagInterface bag) {
+    protected void initializeScrabbleGame(DictionaryInterface dictionary, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, BoardInterface board) {
+        this.dictionary = dictionary;
         this.board = board;
         this.players = players;
+        this.currentPlayer = new SimpleObjectProperty<>(currentPlayer);
         this.bag = bag;
+    }
+
+    public DictionaryInterface getDictionary() {
+        return dictionary;
     }
 
     public BoardInterface getBoard() {
@@ -235,7 +359,18 @@ public class Scrabble extends Application {
      * @return The {@link PlayerInterface} who should play this turn
      */
     public PlayerInterface getCurrentPlayer() {
-        // TODO
+        return this.currentPlayer.get();
+    }
+
+    public SimpleObjectProperty<PlayerInterface> currentPlayerProperty() {
+        return this.currentPlayer;
+    }
+
+    /**
+     * @return The human {@link PlayerInterface} who plays the game
+     */
+    public PlayerInterface getHumanPlayer() {
+        return this.players.get(0);
     }
 
     public BagInterface getBag() {

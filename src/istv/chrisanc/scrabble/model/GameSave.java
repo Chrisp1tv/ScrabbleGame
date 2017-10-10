@@ -6,7 +6,6 @@ import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -15,23 +14,30 @@ import java.util.List;
  * @author Christopher Anciaux
  */
 public class GameSave implements Serializable, GameSaveInterface {
-    protected Calendar saveDate;
+    protected short dictionaryIdentifier;
 
     protected BoardInterface board;
 
     protected List<PlayerInterface> players;
 
+    protected PlayerInterface currentPlayer;
+
     protected BagInterface bag;
 
-    public GameSave(BoardInterface board, List<PlayerInterface> players, BagInterface bag) {
-        this.saveDate = Calendar.getInstance();
+    public GameSave(short dictionaryIdentifier, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag) {
+        this.dictionaryIdentifier = dictionaryIdentifier;
         this.board = board;
         this.players = players;
+        this.currentPlayer = currentPlayer;
         this.bag = bag;
     }
 
-    public Calendar getSaveDate() {
-        return saveDate;
+    public short getDictionaryIdentifier() {
+        return dictionaryIdentifier;
+    }
+
+    public void setDictionaryIdentifier(short dictionaryIdentifier) {
+        this.dictionaryIdentifier = dictionaryIdentifier;
     }
 
     public BoardInterface getBoard() {
@@ -48,6 +54,14 @@ public class GameSave implements Serializable, GameSaveInterface {
 
     public void setPlayers(List<PlayerInterface> players) {
         this.players = players;
+    }
+
+    public PlayerInterface getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(PlayerInterface currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 
     public BagInterface getBag() {

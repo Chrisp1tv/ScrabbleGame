@@ -1,0 +1,30 @@
+/* Module - Squares */
+.square {
+    -fx-background-color: #3366ff;
+}
+
+.dark-blue {
+    -fx-background-color: #0090cd;
+}
+
+.pink, .star {
+    -fx-background-color: #ff99cc;
+}
+
+.red {
+    -fx-background-color: #dc002f;
+}
+
+.sky-blue {
+    -fx-background-color: #97c5e6;
+}
+
+/* Module - Tiles / Letters */
+.tiles {
+    -fx-spacing: 10;
+}
+
+.tile {
+    -fx-background-color: #e9e7d2;
+    -fx-padding: 10;
+}

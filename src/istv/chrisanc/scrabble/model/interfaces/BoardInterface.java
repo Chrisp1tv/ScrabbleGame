@@ -3,6 +3,8 @@ package istv.chrisanc.scrabble.model.interfaces;
 import istv.chrisanc.scrabble.model.Square;
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 /**
  * <p>
  * This class represents the board used during the Scrabble. It has {@link Square} where pieces ({@link LetterInterface}) can be placed on.
@@ -23,6 +25,13 @@ public interface BoardInterface {
     void addWord(WordInterface word);
 
     /**
+     * Add the given {@link WordInterface} to the board.
+     *
+     * @param words The {@link WordInterface} to add to the board
+     */
+    void addWords(List<WordInterface> words);
+
+    /**
      * @return a read-only list of the board's squares
      */
     ObservableList<ObservableList<SquareInterface>> getSquares();
@@ -30,7 +39,9 @@ public interface BoardInterface {
     /**
      * @return a read-only list of the board's letters
      */
-    ObservableList<ObservableList<LetterInterface>> getLetters();
+    List<List<LetterInterface>> getLetters();
+
+    void addLetters(List<List<LetterInterface>> letters);
 
     /**
      * @return a read-only list of the played {@link WordInterface}

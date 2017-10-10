@@ -1,5 +1,8 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.collections.ObservableList;
+
 import java.util.List;
 
 /**
@@ -15,6 +18,8 @@ public interface PlayerInterface {
 
     void increaseScore(int increment);
 
+    IntegerProperty scoreProperty();
+
     List<LetterInterface> getLetters();
 
     void addLetter(LetterInterface letter);
@@ -24,4 +29,6 @@ public interface PlayerInterface {
     void removeLetter(LetterInterface letter);
 
     void removeLetter(short index);
+
+    ObservableList<LetterInterface> lettersProperty();
 }
