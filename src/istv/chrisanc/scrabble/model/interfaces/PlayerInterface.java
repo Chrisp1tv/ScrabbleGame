@@ -10,6 +10,7 @@ import java.util.List;
  * This class represents a player of the Scrabble. The player has {@link LetterInterface} in his rack/hands, a score, a name etc.
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public interface PlayerInterface {
     String getName();
@@ -24,7 +25,7 @@ public interface PlayerInterface {
 
     void addLetter(LetterInterface letter);
 
-    void addLetters(List<LetterInterface> letters);
+    void addLetters(List<LetterInterface> lettersToAdd);
 
     void removeLetter(LetterInterface letter);
 

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * This class represents the board used during the Scrabble. It has {@link SquareInterface} where pieces ({@link LetterInterface}) can be placed on.
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public class Board implements BoardInterface, Serializable {
     /**
@@ -52,6 +53,9 @@ public class Board implements BoardInterface, Serializable {
         this.buildLettersList();
     }
 
+    /**
+     * @return a read-only list of the board's squares
+     */
     @Override
     public ObservableList<ObservableList<SquareInterface>> getSquares() {
         return FXCollections.unmodifiableObservableList(this.squares);
@@ -78,11 +82,13 @@ public class Board implements BoardInterface, Serializable {
         return FXCollections.unmodifiableObservableList(this.playedWords);
     }
 
-    @Override
+    /**
+     * Add the given {@link WordInterface} to the board.
+     *
+     * @param word The {@link WordInterface} to add to the board
+     */
     public void addWord(WordInterface word) {
-        /* TODO:
-            - Add the word to the played words
-        */
+        this.playedWords.add(word);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble.model;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.letters.A;
@@ -37,8 +38,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +50,7 @@ import java.util.stream.Collectors;
  * of the game, and manages the draw, exchanges of {@link LetterInterface} etc.
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public class Bag implements BagInterface, Serializable {
     /**
@@ -59,12 +63,37 @@ public class Bag implements BagInterface, Serializable {
         this.buildLettersList();
     }
 
+    @Override
     public LetterInterface drawLetter() throws EmptyBagException {
-        // TODO
+        if (this.letters.isEmpty()) {
+            throw new EmptyBagException();
+        }
+
+        Collections.shuffle(this.letters);
+
+        LetterInterface letter = letters.get(new Random().nextInt(this.letters.size()));
+        this.letters.remove(letter);
+
+        return letter;
     }
 
-    public List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException {
-        // TODO
+    @Override
+    public List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException, NotEnoughLettersException {
+        // If the bag doesn't contain enough letters to proceed to the exchange, we throw an exception
+        if (this.letters.size() < lettersToPutBackInTheBag.size()) {
+            throw new NotEnoughLettersException();
+        }
+
+        // We add the letters to be given to the user
+        List<LetterInterface> lettersToGetFromTheBag = new ArrayList<>();
+        for (int i = 0, lettersToGetFromTheBagSize = lettersToGetFromTheBag.size(); i < lettersToGetFromTheBagSize; i++) {
+            lettersToGetFromTheBag.add(this.drawLetter());
+        }
+
+        // We put back the letters given by the user, in the bag
+        this.letters.addAll(lettersToPutBackInTheBag);
+
+        return lettersToGetFromTheBag;
     }
 
     protected void buildLettersList() {

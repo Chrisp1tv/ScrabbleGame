@@ -15,6 +15,7 @@ import java.util.List;
  * This class represents a word played on the {@link BoardInterface}
  *
  * @author Christopher Anciaux
+ * @author Eguinane Chavatte
  */
 public class Word implements WordInterface, Serializable {
     protected PlayerInterface player;
@@ -72,7 +73,11 @@ public class Word implements WordInterface, Serializable {
      * @return the line's index of the first word's {@link LetterInterface}
      */
     public short getEndLine() {
-        // TODO
+        if (isHorizontal()) {
+            return getStartLine();
+        } else {
+            return (short) (getStartLine() + this.letters.size() - 1);
+        }
     }
 
     /**
@@ -86,6 +91,10 @@ public class Word implements WordInterface, Serializable {
      * @return the column's index of the last word's {@link LetterInterface}
      */
     public short getEndColumn() {
-        // TODO
+        if (isHorizontal()) {
+            return (short) (getStartColumn() + (this.letters.size() - 1));
+        } else {
+            return getStartColumn();
+        }
     }
 }
