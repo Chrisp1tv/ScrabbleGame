@@ -84,10 +84,6 @@ public class Player implements PlayerInterface, Serializable {
         this.letters.addAll(lettersToAdd);
     }
 
-    public void addLetters(List<LetterInterface> letters) {
-        // TODO
-    }
-
     /**
      * @param letter the {@link LetterInterface} to be removed from the rack of the player
      */
