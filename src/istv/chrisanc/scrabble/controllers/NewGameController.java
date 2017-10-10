@@ -1,21 +1,23 @@
 package istv.chrisanc.scrabble.controllers;
 
-import java.util.ArrayList;
-
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.Player;
 import istv.chrisanc.scrabble.utils.dictionaries.French;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
+import java.util.ArrayList;
+
 /**
- * @author Christopher Anciaux TODO @Bouaggad Abdessamade
+ * @author Christopher Anciaux
+ * @author Abdessamade Bouaggad
+ *
+ * TODO @Bouaggad Abdessamade
  */
 public class NewGameController extends BaseController {
 
@@ -40,13 +42,13 @@ public class NewGameController extends BaseController {
 		if (username.getText().trim().isEmpty()) {
 			 Alert fail= new Alert(AlertType.INFORMATION);
 		        fail.setHeaderText("Attention");
-		        fail.setContentText("Veuillez Saisir Votre Nom Avant De Lancer La Partie SVP ! Merci De Réessayer");
+		        fail.setContentText("Veuillez Saisir Votre Nom Avant De Lancer La Partie SVP ! Merci De Rï¿½essayer");
 		        fail.showAndWait();
 		}
 		else if(username.getText().length()<3) {
 			Alert fail= new Alert(AlertType.INFORMATION);
 	        fail.setHeaderText("Attention");
-	        fail.setContentText("Votre Nom Doit Contenir Au Moins 3 Lettres ! Merci De Réessayer .");
+	        fail.setContentText("Votre Nom Doit Contenir Au Moins 3 Lettres ! Merci De Rï¿½essayer .");
 	        fail.showAndWait();
 		}
 

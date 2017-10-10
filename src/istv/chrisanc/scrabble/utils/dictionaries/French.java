@@ -8,7 +8,7 @@ import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictiona
 public class French extends SerializedDictionary {
     private static French instance = null;
 
-    public French() throws ErrorLoadingDictionaryException {
+    private French() throws ErrorLoadingDictionaryException {
         super();
     }
 

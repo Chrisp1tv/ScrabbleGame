@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.GameEndedController">
    <children>
       <HBox layoutY="-2.0" prefHeight="432.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -24,7 +23,7 @@
       </HBox>
       <HBox alignment="CENTER" layoutY="436.0" prefHeight="66.0" prefWidth="700.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" onAction="handleA" text="Accueil">
+            <Button mnemonicParsing="false" onAction="#handleGoHome" text="Accueil">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
