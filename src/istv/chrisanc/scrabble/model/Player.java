@@ -72,13 +72,9 @@ public class Player implements PlayerInterface, Serializable {
     public void addLetter(LetterInterface letter) {
         this.letters.add(letter);
     }
-    
-    public void addLetters(List<LetterInterface> lettersToAdd){
-    	int i;
-    	for(i=0;i<lettersToAdd.size();i++){
-    		this.letters.add(lettersToAdd.get(0));
-    		lettersToAdd.remove(0);
-    	}
+
+    public void addLetters(List<LetterInterface> lettersToAdd) {
+        this.letters.addAll(lettersToAdd);
     }
 
     /**

@@ -1,8 +1,9 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
-import java.util.List;
-
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,5 +16,5 @@ import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 public interface BagInterface {
     LetterInterface drawLetter() throws EmptyBagException;
 
-    List<LetterInterface> exchangeLetters(List<LetterInterface> letterToPutBackInTheBag) throws EmptyBagException;
+    List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException, NotEnoughLettersException;
 }
