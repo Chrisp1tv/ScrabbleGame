@@ -15,7 +15,7 @@
             </font>
         </Text>
     </Pane>
-    <HBox fx:id="playerLettersContainer" layoutX="17.0" layoutY="242.0" prefHeight="75.0" prefWidth="566.0" />
+    <HBox styleClass="tiles" fx:id="playerLettersContainer" layoutX="17.0" layoutY="242.0" prefHeight="75.0" prefWidth="566.0" />
     <ButtonBar layoutX="20.0" layoutY="346.0" prefHeight="40.0" prefWidth="559.0">
         <buttons>
             <Button fx:id="validateExchangeButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleValidateExchange" text="%validateAndObtainLetters" ButtonBar.buttonData="LEFT" />

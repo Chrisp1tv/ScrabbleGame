@@ -3,6 +3,7 @@ package istv.chrisanc.scrabble.model;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,13 +64,19 @@ public class Player implements PlayerInterface, Serializable {
     }
 
     @Override
-    public IntegerProperty scoreProperty() {
-        return score;
+    public void decreaseScore(int decrement) {
+        this.score.set(this.score.get() - decrement);
+    }
+
+    @Override
+    public ReadOnlyIntegerProperty scoreProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.score);
     }
 
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
      */
+    @Override
     public List<LetterInterface> getLetters() {
         return FXCollections.unmodifiableObservableList(this.letters);
     }
@@ -76,17 +84,25 @@ public class Player implements PlayerInterface, Serializable {
     /**
      * @param letter the {@link LetterInterface} to be added in the rack of the player
      */
+    @Override
     public void addLetter(LetterInterface letter) {
         this.letters.add(letter);
     }
 
-    public void addLetters(List<LetterInterface> lettersToAdd) {
+    @Override
+    public void addLetters(Collection<LetterInterface> lettersToAdd) {
         this.letters.addAll(lettersToAdd);
+    }
+
+    @Override
+    public void removeLetters(Collection<LetterInterface> letters) {
+        this.letters.removeAll(letters);
     }
 
     /**
      * @param letter the {@link LetterInterface} to be removed from the rack of the player
      */
+    @Override
     public void removeLetter(LetterInterface letter) {
         this.letters.remove(letter);
     }
@@ -94,6 +110,7 @@ public class Player implements PlayerInterface, Serializable {
     /**
      * @param index the index of the {@link LetterInterface} to be removed from the rack of the player
      */
+    @Override
     public void removeLetter(short index) {
         this.letters.remove(index);
     }

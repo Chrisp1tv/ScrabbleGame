@@ -17,7 +17,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -67,14 +69,23 @@ public class Board implements BoardInterface, Serializable {
     }
 
     @Override
-    public void addLetters(List<List<LetterInterface>> letters) {
-        for (int i = 0, lettersLineSize = letters.size(); i < lettersLineSize; i++) {
-            for (int j = 0, lettersColumnSize = letters.get(j).size(); j < lettersColumnSize; j++) {
-                if (letters.get(i).get(j) != this.letters.get(i).get(j)) {
-                    this.letters.get(i).set(j, letters.get(i).get(j));
+    public void addLetters(HashMap<List<Integer>, LetterInterface> letters) {
+        for (Map.Entry<List<Integer>, LetterInterface> playedEntry : letters.entrySet()) {
+            this.letters.get(playedEntry.getKey().get(0)).set(playedEntry.getKey().get(1), playedEntry.getValue());
+        }
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
+            for (int j = 0; j < BoardInterface.BOARD_SIZE; j++) {
+                if (null != this.letters.get(i).get(j)) {
+                    return false;
                 }
             }
         }
+
+        return true;
     }
 
     @Override

@@ -5,8 +5,8 @@ import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import istv.chrisanc.scrabble.utils.ui.DraggableLetterManager;
+import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -15,8 +15,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -103,16 +101,7 @@ public class ExchangeLettersController extends BaseController {
      */
     protected void initializeDragAndDropLetters() {
         // We add all the user's letters in the playerLettersContainer
-        for (LetterInterface letter : this.scrabble.getCurrentPlayer().getLetters()) {
-            Text tileText = new Text(LetterToStringTransformer.transform(letter));
-
-            StackPane tile = new StackPane(tileText);
-            tile.getStyleClass().add("tile");
-
-            DraggableLetterManager.makeLetterDraggable(tile, letter);
-
-            this.playerLettersContainer.getChildren().add(tile);
-        }
+        Templates.displayLetters(this.playerLettersContainer, this.scrabble.getCurrentPlayer().getLetters(), true);
 
         DraggableLetterManager.makeElementReadyToReceiveLetter(this.lettersReceiver, false, (letter, event) -> {
             this.lettersToPutBackInTheBag.add(letter);

@@ -3,6 +3,7 @@ package istv.chrisanc.scrabble.model.interfaces;
 import istv.chrisanc.scrabble.model.Square;
 import javafx.collections.ObservableList;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +42,12 @@ public interface BoardInterface {
      */
     List<List<LetterInterface>> getLetters();
 
-    void addLetters(List<List<LetterInterface>> letters);
+    void addLetters(HashMap<List<Integer>, LetterInterface> letters);
+
+    /**
+     * @return true if the board hasn't any letter in it, false otherwise
+     */
+    boolean isEmpty();
 
     /**
      * @return a read-only list of the played {@link WordInterface}

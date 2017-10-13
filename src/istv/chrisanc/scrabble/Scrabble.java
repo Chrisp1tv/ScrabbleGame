@@ -18,6 +18,8 @@ import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.model.letters.Joker;
+import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import istv.chrisanc.scrabble.utils.PlayedWordsValidityManager;
 import istv.chrisanc.scrabble.utils.ScoreManager;
 import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
@@ -27,13 +29,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -42,6 +48,11 @@ import java.util.ResourceBundle;
  * @author Christopher Anciaux
  */
 public class Scrabble extends Application {
+    /**
+     * The maximum number of turns that each user can skip
+     */
+    protected static final short MAX_SKIPPED_TURNS_PER_USER = 3;
+
     protected ResourceBundle i18nMessages;
 
     protected Stage primaryStage;
@@ -57,6 +68,11 @@ public class Scrabble extends Application {
     protected SimpleObjectProperty<PlayerInterface> currentPlayer;
 
     protected BagInterface bag;
+
+    /**
+     * The number of consecutive turns skipped by all the players (without distinction)
+     */
+    protected short consecutiveTurnsSkipped = 0;
 
     public static void main(String[] args) {
         launch(args);
@@ -76,9 +92,7 @@ public class Scrabble extends Application {
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(this.i18nMessages.getString("Scrabble"));
-
-        // TODO Set the application icon.
-        // this.primaryStage.getIcons().add(new Image(""));
+        this.primaryStage.getIcons().add(new Image("file:resources/icon/icon.png"));
 
         this.initializeRootLayout();
         this.showHome();
@@ -211,7 +225,7 @@ public class Scrabble extends Application {
     /**
      * Shows an alert when a letter's drawing happens
      *
-     * @param e EmptyBagException The exepction to be managed
+     * @param e EmptyBagException The exception to be managed
      */
     public void showErrorDrawingLetterFromBagAlert(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -223,22 +237,55 @@ public class Scrabble extends Application {
     }
 
     /**
+     * Shows a dialog to ask the user to select the represented letter by his played joker
+     *
+     * @return the choice of the user, false if he clicked on cancel button
+     */
+    public Optional<String> showRepresentedLetterByJokerSelectorDialog() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(this.getI18nMessages().getString("chooseLetterRepresentedByJoker"));
+        dialog.setHeaderText(this.getI18nMessages().getString("chooseLetterRepresentedByJokerInformation"));
+        dialog.setContentText(this.getI18nMessages().getString("chooseLetterRepresentedByJokerLabel"));
+
+        return dialog.showAndWait();
+    }
+
+    /**
      * Plays the given letters on the board, after checking all the placed letters respect the Scrabble rules
      *
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
-    public void playLetters(List<List<LetterInterface>> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
+    public void playLetters(HashMap<List<Integer>, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
+        System.out.println(playedLetters);
         if (!PlayedWordsValidityManager.playedWordsAreValid(this.board.getLetters(), playedLetters)) {
             throw new InvalidPlayedTurnException();
         }
 
-        this.board.addLetters(playedLetters);
+        /* TODO: move this logic in the PlayedWordsValidityManager */
+        for(LetterInterface playedLetter : playedLetters.values()) {
+            if (!(playedLetter instanceof Joker)) {
+                continue;
+            }
+
+            Optional<String> representedLetterString = this.showRepresentedLetterByJokerSelectorDialog();
+
+            try {
+                // noinspection OptionalGetWithoutIsPresent
+                ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase()));
+            } catch (Exception e) {
+                throw new InvalidPlayedTurnException();
+            }
+        }
 
         List<WordInterface> playedWords = PlayedWordsValidityManager.findPlayedWords(this.board.getLetters(), playedLetters, this.getCurrentPlayer());
+
+        this.board.addLetters(playedLetters);
         this.board.addWords(playedWords);
 
         ScoreManager.updateScore(this.board, playedWords);
 
+        this.getCurrentPlayer().removeLetters(playedLetters.values());
+        this.giveLettersToCurrentPlayerToFillHisRack();
         this.nextTurn();
     }
 
@@ -250,6 +297,7 @@ public class Scrabble extends Application {
      * @throws EmptyBagException if the bag is empty
      */
     public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException, NotEnoughLettersException {
+        this.getCurrentPlayer().removeLetters(letters);
         this.getCurrentPlayer().addLetters(this.getBag().exchangeLetters(letters));
 
         this.nextTurn();
@@ -259,6 +307,7 @@ public class Scrabble extends Application {
      * Skips the turn
      */
     public void skipTurn() {
+        this.consecutiveTurnsSkipped++;
         // TODO @Bouaggad Abdessamade
     }
 
@@ -279,10 +328,25 @@ public class Scrabble extends Application {
         }
 
         this.currentPlayer.setValue(this.getPlayers().get(currentPlayerIndex));
-        System.out.println(this.getCurrentPlayer());
 
         if (this.getHumanPlayer() != this.getCurrentPlayer()) {
             // TODO: ask IA to play
+        }
+    }
+
+    /**
+     * Gives letters to the user to fill his rack
+     */
+    protected void giveLettersToCurrentPlayerToFillHisRack() {
+        int numberOfLettersToDraw = PlayerInterface.BASE_NUMBER_OF_LETTERS - this.getCurrentPlayer().getLetters().size();
+
+        for (int i = 0; i < numberOfLettersToDraw; i++) {
+            try {
+                this.getCurrentPlayer().addLetter(this.getBag().drawLetter());
+            } catch (EmptyBagException e) {
+                // The bag is empty, so we can't draw any letter anymore
+                break;
+            }
         }
     }
 
@@ -291,8 +355,39 @@ public class Scrabble extends Application {
      *
      * @return true if the game is finished, false otherwise
      */
-    public boolean gameIsFinished() {
-        // TODO
+    protected boolean gameIsFinished() {
+        // If the current player has no more letter and the bag is empty
+        if (this.getCurrentPlayer().getLetters().isEmpty() && this.getBag().isEmpty()) {
+            int pointsSumToGiveToCurrentPlayer = 0;
+
+            for (PlayerInterface player : this.getPlayers()) {
+                if (this.getCurrentPlayer() != player) {
+                    // We subtract the values of the letters of all other players to their respective score
+                    for (LetterInterface letter: player.getLetters()) {
+                        player.decreaseScore(letter.getValue());
+                        pointsSumToGiveToCurrentPlayer += letter.getValue();
+                    }
+                }
+
+                // We add all the points of the other players to the current player
+                this.getCurrentPlayer().increaseScore(pointsSumToGiveToCurrentPlayer);
+            }
+
+            return true;
+        }
+
+        // If the players skipped their turns too many times, the game stops
+        if (this.getPlayers().size() * Scrabble.MAX_SKIPPED_TURNS_PER_USER <= this.consecutiveTurnsSkipped) {
+            // We subtract the letters values of each player to its total points
+            for (PlayerInterface player : this.players) {
+                for (LetterInterface letter : player.getLetters()) {
+                    player.decreaseScore(letter.getValue());
+                }
+            }
+
+            return true;
+        }
+
         return false;
     }
 

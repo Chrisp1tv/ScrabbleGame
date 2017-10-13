@@ -8,8 +8,8 @@ import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
-import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import istv.chrisanc.scrabble.utils.ui.DraggableLetterManager;
+import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,19 +17,18 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class GameController extends BaseController {
      * The container of the players list (an {@link HBox} because players are shown one next to the other)
      */
     @FXML
-    protected HBox playersListContainer;
+    protected VBox playersListContainer;
 
     /**
      * The container of the {@link LetterInterface} possessed by the {@link PlayerInterface}
@@ -61,7 +60,7 @@ public class GameController extends BaseController {
      * The container of the control buttons
      */
     @FXML
-    protected ButtonBar controlButtons;
+    protected VBox controlButtons;
 
     /**
      * The button used to exchange a letter with the bag
@@ -83,9 +82,10 @@ public class GameController extends BaseController {
     protected Button takeBackLettersButton;
 
     /**
-     * The temporary Board's letters
+     * The letters being played (put on the board) by the user. The index is a list with, at index 0, the line of the letter,
+     * and at index 1 the column of the letter. The value is the played letter.
      */
-    protected List<List<LetterInterface>> tempBoardLetters;
+    protected HashMap<List<Integer>, LetterInterface> playedLetters = new HashMap<>();
 
     /**
      * Initializes the controller
@@ -95,8 +95,8 @@ public class GameController extends BaseController {
      * game
      */
     public void initializeInterface() {
-        this.initializeTempBoardLetters();
-        this.displayPlayersList();
+        this.initializePlayedLetters();
+        Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
         this.displayBoardGrid();
         this.displayPlayerLettersList();
         this.createControlButtonsEvents();
@@ -109,10 +109,12 @@ public class GameController extends BaseController {
     @FXML
     protected void handleValidatePlayedLetters() {
         try {
-            this.scrabble.playLetters(this.tempBoardLetters);
+            this.scrabble.playLetters(this.playedLetters);
         } catch (InvalidPlayedTurnException | NonExistentWordException e) {
             this.showAlertOfInvalidTurn(e);
         }
+
+        this.refreshScrabbleInterface();
     }
 
     /**
@@ -203,8 +205,7 @@ public class GameController extends BaseController {
      * Refreshes the Scrabble interface, to keep it synchronized with the actual Scrabble state
      */
     protected void refreshScrabbleInterface() {
-        // TODO: Optimize ?
-        this.initializeTempBoardLetters();
+        this.initializePlayedLetters();
 
         this.refreshBoard();
         this.refreshLetters();
@@ -243,47 +244,8 @@ public class GameController extends BaseController {
     /**
      * Initializes the letters of the temporary board
      */
-    protected void initializeTempBoardLetters() {
-        this.tempBoardLetters = new ArrayList<>(this.scrabble.getBoard().getLetters());
-    }
-
-    /**
-     * Displays the players
-     */
-    protected void displayPlayersList() {
-        for (int i = 0, playersSize = this.scrabble.getPlayers().size(); i < playersSize; i++) {
-            this.displayPlayer(this.scrabble.getPlayers().get(i), i);
-        }
-    }
-
-    /**
-     * Displays a player
-     *
-     * @param player      The player to be displayed
-     * @param playerIndex The position of the player
-     */
-    protected void displayPlayer(PlayerInterface player, int playerIndex) {
-        // Layout of each player frame
-        StackPane playerContainer = new StackPane();
-        HBox innerHBox = new HBox();
-
-        // Texts in each player frame
-        VBox innerVBox = new VBox();
-        Text playerNumber = new Text(Integer.toString(playerIndex + 1));
-        Text playerName = new Text(player.getName());
-
-        // Bound number of points
-        TextFlow playerPoints = new TextFlow();
-        Text boundPlayerPoints = new Text();
-        boundPlayerPoints.textProperty().bind(player.scoreProperty().asString());
-        Text playerPointsLegend = new Text(" " + this.scrabble.getI18nMessages().getString("points"));
-        playerPoints.getChildren().addAll(boundPlayerPoints, playerPointsLegend);
-
-        // Assembling all elements of the player frame and adding it to the list of players
-        innerVBox.getChildren().addAll(playerName, playerPoints);
-        innerHBox.getChildren().addAll(playerNumber, innerVBox);
-        playerContainer.getChildren().add(innerHBox);
-        this.playersListContainer.getChildren().add(playerContainer);
+    protected void initializePlayedLetters() {
+        this.playedLetters = new HashMap<>();
     }
 
     /**
@@ -300,21 +262,36 @@ public class GameController extends BaseController {
 
                 if (null != squaresLine.get(j).getInformation()) {
                     Text squareText = new Text(this.scrabble.getI18nMessages().getString(squaresLine.get(j).getInformation()));
+                    squareText.getStyleClass().add("square-legend");
 
                     square = new StackPane(squareText);
                 } else {
                     square = new StackPane();
                 }
 
-                square.getStyleClass().add(squaresLine.get(j).getCssClass());
+                square.getStyleClass().addAll("square", squaresLine.get(j).getCssClass());
 
-                int finalI = i;
-                int finalJ = j;
-                DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
-                    square.getChildren().add((Node) event.getGestureSource());
-                    this.playerLettersContainer.getChildren().remove((Node) event.getGestureSource());
-                    this.tempBoardLetters.get(finalI).set(finalJ, letter);
-                });
+                // First line
+                if (0 == i) {
+                    square.getStyleClass().add("first-line");
+                }
+
+                // First column
+                if (0 == j) {
+                    square.getStyleClass().add("first-column");
+                }
+
+                if (null == this.scrabble.getBoard().getLetters().get(i).get(j)) {
+                    int finalI = i;
+                    int finalJ = j;
+                    DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
+                        square.getChildren().add((Node) event.getGestureSource());
+                        this.playerLettersContainer.getChildren().remove(event.getGestureSource());
+                        this.playedLetters.put(Arrays.asList(finalI, finalJ), letter);
+                    });
+                } else {
+                    Templates.displayLetter(square, this.scrabble.getBoard().getLetters().get(i).get(j), false);
+                }
 
                 this.scrabbleGrid.add(square, j, i);
             }
@@ -326,18 +303,7 @@ public class GameController extends BaseController {
      */
     protected void displayPlayerLettersList() {
         // Initializes the letters list
-        this.scrabble.getHumanPlayer().getLetters().forEach(this::displayPlayerLetter);
-    }
-
-    protected void displayPlayerLetter(LetterInterface letter) {
-        Text tileText = new Text(LetterToStringTransformer.transform(letter));
-
-        StackPane tile = new StackPane(tileText);
-        tile.getStyleClass().add("tile");
-
-        DraggableLetterManager.makeLetterDraggable(tile, letter);
-
-        this.playerLettersContainer.getChildren().add(tile);
+        Templates.displayLetters(this.playerLettersContainer, this.scrabble.getHumanPlayer().getLetters(), true);
     }
 
     /**

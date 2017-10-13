@@ -80,13 +80,13 @@ public class Bag implements BagInterface, Serializable {
     @Override
     public List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException, NotEnoughLettersException {
         // If the bag doesn't contain enough letters to proceed to the exchange, we throw an exception
-        if (this.letters.size() < lettersToPutBackInTheBag.size()) {
+        if (this.letters.size() < BagInterface.MINIMAL_NUMBER_OF_LETTERS_TO_EXCHANGE) {
             throw new NotEnoughLettersException();
         }
 
         // We add the letters to be given to the user
         List<LetterInterface> lettersToGetFromTheBag = new ArrayList<>();
-        for (int i = 0, lettersToGetFromTheBagSize = lettersToGetFromTheBag.size(); i < lettersToGetFromTheBagSize; i++) {
+        for (int i = 0, lettersToPutBackInTheBagSize = lettersToPutBackInTheBag.size(); i < lettersToPutBackInTheBagSize; i++) {
             lettersToGetFromTheBag.add(this.drawLetter());
         }
 
@@ -94,6 +94,11 @@ public class Bag implements BagInterface, Serializable {
         this.letters.addAll(lettersToPutBackInTheBag);
 
         return lettersToGetFromTheBag;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.letters.isEmpty();
     }
 
     protected void buildLettersList() {

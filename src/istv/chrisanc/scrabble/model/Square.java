@@ -57,7 +57,7 @@ public class Square implements SquareInterface, Serializable {
      */
     @Override
     public String getCssClass() {
-        return "square";
+        return "normal-square";
     }
 
     @Override

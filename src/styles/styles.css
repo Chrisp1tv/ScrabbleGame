@@ -1,30 +1,144 @@
-/* Module - Squares */
+/* Players List */
+
+.players-list {
+    -fx-min-width: 260;
+    -fx-max-width: 260;
+    -fx-padding: 0 25 0 0;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+}
+
+.players-list > .player {
+    -fx-alignment: center;
+    -fx-padding: 5;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-background-color: #97c5e6;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 10, 15, 0, 0);
+}
+
+.players-list .player.active {
+    -fx-background-color: #38a4a5;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.3), 10, 20, 0, 0);
+}
+
+.player .inner-player {
+    -fx-padding: 0 15 0 15;
+    -fx-alignment: center;
+}
+
+.player .player-number {
+    -fx-font-size: 250%;
+}
+
+.player .player-information {
+    -fx-padding: 0 0 0 15;
+    -fx-alignment: center-left;
+}
+
+.player .player-name {
+    -fx-font-size: 150%;
+}
+
+.player .player-points {
+
+}
+
+/* Scrabble Grid and Squares */
+
+.scrabble-grid {
+    -fx-alignment: center;
+}
+
+.scrabble-grid * {
+    -fx-min-height: 45;
+    -fx-max-height: 45;
+    -fx-min-width: 45;
+    -fx-max-width: 45;
+    -fx-column-halignment: center;
+    -fx-row-valignment: center;
+}
+
 .square {
-    -fx-background-color: #3366ff;
+    -fx-background-insets: 0, 0 2 2 0;
+    -fx-text-alignment: center;
+}
+
+.square .square-legend {
+    -fx-font-weight: bold;
+    -fx-fill: #ffffff;
+}
+
+.square.first-line {
+    -fx-background-insets: 0, 2 2 2 0;
+}
+
+.square.first-column {
+    -fx-background-insets: 0, 0 2 2 2;
+}
+
+.square.first-line.first-column {
+    -fx-background-insets: 0, 2;
+}
+
+.normal-square {
+    -fx-background-color: #2a6768, #2fa569;
+    /*-fx-effect: innershadow(one-pass-box, rgba(0, 0, 0, 0.25), 10, 0.2, -3, 5);*/
+}
+
+.dark-blue, .pink, .star, .red, .sky-blue {
+    -fx-effect: innershadow(one-pass-box, rgba(255, 255, 255, 0.25), 3, 0.2, -3, 3);
 }
 
 .dark-blue {
-    -fx-background-color: #0090cd;
+    -fx-background-color: #2a6768, #0090cd;
 }
 
 .pink, .star {
-    -fx-background-color: #ff99cc;
+    -fx-background-color: #2a6768, #ff99cc;
 }
 
 .red {
-    -fx-background-color: #dc002f;
+    -fx-background-color: #2a6768, #dc002f;
 }
 
 .sky-blue {
-    -fx-background-color: #97c5e6;
+    -fx-background-color: #2a6768, #97c5e6;
 }
 
-/* Module - Tiles / Letters */
-.tiles {
+/* Control buttons */
+
+.scrabble-control-buttons {
+    -fx-min-width: 260;
+    -fx-max-width: 260;
+    -fx-padding: 0 0 0 25;
     -fx-spacing: 10;
+    -fx-alignment: center-left;
+}
+
+/* Tiles / Letters */
+
+.tiles {
+    -fx-padding: 5 0 0 0;
+    -fx-spacing: 10;
+    -fx-alignment: center;
 }
 
 .tile {
-    -fx-background-color: #e9e7d2;
     -fx-padding: 10;
+    -fx-background-color: #e9e7d2;
+}
+
+.tiles > .tile {
+    -fx-effect: dropshadow(one-pass-box, rgba(195, 194, 173, 0.8), 4, 1, 0, 5);
+    -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
+}
+
+.tile > .tile-letter {
+    -fx-font-size: 120%;
+}
+
+.tile > .tile-value {
+    -fx-font-size: 80%;
 }

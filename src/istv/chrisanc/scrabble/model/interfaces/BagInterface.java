@@ -14,7 +14,14 @@ import java.util.List;
  * @author Eguinane Chavatte
  */
 public interface BagInterface {
+    /**
+     * The minimum number of letters that the bag must have to proceed to an exchange
+     */
+    short MINIMAL_NUMBER_OF_LETTERS_TO_EXCHANGE = 7;
+
     LetterInterface drawLetter() throws EmptyBagException;
 
     List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException, NotEnoughLettersException;
+
+    boolean isEmpty();
 }
