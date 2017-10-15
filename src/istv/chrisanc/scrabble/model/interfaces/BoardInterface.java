@@ -3,8 +3,8 @@ package istv.chrisanc.scrabble.model.interfaces;
 import istv.chrisanc.scrabble.model.Square;
 import javafx.collections.ObservableList;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -42,7 +42,7 @@ public interface BoardInterface {
      */
     List<List<LetterInterface>> getLetters();
 
-    void addLetters(HashMap<List<Integer>, LetterInterface> letters);
+    void addLetters(Map<List<Integer>, LetterInterface> letters);
 
     /**
      * @return true if the board hasn't any letter in it, false otherwise

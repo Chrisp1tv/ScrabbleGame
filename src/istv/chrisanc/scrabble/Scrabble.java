@@ -37,8 +37,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -255,7 +255,7 @@ public class Scrabble extends Application {
      *
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
-    public void playLetters(HashMap<List<Integer>, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
+    public void playLetters(Map<List<Integer>, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
         System.out.println(playedLetters);
         if (!PlayedWordsValidityManager.playedWordsAreValid(this.board.getLetters(), playedLetters)) {
             throw new InvalidPlayedTurnException();

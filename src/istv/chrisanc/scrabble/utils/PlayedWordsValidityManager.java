@@ -6,8 +6,8 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class manages the checking of a played words on the Scrabble game. It checks if played words on a turn are valid, that is
@@ -18,7 +18,7 @@ import java.util.List;
  * @author Christopher Anciaux
  */
 abstract public class PlayedWordsValidityManager {
-    public static boolean playedWordsAreValid(List<List<LetterInterface>> currentBoardLetters, HashMap<List<Integer>, LetterInterface> playedLetters) {
+    public static boolean playedWordsAreValid(List<List<LetterInterface>> currentBoardLetters, Map<List<Integer>, LetterInterface> playedLetters) {
         // TODO: Check if the positioning of the letters are correct
         // For example (might need supplementary logic) :
         // - If it's the first turn, the player must place a letter on the star square and all his letters must be next to each other
@@ -29,7 +29,7 @@ abstract public class PlayedWordsValidityManager {
         return true;
     }
 
-    public static List<WordInterface> findPlayedWords(List<List<LetterInterface>> currentLetters, HashMap<List<Integer>, LetterInterface> playedLetters, PlayerInterface player) throws NonExistentWordException {
+    public static List<WordInterface> findPlayedWords(List<List<LetterInterface>> currentLetters, Map<List<Integer>, LetterInterface> playedLetters, PlayerInterface player) throws NonExistentWordException {
         // The player is given, to attribute him the played words
         // TODO
         List<WordInterface> playedWords = new ArrayList<>();

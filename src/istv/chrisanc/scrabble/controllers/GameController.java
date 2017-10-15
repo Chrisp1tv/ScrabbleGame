@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is the controller handling all the Game view logic, managing the Scrabble interface itself. All game-relative actions are done
@@ -85,7 +86,7 @@ public class GameController extends BaseController {
      * The letters being played (put on the board) by the user. The index is a list with, at index 0, the line of the letter,
      * and at index 1 the column of the letter. The value is the played letter.
      */
-    protected HashMap<List<Integer>, LetterInterface> playedLetters = new HashMap<>();
+    protected Map<List<Integer>, LetterInterface> playedLetters = new HashMap<>();
 
     /**
      * Initializes the controller

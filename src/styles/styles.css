@@ -48,6 +48,7 @@
 
 .scrabble-grid {
     -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 25, 0.0, 0, 0);
 }
 
 .scrabble-grid * {
