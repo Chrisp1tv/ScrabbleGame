@@ -42,10 +42,17 @@ public class Player implements PlayerInterface, Serializable {
     protected ObservableList<LetterInterface> letters;
 
     /**
-     * @param name The player's name
+     * If the player is a human player, the value is set to true. False otherwise
      */
-    public Player(String name) {
+    protected boolean human;
+
+    /**
+     * @param name  The player's name
+     * @param human True if the player is a human, false otherwise
+     */
+    public Player(String name, boolean human) {
         this.initialize();
+        this.human = human;
         this.name.set(name);
     }
 
@@ -120,12 +127,21 @@ public class Player implements PlayerInterface, Serializable {
         return letters;
     }
 
+    @Override
+    public boolean isHuman() {
+        return this.human;
+    }
+
     protected void setName(String name) {
         this.name.set(name);
     }
 
     protected void setScore(int score) {
         this.score.set(score);
+    }
+
+    protected void setHuman(boolean human) {
+        this.human = human;
     }
 
     protected void initialize() {
@@ -135,6 +151,7 @@ public class Player implements PlayerInterface, Serializable {
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        objectOutputStream.writeBoolean(this.human);
         objectOutputStream.writeObject(this.name.getValue());
         objectOutputStream.writeInt(this.score.getValue());
         objectOutputStream.writeObject(this.letters.stream().collect(Collectors.toList()));
@@ -143,6 +160,7 @@ public class Player implements PlayerInterface, Serializable {
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         this.initialize();
 
+        this.setHuman(objectInputStream.readBoolean());
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
 

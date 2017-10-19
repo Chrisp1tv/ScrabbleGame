@@ -1,5 +1,6 @@
 package istv.chrisanc.scrabble.model;
 
+import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
@@ -18,7 +19,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 
 /**
@@ -68,9 +69,9 @@ public class Board implements BoardInterface, Serializable {
     }
 
     @Override
-    public void addLetters(Map<List<Integer>, LetterInterface> letters) {
-        for (Map.Entry<List<Integer>, LetterInterface> playedEntry : letters.entrySet()) {
-            this.letters.get(playedEntry.getKey().get(0)).set(playedEntry.getKey().get(1), playedEntry.getValue());
+    public void addLetters(SortedMap<GameController.BoardPosition, LetterInterface> letters) {
+        for (SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedEntry : letters.entrySet()) {
+            this.letters.get(playedEntry.getKey().getLine()).set(playedEntry.getKey().getColumn(), playedEntry.getValue());
         }
     }
 

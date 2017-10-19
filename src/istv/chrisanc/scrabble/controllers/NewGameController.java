@@ -57,8 +57,8 @@ public class NewGameController extends BaseController {
 			myBag = new Bag();
 			mydictionnaire = new French();
 			myBoard = new Board();
-			myPlayersList.add(new Player(username.getText()));
-			myPlayersList.add(new Player("This Is IA"));
+			myPlayersList.add(new Player(username.getText(), true));
+			myPlayersList.add(new Player("This Is IA", false));
 
 			for (Player player : myPlayersList) {
 				player.addLetter(myBag.drawLetter());

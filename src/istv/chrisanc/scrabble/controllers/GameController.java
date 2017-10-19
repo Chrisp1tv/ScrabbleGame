@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,10 +28,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * This is the controller handling all the Game view logic, managing the Scrabble interface itself. All game-relative actions are done
@@ -84,9 +84,10 @@ public class GameController extends BaseController {
 
     /**
      * The letters being played (put on the board) by the user. The index is a list with, at index 0, the line of the letter,
-     * and at index 1 the column of the letter. The value is the played letter.
+     * and at index 1 the column of the letter. The value is the played letter. The played letters are ordered in the grid order
+     * (from top to bottom and from left to right)
      */
-    protected Map<List<Integer>, LetterInterface> playedLetters = new HashMap<>();
+    protected SortedMap<BoardPosition, LetterInterface> playedLetters = new TreeMap<>();
 
     /**
      * Initializes the controller
@@ -100,7 +101,7 @@ public class GameController extends BaseController {
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
         this.displayBoardGrid();
         this.displayPlayerLettersList();
-        this.createControlButtonsEvents();
+        this.listenCurrentPlayer();
     }
 
     /**
@@ -203,6 +204,18 @@ public class GameController extends BaseController {
     }
 
     /**
+     * Quits the game after the user confirmed his choice
+     */
+    @FXML
+    protected void handleQuitGame() {
+        Optional<ButtonType> quitDialog = this.showQuitConfirmationDialog();
+
+        if (quitDialog.isPresent() && quitDialog.get() == ButtonType.OK) {
+            this.scrabble.showHome();
+        }
+    }
+
+    /**
      * Refreshes the Scrabble interface, to keep it synchronized with the actual Scrabble state
      */
     protected void refreshScrabbleInterface() {
@@ -243,10 +256,22 @@ public class GameController extends BaseController {
     }
 
     /**
+     * Shows a confirmation dialog when the player is leaving the game
+     */
+    protected Optional<ButtonType> showQuitConfirmationDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(this.scrabble.getI18nMessages().getString("confirmation"));
+        alert.setHeaderText(this.scrabble.getI18nMessages().getString("quitConfirmationDialogTitle"));
+        alert.setContentText(this.scrabble.getI18nMessages().getString("quitConfirmationDialogInformation"));
+
+        return alert.showAndWait();
+    }
+
+    /**
      * Initializes the letters of the temporary board
      */
     protected void initializePlayedLetters() {
-        this.playedLetters = new HashMap<>();
+        this.playedLetters = new TreeMap<>();
     }
 
     /**
@@ -288,7 +313,7 @@ public class GameController extends BaseController {
                     DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
                         square.getChildren().add((Node) event.getGestureSource());
                         this.playerLettersContainer.getChildren().remove(event.getGestureSource());
-                        this.playedLetters.put(Arrays.asList(finalI, finalJ), letter);
+                        this.playedLetters.put(new BoardPosition((short) finalI, (short) finalJ), letter);
                     });
                 } else {
                     Templates.displayLetter(square, this.scrabble.getBoard().getLetters().get(i).get(j), false);
@@ -304,13 +329,74 @@ public class GameController extends BaseController {
      */
     protected void displayPlayerLettersList() {
         // Initializes the letters list
-        Templates.displayLetters(this.playerLettersContainer, this.scrabble.getHumanPlayer().getLetters(), true);
+        Templates.displayLetters(this.playerLettersContainer, this.scrabble.getCurrentPlayer().getLetters(), true);
     }
 
     /**
-     * Handles events of the action buttons
+     * Handles events of the action buttons and manages the refresh of the interface according to the current player
      */
-    protected void createControlButtonsEvents() {
-        this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> this.controlButtons.setDisable(newValue != this.scrabble.getHumanPlayer()));
+    protected void listenCurrentPlayer() {
+        this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
+            this.controlButtons.setDisable(!newValue.isHuman());
+
+            if (newValue.isHuman()) {
+                this.refreshScrabbleInterface();
+            }
+        });
+    }
+
+    /**
+     * This class is used to send a board position to other objects during turn validation only, and only in this case.
+     *
+     * @author Christopher Anciaux
+     */
+    public static class BoardPosition implements Comparable<BoardPosition> {
+        protected short line;
+
+        protected short column;
+
+        public BoardPosition(short line, short column) {
+            this.line = line;
+            this.column = column;
+        }
+
+        public short getLine() {
+            return line;
+        }
+
+        public short getColumn() {
+            return column;
+        }
+
+        @Override
+        public int compareTo(BoardPosition o) {
+            if (o.getLine() == this.getLine()) {
+                return this.getColumn() - o.getColumn();
+            }
+
+            return this.getLine() - o.getLine();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            BoardPosition that = (BoardPosition) o;
+
+            return line == that.line && column == that.column;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) line;
+            result = 31 * result + (int) column;
+
+            return result;
+        }
     }
 }

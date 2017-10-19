@@ -1,10 +1,11 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
+import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.model.Square;
 import javafx.collections.ObservableList;
 
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * <p>
@@ -42,7 +43,7 @@ public interface BoardInterface {
      */
     List<List<LetterInterface>> getLetters();
 
-    void addLetters(Map<List<Integer>, LetterInterface> letters);
+    void addLetters(SortedMap<GameController.BoardPosition, LetterInterface> letters);
 
     /**
      * @return true if the board hasn't any letter in it, false otherwise

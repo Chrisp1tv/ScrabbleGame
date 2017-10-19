@@ -42,4 +42,6 @@ public interface PlayerInterface {
     void removeLetter(short index);
 
     ObservableList<LetterInterface> lettersProperty();
+
+    boolean isHuman();
 }

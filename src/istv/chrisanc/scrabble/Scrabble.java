@@ -38,9 +38,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.SortedMap;
 
 /**
  * This class represents the "main" class of the ScrabbleGame. It starts, manages and ends the game.
@@ -255,9 +255,8 @@ public class Scrabble extends Application {
      *
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
-    public void playLetters(Map<List<Integer>, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
-        System.out.println(playedLetters);
-        if (!PlayedWordsValidityManager.playedWordsAreValid(this.board.getLetters(), playedLetters)) {
+    public void playLetters(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
+        if (!PlayedWordsValidityManager.playedWordsAreValid(this.board, playedLetters)) {
             throw new InvalidPlayedTurnException();
         }
 
@@ -277,7 +276,7 @@ public class Scrabble extends Application {
             }
         }
 
-        List<WordInterface> playedWords = PlayedWordsValidityManager.findPlayedWords(this.board.getLetters(), playedLetters, this.getCurrentPlayer());
+        List<WordInterface> playedWords = PlayedWordsValidityManager.findPlayedWords(this.board, playedLetters, this.getCurrentPlayer());
 
         this.board.addLetters(playedLetters);
         this.board.addWords(playedWords);
@@ -329,7 +328,7 @@ public class Scrabble extends Application {
 
         this.currentPlayer.setValue(this.getPlayers().get(currentPlayerIndex));
 
-        if (this.getHumanPlayer() != this.getCurrentPlayer()) {
+        if (!this.getCurrentPlayer().isHuman()) {
             // TODO: ask IA to play
         }
     }
@@ -460,13 +459,6 @@ public class Scrabble extends Application {
 
     public SimpleObjectProperty<PlayerInterface> currentPlayerProperty() {
         return this.currentPlayer;
-    }
-
-    /**
-     * @return The human {@link PlayerInterface} who plays the game
-     */
-    public PlayerInterface getHumanPlayer() {
-        return this.players.get(0);
     }
 
     public BagInterface getBag() {
