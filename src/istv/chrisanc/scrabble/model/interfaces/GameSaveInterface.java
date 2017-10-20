@@ -8,9 +8,9 @@ import java.util.List;
  * @author Christopher Anciaux
  */
 public interface GameSaveInterface {
-    short getDictionaryIdentifier();
+    LanguageInterface getLanguage();
 
-    void setDictionaryIdentifier(short dictionaryIdentifier);
+    void setLanguage(LanguageInterface language);
 
     BoardInterface getBoard();
 

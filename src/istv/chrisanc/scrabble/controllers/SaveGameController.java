@@ -57,8 +57,7 @@ public class SaveGameController extends BaseController {
      */
     @FXML
     protected void handleOk() {
-        // TODO: (not mandatory for the project) handle saving of non-french game
-        GameSaveInterface gameSave = new GameSave((short) 0, this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getCurrentPlayer(), this.scrabble.getBag());
+        GameSaveInterface gameSave = new GameSave(this.scrabble.getLanguage(), this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getCurrentPlayer(), this.scrabble.getBag());
 
         try {
             // If the user entered a filename

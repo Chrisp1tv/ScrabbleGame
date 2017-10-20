@@ -8,6 +8,7 @@ import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.exceptions.NonExistentWordException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
+import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
@@ -15,15 +16,14 @@ import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
-import istv.chrisanc.scrabble.model.letters.Joker;
+import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import istv.chrisanc.scrabble.utils.PlayedWordsValidityManager;
 import istv.chrisanc.scrabble.utils.ScoreManager;
-import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -59,7 +59,7 @@ public class Scrabble extends Application {
 
     protected BorderPane rootLayout;
 
-    protected DictionaryInterface dictionary;
+    protected LanguageInterface language;
 
     protected BoardInterface board;
 
@@ -192,10 +192,7 @@ public class Scrabble extends Application {
      */
     public void resumeGameFromSaveAndShowGame(GameSaveInterface gameSave) {
         try {
-            DictionaryFactory dictionaryFactory = new DictionaryFactory();
-            DictionaryInterface dictionary = dictionaryFactory.getDictionary(gameSave.getDictionaryIdentifier());
-
-            this.initializeScrabbleGame(dictionary, gameSave.getPlayers(), gameSave.getCurrentPlayer(), gameSave.getBag(), gameSave.getBoard());
+            this.initializeScrabbleGame(gameSave.getLanguage(), gameSave.getPlayers(), gameSave.getCurrentPlayer(), gameSave.getBag(), gameSave.getBoard());
 
             this.showGame();
         } catch (ErrorLoadingDictionaryException e) {
@@ -260,7 +257,7 @@ public class Scrabble extends Application {
             throw new InvalidPlayedTurnException();
         }
 
-        for(LetterInterface playedLetter : playedLetters.values()) {
+        for (LetterInterface playedLetter : playedLetters.values()) {
             if (!(playedLetter instanceof Joker)) {
                 continue;
             }
@@ -269,7 +266,7 @@ public class Scrabble extends Application {
 
             try {
                 // noinspection OptionalGetWithoutIsPresent
-                ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase()));
+                ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase(), this.getLanguage().getClass()));
             } catch (Exception e) {
                 throw new InvalidPlayedTurnException();
             }
@@ -361,7 +358,7 @@ public class Scrabble extends Application {
             for (PlayerInterface player : this.getPlayers()) {
                 if (this.getCurrentPlayer() != player) {
                     // We subtract the values of the letters of all other players to their respective score
-                    for (LetterInterface letter: player.getLetters()) {
+                    for (LetterInterface letter : player.getLetters()) {
                         player.decreaseScore(letter.getValue());
                         pointsSumToGiveToCurrentPlayer += letter.getValue();
                     }
@@ -415,30 +412,30 @@ public class Scrabble extends Application {
     }
 
     /**
-     * @see #initializeScrabbleGame(DictionaryInterface, List, PlayerInterface, BagInterface, BoardInterface)
+     * @see #initializeScrabbleGame(LanguageInterface, List, PlayerInterface, BagInterface, BoardInterface)
      */
-    protected void initializeScrabbleGame(DictionaryInterface dictionary, List<PlayerInterface> players, PlayerInterface currentPlayer) {
-        this.initializeScrabbleGame(dictionary, players, currentPlayer, new Bag(), new Board());
+    protected void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players, PlayerInterface currentPlayer) throws InitializationBagException {
+        this.initializeScrabbleGame(language, players, currentPlayer, new Bag(language.getBagLettersDistribution()), new Board());
     }
 
     /**
      * Initializes the ScrabbleGame with all the needed information
      *
-     * @param dictionary The dictionary to be used during the game
-     * @param players    The players
-     * @param bag        The bag
-     * @param board      The board
+     * @param language The language to be used during the game
+     * @param players  The players
+     * @param bag      The bag
+     * @param board    The board
      */
-    protected void initializeScrabbleGame(DictionaryInterface dictionary, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, BoardInterface board) {
-        this.dictionary = dictionary;
+    protected void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, BoardInterface board) {
+        this.language = language;
         this.board = board;
         this.players = players;
         this.currentPlayer = new SimpleObjectProperty<>(currentPlayer);
         this.bag = bag;
     }
 
-    public DictionaryInterface getDictionary() {
-        return dictionary;
+    public LanguageInterface getLanguage() {
+        return this.language;
     }
 
     public BoardInterface getBoard() {
