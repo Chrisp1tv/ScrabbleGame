@@ -6,6 +6,7 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,11 +18,11 @@ import java.util.Set;
  * @author Eguinane Chavatte
  */
 public class ScoreManager {
-    public static int getTurnScore(List<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board) {
+    public static int getTurnScore(Collection<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board) {
         return ScoreManager.getTurnScore(playedLetters, playedWords, board, true);
     }
 
-    public static int getTurnScore(List<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board, boolean updateMultipliers) {
+    public static int getTurnScore(Collection<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board, boolean updateMultipliers) {
         int i, j, turnScore = PlayerInterface.BASE_NUMBER_OF_LETTERS == playedLetters.size() ? 50 : 0;
         Set<SquareInterface> squaresToMakeUsed = new HashSet<>();
 

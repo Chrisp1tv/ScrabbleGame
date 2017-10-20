@@ -260,7 +260,6 @@ public class Scrabble extends Application {
             throw new InvalidPlayedTurnException();
         }
 
-        /* TODO: move this logic in the PlayedWordsValidityManager */
         for(LetterInterface playedLetter : playedLetters.values()) {
             if (!(playedLetter instanceof Joker)) {
                 continue;
@@ -281,10 +280,10 @@ public class Scrabble extends Application {
         this.board.addLetters(playedLetters);
         this.board.addWords(playedWords);
 
-        ScoreManager.updateScore(this.board, playedWords);
-
+        this.getCurrentPlayer().increaseScore(ScoreManager.getTurnScore(playedLetters.values(), playedWords, this.getBoard()));
         this.getCurrentPlayer().removeLetters(playedLetters.values());
         this.giveLettersToCurrentPlayerToFillHisRack();
+
         this.nextTurn();
     }
 
