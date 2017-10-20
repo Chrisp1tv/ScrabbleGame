@@ -1,155 +1,70 @@
 package istv.chrisanc.scrabble.utils;
 
-import java.util.List;
-
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
- * This class handles all the calculations of the {@link Player}'s score, and manages all score-relative logic.
+ * This class handles all the calculations of the player's score, and manages all score-relative logic.
  *
  * @author Christopher Anciaux
  * @author Eguinane Chavatte
  */
 public class ScoreManager {
-    public static int updateScore(List<WordInterface> playedWords, BoardInterface board) {
-    	int i,j,Somme=0;
-    	for(i=0;i<playedWords.size();i++){
-    		int wordMulti=1;
-    		int Score=0;
-    		for(j=0;j<playedWords.get(i).getLetters().size();j++){
-    			if(playedWords.get(i).isHorizontal()){
-    				if(board.getSquares()
-						.get(playedWords.get(i).getStartColumn()+j)
-						.get(playedWords.get(i).getStartLine()).isMultiplierUsed()==false)
-    				{	//Multiplier unused and Horizontal Word
-    					Score += ((int) playedWords.get(i).getLetters().get(j).getValue())
-    								*board.getSquares()
-    								.get(playedWords.get(i).getStartColumn()+j)
-    								.get(playedWords.get(i).getStartLine()).getLetterMultiplier();
-    					wordMulti *= board.getSquares()
-    								.get(playedWords.get(i).getStartColumn()+j)
-    								.get(playedWords.get(i).getStartLine()).getWordMultiplier();
-    				}else{//Multiplier used
-    					Score += ((int) playedWords.get(i).getLetters().get(j).getValue());
-    				}
-    			}else{	
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn())
-    						.get(playedWords.get(i).getStartLine()+j).isMultiplierUsed()==false)
-        				{	//Multiplier unused and Vertical word
-    						Score += ((int) playedWords.get(i).getLetters().get(j).getValue())
-    									*board.getSquares()
-    									.get(playedWords.get(i).getStartColumn())
-    									.get(playedWords.get(i).getStartLine()+j).getLetterMultiplier();
-        					wordMulti *= board.getSquares()
-        								.get(playedWords.get(i).getStartColumn())
-        								.get(playedWords.get(i).getStartLine()+j).getWordMultiplier();
-        				}else{//Multiplier used
-        					Score += ((int) playedWords.get(i).getLetters().get(j).getValue());
-    				}
-    			}
-    		}
-    		Somme += Score*wordMulti;
-    	}
-    	int nb=0;
-    	for(i=0;i<playedWords.size();i++){
-    		for(j=0;j<playedWords.get(i).getLetters().size();j++){
-    			if(playedWords.get(i).isHorizontal()){
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn()+j)
-    						.get(playedWords.get(i).getStartLine()).isMultiplierUsed()==false)
-        				{
-    						nb+=1;
-    						board.getSquares()
-    							.get(playedWords.get(i).getStartColumn()+j)
-    							.get(playedWords.get(i).getStartLine()).makeMultiplierUsed();
-        				}
-    			}else{
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn())
-    						.get(playedWords.get(i).getStartLine()+j).isMultiplierUsed()==false)
-        			{
-    					nb+=1;
-    					board.getSquares()
-							.get(playedWords.get(i).getStartColumn())
-							.get(playedWords.get(i).getStartLine()+j).makeMultiplierUsed();
-        			}
-    			}
-    		}
-    	}
-    	if(nb==7){
-    		Somme+=50;
-    	}
-    	return Somme;
+    public static int getTurnScore(List<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board) {
+        return ScoreManager.getTurnScore(playedLetters, playedWords, board, true);
     }
-    		/*
-    		*	that function is a specific ask from the IA's programming team to compare the best moves to do 
-    		*	this is like the updateScore function but it let the multipliers unchanged
-    		*/
-    public static int testScore(List<WordInterface> playedWords, BoardInterface board) {
-    	int i,j,Somme=0;
-    	for(i=0;i<playedWords.size();i++){
-    		int wordMulti=1;
-    		int Score=0;
-    		for(j=0;j<playedWords.get(i).getLetters().size();j++){
-    			if(playedWords.get(i).isHorizontal()){
-    				if(board.getSquares()
-						.get(playedWords.get(i).getStartColumn()+j)
-						.get(playedWords.get(i).getStartLine()).isMultiplierUsed()==false)
-    				{	//Multiplier unused and Horizontal Word
-    					Score += ((int) playedWords.get(i).getLetters().get(j).getValue())
-    								*board.getSquares()
-    								.get(playedWords.get(i).getStartColumn()+j)
-    								.get(playedWords.get(i).getStartLine()).getLetterMultiplier();
-    					wordMulti *= board.getSquares()
-    								.get(playedWords.get(i).getStartColumn()+j)
-    								.get(playedWords.get(i).getStartLine()).getWordMultiplier();
-    				}else{//Multiplier used
-    					Score += ((int) playedWords.get(i).getLetters().get(j).getValue());
-    				}
-    			}else{	
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn())
-    						.get(playedWords.get(i).getStartLine()+j).isMultiplierUsed()==false)
-        				{	//Multiplier unused and Vertical word
-    						Score += ((int) playedWords.get(i).getLetters().get(j).getValue())
-    									*board.getSquares()
-    									.get(playedWords.get(i).getStartColumn())
-    									.get(playedWords.get(i).getStartLine()+j).getLetterMultiplier();
-        					wordMulti *= board.getSquares()
-        								.get(playedWords.get(i).getStartColumn())
-        								.get(playedWords.get(i).getStartLine()+j).getWordMultiplier();
-        				}else{//Multiplier used
-        					Score += ((int) playedWords.get(i).getLetters().get(j).getValue());
-    				}
-    			}
-    		}
-    		Somme += Score*wordMulti;
-    	}
-    	int nb=0;
-    	for(i=0;i<playedWords.size();i++){
-    		for(j=0;j<playedWords.get(i).getLetters().size();j++){
-    			if(playedWords.get(i).isHorizontal()){
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn()+j)
-    						.get(playedWords.get(i).getStartLine()).isMultiplierUsed()==false)
-        			{
-    					nb+=1;
-    				}
-    			}else{
-    				if(board.getSquares()
-    						.get(playedWords.get(i).getStartColumn())
-    						.get(playedWords.get(i).getStartLine()+j).isMultiplierUsed()==false)
-        			{
-    					nb+=1;
-    				}
-    			}
-    		}
-    	}
-    	if(nb==7){
-    		Somme+=50;
-    	}
-    	return Somme;
+
+    public static int getTurnScore(List<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board, boolean updateMultipliers) {
+        int i, j, turnScore = PlayerInterface.BASE_NUMBER_OF_LETTERS == playedLetters.size() ? 50 : 0;
+        Set<SquareInterface> squaresToMakeUsed = new HashSet<>();
+
+        for (i = 0; i < playedWords.size(); i++) {
+            int currentWordMultiplier = 1, currentWordScore = 0;
+            WordInterface currentWord = playedWords.get(i);
+
+            for (j = 0; j < currentWord.getLetters().size(); j++) {
+                LetterInterface currentLetter = currentWord.getLetters().get(j);
+
+                if (currentWord.isHorizontal()) {
+                    if (!board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).isMultiplierUsed()) {
+                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).getLetterMultiplier();
+                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).getWordMultiplier();
+
+                        if (updateMultipliers) {
+                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()));
+                        }
+                    } else {
+                        currentWordScore += (currentLetter.getValue());
+                    }
+                } else {
+                    if (!board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).isMultiplierUsed()) {
+                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).getLetterMultiplier();
+                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).getWordMultiplier();
+
+                        if (updateMultipliers) {
+                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j));
+                        }
+                    } else {
+                        currentWordScore += currentLetter.getValue();
+                    }
+                }
+            }
+
+            turnScore += currentWordMultiplier * currentWordScore;
+        }
+
+        if (updateMultipliers) {
+            // Update all squares to make their multipliers used
+            squaresToMakeUsed.forEach(SquareInterface::makeMultiplierUsed);
+        }
+
+        return turnScore;
     }
 }

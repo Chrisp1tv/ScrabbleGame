@@ -1,7 +1,17 @@
 package istv.chrisanc.scrabble.tests.utils;
 
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.letters.*;
+import istv.chrisanc.scrabble.model.letters.A;
+import istv.chrisanc.scrabble.model.letters.C;
+import istv.chrisanc.scrabble.model.letters.D;
+import istv.chrisanc.scrabble.model.letters.E;
+import istv.chrisanc.scrabble.model.letters.H;
+import istv.chrisanc.scrabble.model.letters.I;
+import istv.chrisanc.scrabble.model.letters.J;
+import istv.chrisanc.scrabble.model.letters.Joker;
+import istv.chrisanc.scrabble.model.letters.N;
+import istv.chrisanc.scrabble.model.letters.R;
+import istv.chrisanc.scrabble.model.letters.U;
 import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
 import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
 import org.junit.BeforeClass;
