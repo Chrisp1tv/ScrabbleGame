@@ -1,18 +1,26 @@
 package istv.chrisanc.scrabble.tests.utils;
 
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.letters.*;
-import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.languages.French.French;
+import istv.chrisanc.scrabble.model.languages.French.letters.A;
+import istv.chrisanc.scrabble.model.languages.French.letters.C;
+import istv.chrisanc.scrabble.model.languages.French.letters.D;
+import istv.chrisanc.scrabble.model.languages.French.letters.E;
+import istv.chrisanc.scrabble.model.languages.French.letters.H;
+import istv.chrisanc.scrabble.model.languages.French.letters.I;
+import istv.chrisanc.scrabble.model.languages.French.letters.J;
+import istv.chrisanc.scrabble.model.languages.French.letters.N;
+import istv.chrisanc.scrabble.model.languages.French.letters.R;
+import istv.chrisanc.scrabble.model.languages.French.letters.U;
+import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Christopher Anciaux
@@ -64,8 +72,7 @@ public class DictionaryTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        DictionaryFactory dictionaryFactory = new DictionaryFactory();
-        DictionaryTest.dictionary = dictionaryFactory.getDictionary(DictionaryFactory.FRENCH);
+        DictionaryTest.dictionary = (new French()).getDictionary();
 
         DictionaryTest.lettersWithoutJoker = Arrays.asList(new A(), new H(), new C(), new N(), new E(), new D(), new I());
         DictionaryTest.lettersWithJoker = Arrays.asList(new A(), new H(), new C(), new J(), new Joker(), new D());

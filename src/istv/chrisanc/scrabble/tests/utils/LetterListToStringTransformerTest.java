@@ -1,9 +1,10 @@
 package istv.chrisanc.scrabble.tests.utils;
 
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.letters.A;
-import istv.chrisanc.scrabble.model.letters.C;
-import istv.chrisanc.scrabble.model.letters.W;
+import istv.chrisanc.scrabble.model.languages.French.French;
+import istv.chrisanc.scrabble.model.languages.French.letters.A;
+import istv.chrisanc.scrabble.model.languages.French.letters.C;
+import istv.chrisanc.scrabble.model.languages.French.letters.W;
 import istv.chrisanc.scrabble.utils.LetterListToStringTransformer;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class LetterListToStringTransformerTest {
 
     @Test
     public void reverseTransform() throws Exception {
-        List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW");
+        List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW", French.class);
 
         assertThat(letters, is(LetterListToStringTransformerTest.letters));
     }

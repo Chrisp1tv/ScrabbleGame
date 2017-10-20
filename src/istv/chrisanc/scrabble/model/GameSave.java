@@ -3,6 +3,7 @@ package istv.chrisanc.scrabble.model;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author Christopher Anciaux
  */
 public class GameSave implements Serializable, GameSaveInterface {
-    protected short dictionaryIdentifier;
+    protected LanguageInterface language;
 
     protected BoardInterface board;
 
@@ -24,20 +25,20 @@ public class GameSave implements Serializable, GameSaveInterface {
 
     protected BagInterface bag;
 
-    public GameSave(short dictionaryIdentifier, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag) {
-        this.dictionaryIdentifier = dictionaryIdentifier;
+    public GameSave(LanguageInterface language, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag) {
+        this.language = language;
         this.board = board;
         this.players = players;
         this.currentPlayer = currentPlayer;
         this.bag = bag;
     }
 
-    public short getDictionaryIdentifier() {
-        return dictionaryIdentifier;
+    public LanguageInterface getLanguage() {
+        return this.language;
     }
 
-    public void setDictionaryIdentifier(short dictionaryIdentifier) {
-        this.dictionaryIdentifier = dictionaryIdentifier;
+    public void setLanguage(LanguageInterface language) {
+        this.language = language;
     }
 
     public BoardInterface getBoard() {

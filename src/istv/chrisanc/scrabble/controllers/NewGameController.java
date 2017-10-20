@@ -5,7 +5,7 @@ import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictiona
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.Player;
-import istv.chrisanc.scrabble.utils.dictionaries.French;
+import istv.chrisanc.scrabble.model.languages.French.French;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

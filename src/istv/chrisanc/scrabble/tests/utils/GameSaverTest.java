@@ -5,12 +5,14 @@ import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.GameSave;
 import istv.chrisanc.scrabble.model.Player;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.model.letters.A;
-import istv.chrisanc.scrabble.model.letters.B;
-import istv.chrisanc.scrabble.model.letters.C;
-import istv.chrisanc.scrabble.model.letters.D;
-import istv.chrisanc.scrabble.model.letters.J;
+import istv.chrisanc.scrabble.model.languages.French.French;
+import istv.chrisanc.scrabble.model.languages.French.letters.A;
+import istv.chrisanc.scrabble.model.languages.French.letters.B;
+import istv.chrisanc.scrabble.model.languages.French.letters.C;
+import istv.chrisanc.scrabble.model.languages.French.letters.D;
+import istv.chrisanc.scrabble.model.languages.French.letters.J;
 import istv.chrisanc.scrabble.utils.GameSaver;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -58,11 +60,12 @@ public class GameSaverTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
+        LanguageInterface language = new French();
         PlayerInterface player = new Player("Christopher Anciaux", true);
         PlayerInterface player2 = new Player("AI", true);
         player.addLetters(Arrays.asList(new A(), new B(), new C(), new J()));
         player2.addLetters(Arrays.asList(new D(), new B(), new J(), new A()));
 
-        GameSaverTest.gameSave = new GameSave((short) 0, new Board(), Arrays.asList(player, player2), player, new Bag());
+        GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()));
     }
 }
