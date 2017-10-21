@@ -12,7 +12,7 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 public class LetterToStringTransformer {
     /**
      * Transforms a {@link LetterInterface} to a {@link String} object.
-     * This method isn't very useful but is implemented to keep a certain logic within the ccurrent lass.
+     * This method isn't very useful but is implemented to keep a certain logic within the current lass.
      *
      * @param letter The {@link LetterInterface} to be transformed into a {@link String}
      *
@@ -33,7 +33,7 @@ public class LetterToStringTransformer {
      */
     public static LetterInterface reverseTransform(String letter, Class<? extends LanguageInterface> language) throws LetterToStringTransformationException {
         try {
-            return (LetterInterface) Class.forName(language.getPackage() + ".letters." + letter).newInstance();
+            return (LetterInterface) Class.forName(language.getPackage().getName() + ".letters." + letter).newInstance();
         } catch (Exception e) {
             throw new LetterToStringTransformationException();
         }
