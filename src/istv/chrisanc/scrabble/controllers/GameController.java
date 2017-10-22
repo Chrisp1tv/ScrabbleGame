@@ -2,7 +2,6 @@ package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
-import istv.chrisanc.scrabble.exceptions.NonExistentWordException;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
@@ -112,7 +111,7 @@ public class GameController extends BaseController {
     protected void handleValidatePlayedLetters() {
         try {
             this.scrabble.playLetters(this.playedLetters);
-        } catch (InvalidPlayedTurnException | NonExistentWordException e) {
+        } catch (InvalidPlayedTurnException e) {
             this.showAlertOfInvalidTurn(e);
         }
 

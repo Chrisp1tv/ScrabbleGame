@@ -7,4 +7,8 @@ public class InvalidPlayedTurnException extends Exception {
     public InvalidPlayedTurnException() {
         super("exceptions.invalidPlayedTurn");
     }
+
+    public InvalidPlayedTurnException(String message) {
+        super(message);
+    }
 }

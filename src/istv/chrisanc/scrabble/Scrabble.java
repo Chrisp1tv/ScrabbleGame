@@ -6,7 +6,6 @@ import istv.chrisanc.scrabble.controllers.LoadGameController;
 import istv.chrisanc.scrabble.controllers.NewGameController;
 import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
-import istv.chrisanc.scrabble.exceptions.NonExistentWordException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
@@ -22,7 +21,7 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
-import istv.chrisanc.scrabble.utils.PlayedWordsValidityManager;
+import istv.chrisanc.scrabble.utils.PlayedTurnValidityChecker;
 import istv.chrisanc.scrabble.utils.ScoreManager;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
@@ -252,8 +251,8 @@ public class Scrabble extends Application {
      *
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
-    public void playLetters(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException, NonExistentWordException {
-        if (!PlayedWordsValidityManager.playedWordsAreValid(this.board, playedLetters)) {
+    public void playLetters(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
+        if (!PlayedTurnValidityChecker.playedWordsAreValid(this.board, playedLetters)) {
             throw new InvalidPlayedTurnException();
         }
 
@@ -272,7 +271,7 @@ public class Scrabble extends Application {
             }
         }
 
-        List<WordInterface> playedWords = PlayedWordsValidityManager.findPlayedWords(this.board, playedLetters, this.getCurrentPlayer());
+        List<WordInterface> playedWords = PlayedTurnValidityChecker.findPlayedWords(this.board, playedLetters, this.getCurrentPlayer());
 
         this.board.addLetters(playedLetters);
         this.board.addWords(playedWords);
