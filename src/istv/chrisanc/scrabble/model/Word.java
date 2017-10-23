@@ -7,6 +7,7 @@ import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class Word implements WordInterface, Serializable {
     protected PlayerInterface player;
 
-    protected List<LetterInterface> letters = new ArrayList<>();
+    protected List<LetterInterface> letters;
 
     protected boolean horizontal;
 
@@ -28,16 +29,11 @@ public class Word implements WordInterface, Serializable {
 
     protected short startColumn;
 
-    public Word(List<LetterInterface> letters, boolean horizontal, short startLine, short startColumn) {
-        this.letters = letters;
+    public Word(PlayerInterface player, Collection<LetterInterface> letters, boolean horizontal, short startLine, short startColumn) {
+        this.letters = new ArrayList<>(letters);
         this.horizontal = horizontal;
         this.startLine = startLine;
         this.startColumn = startColumn;
-    }
-
-    public Word(PlayerInterface player, List<LetterInterface> letters, boolean horizontal, short startLine, short startColumn) {
-        this(letters, horizontal, startLine, startColumn);
-
         this.player = player;
     }
 

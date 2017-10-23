@@ -252,10 +252,6 @@ public class Scrabble extends Application {
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
     public void playLetters(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
-        if (!PlayedTurnValidityChecker.playedWordsAreValid(this.board, playedLetters)) {
-            throw new InvalidPlayedTurnException();
-        }
-
         for (LetterInterface playedLetter : playedLetters.values()) {
             if (!(playedLetter instanceof Joker)) {
                 continue;
@@ -267,11 +263,11 @@ public class Scrabble extends Application {
                 // noinspection OptionalGetWithoutIsPresent
                 ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase(), this.getLanguage().getClass()));
             } catch (Exception e) {
-                throw new InvalidPlayedTurnException();
+                throw new InvalidPlayedTurnException("exceptions.invalidPlayedTurn.jokerValueNonExistent");
             }
         }
 
-        List<WordInterface> playedWords = PlayedTurnValidityChecker.findPlayedWords(this.board, playedLetters, this.getCurrentPlayer());
+        List<WordInterface> playedWords = PlayedTurnValidityChecker.findPlayedWords(this.getLanguage().getDictionary(), this.board, playedLetters, this.getCurrentPlayer());
 
         this.board.addLetters(playedLetters);
         this.board.addWords(playedWords);
