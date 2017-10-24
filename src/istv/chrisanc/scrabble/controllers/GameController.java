@@ -169,7 +169,7 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleSkipTurn() {
-        // TODO @Bouaggad Abdessamade
+        this.scrabble.nextTurn();
     }
 
     /**
