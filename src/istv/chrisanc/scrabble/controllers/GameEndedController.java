@@ -8,6 +8,8 @@ import java.util.List;
 
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * This is the controller which recaps the game, announces the winner, and redirects the user to the home if he wants to.
@@ -73,7 +75,14 @@ public class GameEndedController extends BaseController {
 
 		});
 
-		System.out.println("The Winner Is >> "+players.get(players.size()-1).getName());
+		//System.out.println("The Winner Is >> "+players.get(players.size()-1).getName());
+
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("CONGRATULATIONS !");
+		alert.setHeaderText(null);
+		alert.setContentText("The Winner Is >> "+players.get(players.size()-1).getName());
+
+		alert.showAndWait();
 
 
 	}
