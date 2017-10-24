@@ -19,6 +19,7 @@ public class GameEndedController extends BaseController {
 	protected void handleNewGame() {
 		this.scrabble.showNewGame();
 	}
+	
 
 	@FXML
 	protected void handleQuit() {

@@ -42,13 +42,13 @@ public class NewGameController extends BaseController {
 		if (username.getText().trim().isEmpty()) {
 			 Alert fail= new Alert(AlertType.INFORMATION);
 		        fail.setHeaderText("Attention");
-		        fail.setContentText("Veuillez Saisir Votre Nom Avant De Lancer La Partie SVP ! Merci De R�essayer");
+		        fail.setContentText("Veuillez Saisir Votre Nom Avant De Lancer La Partie SVP ! Merci De Le Saisir A Nouveau .");
 		        fail.showAndWait();
 		}
 		else if(username.getText().length()<3) {
 			Alert fail= new Alert(AlertType.INFORMATION);
 	        fail.setHeaderText("Attention");
-	        fail.setContentText("Votre Nom Doit Contenir Au Moins 3 Lettres ! Merci De R�essayer .");
+	        fail.setContentText("Votre Nom Doit Contenir Au Moins 3 Lettres ! Merci De Le Saisir A Nouveau .");
 	        fail.showAndWait();
 		}
 
@@ -78,8 +78,8 @@ public class NewGameController extends BaseController {
 	 */
 	@FXML
 	protected void handleCancelGame() {
-		// this.scrabble.showNewGame();
-		this.scrabble.cancelGame();
+		this.scrabble.showHome();
+		//this.scrabble.cancelGame();
 	}
 
 }
