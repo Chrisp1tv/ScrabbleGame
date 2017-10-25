@@ -17,8 +17,9 @@ import java.util.SortedMap;
 
 /**
  * <p>
- * This class manages the checking of a played words on the Scrabble game. It checks if played words on a turn are valid, that is
+ * This class manages the checking of played words on the Scrabble game. It checks if played words on a turn are valid, that is
  * to say if these words respect the Scrabble rules.
+ * TODO: Some optimization of the code is possible, would be interesting to do it once other tasks have been done
  *
  * @author Christopher Anciaux
  * @author Julien Basquin
@@ -59,7 +60,7 @@ abstract public class PlayedTurnValidityChecker {
                 throw new InvalidPlayedTurnException("exceptions.invalidPlayedTurn.playedLettersNotAdjacentToAlreadyPlayedLetters");
             }
 
-            //PlayedTurnValidityChecker.findAllFormedWords(dictionary, board, false, playedLetters, playedWords, player, horizontal);
+            PlayedTurnValidityChecker.findAllFormedWords(dictionary, board, false, playedLetters, playedWords, player, horizontal);
         }
 
         return playedWords;
@@ -202,49 +203,137 @@ abstract public class PlayedTurnValidityChecker {
             return;
         }
 
+
+        Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
+
         if (1 == playedLetters.size()) {
-            // Find all the words which might have been formed at left, top, right, bottom...
+            SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+
+            PlayedTurnValidityChecker.addHorizontalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
+            PlayedTurnValidityChecker.addVerticalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
         } else if (horizontal) {
-            // TODO: Buggy, find the problem :)
-            // First, add the horizontal word done with all the played letters (and eventually the letters already disposed on the board)
-            // Then, for each letter, find the vertical word which may have been formed
+            // First, we find the word formed on the actual line. Let's find the first letter of the word, which may be a letter played in a previous turn,
+            // and the last letter
 
-            // First, we find the word formed on the actual line. Let's find the first letter of the word, which may be a letter played in a previous turn
-            int currentColumnAtLeft = 0;
-            while (null != board.getLetters().get(playedLetters.firstKey().getLine()).get(playedLetters.firstKey().getColumn() - currentColumnAtLeft) && playedLetters.firstKey().getColumn() - currentColumnAtLeft >= 0) {
-                currentColumnAtLeft++;
+            int line = playedLetters.firstKey().getLine();
+            int currentColumn = 0;
+            while (playedLetters.firstKey().getColumn() - currentColumn - 1 >= 0 && null != board.getLetters().get(line).get(playedLetters.firstKey().getColumn() - currentColumn - 1)) {
+                currentColumn++;
             }
 
-            // Then, we construct the word
-            int startColumn = playedLetters.firstKey().getColumn() - currentColumnAtLeft, endColumn;
-            Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
-            LetterInterface currentLetter;
+            int startColumn = playedLetters.firstKey().getColumn() - currentColumn;
+
             List<LetterInterface> horizontalWordLetters = new ArrayList<>();
+            LetterInterface currentLetter;
+            currentColumn = startColumn;
+
             do {
-                if (null != board.getLetters().get(playedLetters.firstKey().getLine()).get(playedLetters.firstKey().getColumn() - currentColumnAtLeft)) {
-                    currentLetter = board.getLetters().get(playedLetters.firstKey().getLine()).get(playedLetters.firstKey().getColumn() - currentColumnAtLeft);
+                if (null != board.getLetters().get(line).get(currentColumn)) {
+                    currentLetter = board.getLetters().get(line).get(currentColumn);
+                } else if (playedLettersIterator.hasNext()) {
+                    SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+                    currentLetter = currentLetterEntry.getValue();
+
+                    PlayedTurnValidityChecker.addVerticalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
                 } else {
-                    if (playedLettersIterator.hasNext()) {
-                        currentLetter = playedLettersIterator.next().getValue();
-                        // Here, check for vertical words formed by new played letters
-                    } else {
-                        currentLetter = null;
-                    }
+                    break;
                 }
 
-                if (null == currentLetter) {
-                    // When there is no more letter, we can add the horizontal word to the played words, after we checked it really exists
-                    PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, horizontalWordLetters, true, playedLetters.firstKey().getLine(), (short) startColumn);
-                } else {
-                    horizontalWordLetters.add(currentLetter);
-                }
+                horizontalWordLetters.add(currentLetter);
+                currentColumn++;
+            } while (currentColumn < BoardInterface.BOARD_SIZE);
 
-                currentColumnAtLeft++;
-            }
-            while (null != currentLetter && playedLetters.firstKey().getColumn() - currentColumnAtLeft < BoardInterface.BOARD_SIZE);
+            PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, horizontalWordLetters, true, (short) line, (short) startColumn);
         } else {
-            // First, add the vertical word done with all the played letters (and eventually the letters already disposed on the board)
-            // Then, for each letter, find the horizontal word which may have been formed
+            int column = playedLetters.firstKey().getColumn();
+            int currentLine = 0;
+            while (playedLetters.firstKey().getLine() - currentLine - 1 >= 0 && null != board.getLetters().get(playedLetters.firstKey().getLine() - currentLine - 1).get(column)) {
+                currentLine++;
+            }
+
+            int startLine = playedLetters.firstKey().getLine() - currentLine;
+
+            List<LetterInterface> verticalWordLetters = new ArrayList<>();
+            LetterInterface currentLetter;
+            currentLine = startLine;
+
+            do {
+                if (null != board.getLetters().get(currentLine).get(column)) {
+                    currentLetter = board.getLetters().get(currentLine).get(column);
+                } else if (playedLettersIterator.hasNext()) {
+                    SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+                    currentLetter = currentLetterEntry.getValue();
+
+                    PlayedTurnValidityChecker.addHorizontalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
+                } else {
+                    break;
+                }
+
+                verticalWordLetters.add(currentLetter);
+                currentLine++;
+            } while (currentLine < BoardInterface.BOARD_SIZE);
+
+            PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, verticalWordLetters, true, (short) startLine, (short) column);
         }
+    }
+
+    protected static void addVerticalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
+        if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAbove(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterBelow(board, playedLetter)) {
+            return;
+        }
+
+        int currentLine = 0;
+        while (playedLetter.getKey().getLine() - currentLine - 1 >= 0 && null != board.getLetters().get(playedLetter.getKey().getLine() - currentLine - 1).get(playedLetter.getKey().getColumn())) {
+            currentLine++;
+        }
+
+        short startLine = (short) (playedLetter.getKey().getLine() - currentLine);
+        currentLine = startLine;
+        LetterInterface currentLetter;
+        List<LetterInterface> wordLetters = new ArrayList<>();
+        do {
+            if (null != board.getLetters().get(currentLine).get(playedLetter.getKey().getColumn())) {
+                currentLetter = board.getLetters().get(currentLine).get(playedLetter.getKey().getColumn());
+            } else if (playedLetter.getKey().getLine() == currentLine) {
+                currentLetter = playedLetter.getValue();
+            } else {
+                break;
+            }
+
+            wordLetters.add(currentLetter);
+            currentLine++;
+        } while (currentLine < BoardInterface.BOARD_SIZE);
+
+        PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, false, startLine, playedLetter.getKey().getColumn());
+    }
+
+    protected static void addHorizontalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
+        if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAtLeft(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterAtRight(board, playedLetter)) {
+            return;
+        }
+
+        int currentColumn = 0;
+        while (playedLetter.getKey().getColumn() - currentColumn - 1 >= 0 && null != board.getLetters().get(playedLetter.getKey().getLine()).get(playedLetter.getKey().getColumn() - currentColumn - 1)) {
+            currentColumn++;
+        }
+
+        short startColumn = (short) (playedLetter.getKey().getColumn() - currentColumn);
+        currentColumn = startColumn;
+        LetterInterface currentLetter;
+        List<LetterInterface> wordLetters = new ArrayList<>();
+        do {
+            if (null != board.getLetters().get(playedLetter.getKey().getLine()).get(currentColumn)) {
+                currentLetter = board.getLetters().get(playedLetter.getKey().getLine()).get(currentColumn);
+            } else if (playedLetter.getKey().getColumn() == currentColumn) {
+                currentLetter = playedLetter.getValue();
+            } else {
+                break;
+            }
+
+            wordLetters.add(currentLetter);
+            currentColumn++;
+        } while (currentColumn < BoardInterface.BOARD_SIZE);
+
+        PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, false, playedLetter.getKey().getLine(), startColumn);
     }
 }
