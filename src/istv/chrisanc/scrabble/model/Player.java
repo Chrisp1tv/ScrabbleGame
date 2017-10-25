@@ -103,7 +103,10 @@ public class Player implements PlayerInterface, Serializable {
 
     @Override
     public void removeLetters(Collection<LetterInterface> letters) {
-        this.letters.removeAll(letters);
+        // We don't use removeAll because removeAll use equals, and remove all occurrences of the same letter
+        for (LetterInterface letter : letters) {
+            this.letters.remove(letter);
+        }
     }
 
     /**
