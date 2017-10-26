@@ -1,10 +1,8 @@
 package istv.chrisanc.scrabble.tests.utils;
 
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.languages.French.French;
-import istv.chrisanc.scrabble.model.languages.French.letters.A;
-import istv.chrisanc.scrabble.model.languages.French.letters.C;
-import istv.chrisanc.scrabble.model.languages.French.letters.W;
 import istv.chrisanc.scrabble.utils.LetterListToStringTransformer;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,6 +18,8 @@ import static org.junit.Assert.assertThat;
  * @author Christopher Anciaux
  */
 public class LetterListToStringTransformerTest {
+    private static LanguageInterface language;
+
     private static List<LetterInterface> letters;
 
     @Test
@@ -31,13 +31,14 @@ public class LetterListToStringTransformerTest {
 
     @Test
     public void reverseTransform() throws Exception {
-        List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW", French.class);
+        List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW", new French());
 
         assertThat(letters, is(LetterListToStringTransformerTest.letters));
     }
 
     @BeforeClass
     public static void setUp() throws Exception {
-        LetterListToStringTransformerTest.letters = Arrays.asList(new A(), new C(), new W());
+        LetterListToStringTransformerTest.language = new French();
+        LetterListToStringTransformerTest.letters = Arrays.asList(language.getLetter("A"), language.getLetter("C"), language.getLetter("W"));
     }
 }

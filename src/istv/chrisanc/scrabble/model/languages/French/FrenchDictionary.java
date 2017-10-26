@@ -33,7 +33,7 @@ public class FrenchDictionary extends SerializedDictionary {
     }
 
     @Override
-    protected Class<? extends LanguageInterface> getLanguageClass() {
-        return French.class;
+    protected LanguageInterface getLanguage() {
+        return new French();
     }
 }

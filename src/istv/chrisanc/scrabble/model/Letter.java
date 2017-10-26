@@ -11,7 +11,21 @@ import java.io.Serializable;
  *
  * @author Christopher Anciaux
  */
-abstract public class Letter implements LetterInterface, Serializable {
+public class Letter implements LetterInterface, Serializable {
+    protected String letter;
+
+    protected byte value;
+
+    public Letter(String letter, byte value) {
+        this.letter = letter;
+        this.value = value;
+    }
+
+    @Override
+    public byte getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -37,6 +51,6 @@ abstract public class Letter implements LetterInterface, Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName();
+        return this.letter;
     }
 }

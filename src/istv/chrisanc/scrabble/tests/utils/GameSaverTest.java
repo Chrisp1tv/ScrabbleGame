@@ -8,12 +8,8 @@ import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.languages.French.French;
-import istv.chrisanc.scrabble.model.languages.French.letters.A;
-import istv.chrisanc.scrabble.model.languages.French.letters.B;
-import istv.chrisanc.scrabble.model.languages.French.letters.C;
-import istv.chrisanc.scrabble.model.languages.French.letters.D;
-import istv.chrisanc.scrabble.model.languages.French.letters.J;
 import istv.chrisanc.scrabble.utils.GameSaver;
+import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,8 +59,8 @@ public class GameSaverTest {
         LanguageInterface language = new French();
         PlayerInterface player = new Player("Christopher Anciaux", true);
         PlayerInterface player2 = new Player("AI", true);
-        player.addLetters(Arrays.asList(new A(), new B(), new C(), new J()));
-        player2.addLetters(Arrays.asList(new D(), new B(), new J(), new A()));
+        player.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("A", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("C", language), LetterToStringTransformer.reverseTransform("J", language)));
+        player2.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("D", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("J", language), LetterToStringTransformer.reverseTransform("C", language)));
 
         GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()));
     }

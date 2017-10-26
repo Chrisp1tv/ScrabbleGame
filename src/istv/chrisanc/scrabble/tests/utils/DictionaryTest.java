@@ -1,19 +1,10 @@
 package istv.chrisanc.scrabble.tests.utils;
 
-import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.languages.French.French;
-import istv.chrisanc.scrabble.model.languages.French.letters.A;
-import istv.chrisanc.scrabble.model.languages.French.letters.C;
-import istv.chrisanc.scrabble.model.languages.French.letters.D;
-import istv.chrisanc.scrabble.model.languages.French.letters.E;
-import istv.chrisanc.scrabble.model.languages.French.letters.H;
-import istv.chrisanc.scrabble.model.languages.French.letters.I;
-import istv.chrisanc.scrabble.model.languages.French.letters.J;
-import istv.chrisanc.scrabble.model.languages.French.letters.N;
-import istv.chrisanc.scrabble.model.languages.French.letters.R;
-import istv.chrisanc.scrabble.model.languages.French.letters.U;
 import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
+import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  * @author Christopher Anciaux
  */
 public class DictionaryTest {
-    private static DictionaryInterface dictionary;
+    private static LanguageInterface language;
 
     private static List<LetterInterface> lettersWithoutJoker;
 
@@ -40,46 +31,46 @@ public class DictionaryTest {
 
     @Test
     public void wordExists() throws Exception {
-        assertTrue(DictionaryTest.dictionary.wordExists("BONJOUR"));
-        assertFalse(DictionaryTest.dictionary.wordExists("NUMBER"));
+        assertTrue(DictionaryTest.language.getDictionary().wordExists("BONJOUR"));
+        assertFalse(DictionaryTest.language.getDictionary().wordExists("NUMBER"));
     }
 
     @Test
     public void findWordsHavingLettersWithoutJoker() {
-        List<String> foundWords = dictionary.findWordsHavingLetters(DictionaryTest.lettersWithoutJoker);
+        List<String> foundWords = DictionaryTest.language.getDictionary().findWordsHavingLetters(DictionaryTest.lettersWithoutJoker);
 
         assertEquals(88, foundWords.size());
     }
 
     @Test
     public void findWordsHavingLettersWithJoker() {
-        List<String> foundWords = dictionary.findWordsHavingLetters(DictionaryTest.lettersWithJoker);
+        List<String> foundWords = DictionaryTest.language.getDictionary().findWordsHavingLetters(DictionaryTest.lettersWithJoker);
 
         assertEquals(104, foundWords.size());
     }
 
     @Test
     public void findWordsStartingWithAndHavingLetters() {
-        List<String> foundWords = DictionaryTest.dictionary.findWordsStartingWithAndHavingLetters(3, 10, DictionaryTest.startingLetters, DictionaryTest.lettersWithoutJoker);
+        List<String> foundWords = DictionaryTest.language.getDictionary().findWordsStartingWithAndHavingLetters(3, 10, DictionaryTest.startingLetters, DictionaryTest.lettersWithoutJoker);
 
         assertEquals(16, foundWords.size());
     }
 
     @Test
     public void findWordsEndingWithAndHavingLetters() {
-        List<String> foundWords = DictionaryTest.dictionary.findWordsEndingWithAndHavingLetters(3, 10, DictionaryTest.endingLetters, DictionaryTest.lettersWithoutJoker);
+        List<String> foundWords = DictionaryTest.language.getDictionary().findWordsEndingWithAndHavingLetters(3, 10, DictionaryTest.endingLetters, DictionaryTest.lettersWithoutJoker);
 
         assertEquals(10, foundWords.size());
     }
 
     @BeforeClass
     public static void setUp() throws Exception {
-        DictionaryTest.dictionary = (new French()).getDictionary();
+        DictionaryTest.language = new French();
 
-        DictionaryTest.lettersWithoutJoker = Arrays.asList(new A(), new H(), new C(), new N(), new E(), new D(), new I());
-        DictionaryTest.lettersWithJoker = Arrays.asList(new A(), new H(), new C(), new J(), new Joker(), new D());
+        DictionaryTest.lettersWithoutJoker = Arrays.asList(LetterToStringTransformer.reverseTransform("A", DictionaryTest.language), LetterToStringTransformer.reverseTransform("H", DictionaryTest.language), LetterToStringTransformer.reverseTransform("C", DictionaryTest.language), LetterToStringTransformer.reverseTransform("N", DictionaryTest.language),LetterToStringTransformer.reverseTransform("E", DictionaryTest.language), LetterToStringTransformer.reverseTransform("D", DictionaryTest.language), LetterToStringTransformer.reverseTransform("I", DictionaryTest.language));
+        DictionaryTest.lettersWithJoker = Arrays.asList(LetterToStringTransformer.reverseTransform("A", DictionaryTest.language), LetterToStringTransformer.reverseTransform("H", DictionaryTest.language), LetterToStringTransformer.reverseTransform("C", DictionaryTest.language), LetterToStringTransformer.reverseTransform("J", DictionaryTest.language), new Joker(), LetterToStringTransformer.reverseTransform("D", DictionaryTest.language));
 
-        DictionaryTest.startingLetters = Arrays.asList(new C(), new H(), new I());
-        DictionaryTest.endingLetters = Arrays.asList(new E(), new U(), new R());
+        DictionaryTest.startingLetters = Arrays.asList(LetterToStringTransformer.reverseTransform("C", DictionaryTest.language), LetterToStringTransformer.reverseTransform("H", DictionaryTest.language), LetterToStringTransformer.reverseTransform("I", DictionaryTest.language));
+        DictionaryTest.endingLetters = Arrays.asList(LetterToStringTransformer.reverseTransform("E", DictionaryTest.language), LetterToStringTransformer.reverseTransform("U", DictionaryTest.language), LetterToStringTransformer.reverseTransform("R", DictionaryTest.language));
     }
 }

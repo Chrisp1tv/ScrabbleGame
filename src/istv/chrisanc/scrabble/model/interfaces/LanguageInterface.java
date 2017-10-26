@@ -11,4 +11,6 @@ public interface LanguageInterface {
     DictionaryInterface getDictionary();
 
     List<LetterInterface> getBagLettersDistribution() throws InitializationBagException;
+
+    LetterInterface getLetter(String letter);
 }

@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.utils;
 
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 
@@ -28,14 +27,10 @@ public class LetterToStringTransformer {
      * @param letter The {@link String} object to be transformed into a {@link LetterInterface}
      *
      * @return the transformed {@link String} to {@link LetterInterface}
-     * @throws LetterToStringTransformationException if the corresponding {@link LetterInterface} isn't found or an
+     * @throws IllegalArgumentException if the corresponding {@link LetterInterface} isn't found or an
      *                                               error occurred during creation of the letter
      */
-    public static LetterInterface reverseTransform(String letter, Class<? extends LanguageInterface> language) throws LetterToStringTransformationException {
-        try {
-            return (LetterInterface) Class.forName(language.getPackage().getName() + ".letters." + letter).newInstance();
-        } catch (Exception e) {
-            throw new LetterToStringTransformationException();
-        }
+    public static LetterInterface reverseTransform(String letter, LanguageInterface language) {
+        return language.getLetter(letter);
     }
 }

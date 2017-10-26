@@ -261,7 +261,7 @@ public class Scrabble extends Application {
 
             try {
                 // noinspection OptionalGetWithoutIsPresent
-                ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase(), this.getLanguage().getClass()));
+                ((Joker) playedLetter).setRepresentedLetter(LetterToStringTransformer.reverseTransform(representedLetterString.get().toUpperCase(), this.getLanguage()));
             } catch (Exception e) {
                 throw new InvalidPlayedTurnException("exceptions.invalidPlayedTurn.jokerValueNonExistent");
             }

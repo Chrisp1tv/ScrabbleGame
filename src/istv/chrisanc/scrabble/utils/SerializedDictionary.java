@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.utils;
 
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
@@ -143,14 +142,9 @@ abstract public class SerializedDictionary implements DictionaryInterface {
 
         // Then, we check if we have enough of each letter, among the given letters, to write the word
         for (Map.Entry<Character, Integer> nbCurrentLetter : nbLettersOfCurrentWord.entrySet()) {
-            try {
-                LetterInterface currentLetter = LetterToStringTransformer.reverseTransform(nbCurrentLetter.getKey().toString(), this.getLanguageClass());
+            LetterInterface currentLetter = LetterToStringTransformer.reverseTransform(nbCurrentLetter.getKey().toString(), this.getLanguage());
 
-                if (nbCurrentLetter.getValue() > nbLettersAvailable.get(currentLetter)) {
-                    wordMatches = false;
-                    break;
-                }
-            } catch (LetterToStringTransformationException e) {
+            if (nbCurrentLetter.getValue() > nbLettersAvailable.get(currentLetter)) {
                 wordMatches = false;
                 break;
             }
@@ -170,27 +164,22 @@ abstract public class SerializedDictionary implements DictionaryInterface {
 
         // Then, we check if we have enough of each letter, among the given letters, to write the word
         for (Map.Entry<Character, Integer> nbCurrentLetter : nbLettersOfCurrentWord.entrySet()) {
-            try {
-                LetterInterface currentLetter = LetterToStringTransformer.reverseTransform(nbCurrentLetter.getKey().toString(), this.getLanguageClass());
+            LetterInterface currentLetter = LetterToStringTransformer.reverseTransform(nbCurrentLetter.getKey().toString(), this.getLanguage());
 
-                if (nbLettersAvailable.containsKey(currentLetter)) {
-                    // If we get here, the letter has been recognized among the given letters
-                    if (nbCurrentLetter.getValue() > nbLettersAvailable.get(currentLetter)) {
-                        wordMatches = false;
-                        break;
-                    }
-                } else {
-                    // If we get here, the letter hasn't been recognized among the given letters so we use the Joker
-                    if (nbCurrentLetter.getValue() > nbJokersAvailable) {
-                        wordMatches = false;
-                        break;
-                    }
-
-                    nbJokersAvailable -= nbCurrentLetter.getValue();
+            if (nbLettersAvailable.containsKey(currentLetter)) {
+                // If we get here, the letter has been recognized among the given letters
+                if (nbCurrentLetter.getValue() > nbLettersAvailable.get(currentLetter)) {
+                    wordMatches = false;
+                    break;
                 }
-            } catch (LetterToStringTransformationException e) {
-                wordMatches = false;
-                break;
+            } else {
+                // If we get here, the letter hasn't been recognized among the given letters so we use the Joker
+                if (nbCurrentLetter.getValue() > nbJokersAvailable) {
+                    wordMatches = false;
+                    break;
+                }
+
+                nbJokersAvailable -= nbCurrentLetter.getValue();
             }
         }
 
@@ -261,5 +250,5 @@ abstract public class SerializedDictionary implements DictionaryInterface {
     /**
      * @return the language class associated with the language
      */
-    abstract protected Class<? extends LanguageInterface> getLanguageClass();
+    abstract protected LanguageInterface getLanguage();
 }

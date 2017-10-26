@@ -34,7 +34,7 @@ public class LetterListToStringTransformer {
      *
      * @return the transformed {@link String} to {@link List}
      */
-    public static List<LetterInterface> reverseTransform(String word, Class<? extends LanguageInterface> language) throws LetterToStringTransformationException {
+    public static List<LetterInterface> reverseTransform(String word, LanguageInterface language) throws LetterToStringTransformationException {
         List<LetterInterface> letters = new ArrayList<>();
 
         for (int i = 0; i < word.length(); i++) {

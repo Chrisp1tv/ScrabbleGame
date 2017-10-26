@@ -1,9 +1,11 @@
 package istv.chrisanc.scrabble.model.languages;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
+import istv.chrisanc.scrabble.model.Letter;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
 import istv.chrisanc.scrabble.utils.DictionaryFactory;
 
 import java.io.Serializable;
@@ -27,22 +29,35 @@ public abstract class Language implements LanguageInterface, Serializable {
 
     @Override
     public List<LetterInterface> getBagLettersDistribution() throws InitializationBagException {
-        try {
-            List<LetterInterface> letters = new ArrayList<>();
+        List<LetterInterface> letters = new ArrayList<>();
 
-            for (int i = 0; i < this.getLettersDistribution().length; i++) {
-                for (int numberOfCurrentLetter = 0; numberOfCurrentLetter < this.getLettersDistribution()[i]; numberOfCurrentLetter++) {
-                    letters.add(this.getLetters().get(i).newInstance());
-                }
+        for (int i = 0; i < this.getLettersDistribution().length; i++) {
+            for (int numberOfCurrentLetter = 0; numberOfCurrentLetter < this.getLettersDistribution()[i]; numberOfCurrentLetter++) {
+                letters.add(new Letter(this.getAuthorizedLetters().get(i), this.getLettersValues()[i]));
             }
-
-            return letters;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new InitializationBagException();
         }
+
+        for (int i = 0; i < this.getNumberOfJokers(); i++) {
+            letters.add(new Joker());
+        }
+
+        return letters;
     }
 
-    protected abstract List<Class<? extends LetterInterface>> getLetters();
+    @Override
+    public LetterInterface getLetter(String letter) {
+        if (!this.getAuthorizedLetters().contains(letter)) {
+            throw new IllegalArgumentException();
+        }
 
-    protected abstract int[] getLettersDistribution();
+        return new Letter(letter, this.getLettersValues()[this.getAuthorizedLetters().indexOf(letter)]);
+    }
+
+    protected abstract List<String> getAuthorizedLetters();
+
+    protected abstract byte[] getLettersValues();
+
+    protected abstract byte[] getLettersDistribution();
+
+    protected abstract byte getNumberOfJokers();
 }

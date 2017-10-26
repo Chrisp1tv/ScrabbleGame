@@ -7,6 +7,10 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
  * @author Christopher Anciaux
  */
 public class Joker extends Letter {
+    public Joker() {
+        super(" ", (byte) 0);
+    }
+
     /**
      * The letter represented by the joker
      */
@@ -23,7 +27,7 @@ public class Joker extends Letter {
     @Override
     public String toString() {
         if (null == representedLetter) {
-            return " ";
+            return this.letter;
         }
 
         return representedLetter.toString();
