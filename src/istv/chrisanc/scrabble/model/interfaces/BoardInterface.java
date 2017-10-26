@@ -2,7 +2,6 @@ package istv.chrisanc.scrabble.model.interfaces;
 
 import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.model.Square;
-import javafx.collections.ObservableList;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -36,7 +35,7 @@ public interface BoardInterface {
     /**
      * @return a read-only list of the board's squares
      */
-    ObservableList<ObservableList<SquareInterface>> getSquares();
+    List<List<SquareInterface>> getSquares();
 
     /**
      * @return a read-only list of the board's letters
@@ -53,5 +52,5 @@ public interface BoardInterface {
     /**
      * @return a read-only list of the played {@link WordInterface}
      */
-    ObservableList<WordInterface> getPlayedWords();
+    List<WordInterface> getPlayedWords();
 }

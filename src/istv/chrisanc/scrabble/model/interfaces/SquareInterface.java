@@ -18,5 +18,5 @@ public interface SquareInterface {
 
     boolean isMultiplierUsed();
 
-    SquareInterface makeMultiplierUsed();
+    void makeMultiplierUsed();
 }

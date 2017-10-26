@@ -3,12 +3,7 @@ package istv.chrisanc.scrabble.model;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -22,11 +17,7 @@ public class Square implements SquareInterface, Serializable {
     /**
      * This boolean states whether the multiplier has already been used or not
      */
-    protected BooleanProperty multiplierUsed;
-
-    public Square() {
-        this.initialize();
-    }
+    protected boolean multiplierUsed = false;
 
     /**
      * This number represents the multiplier applied to the won points (of the current square only !) when a letter of the word is placed on the actual square
@@ -61,32 +52,12 @@ public class Square implements SquareInterface, Serializable {
     }
 
     @Override
-    public boolean isMultiplierUsed() {
-        return multiplierUsed.get();
+    public void makeMultiplierUsed() {
+        this.multiplierUsed = true;
     }
 
     @Override
-    public SquareInterface makeMultiplierUsed() {
-        this.multiplierUsed.set(true);
-
-        return this;
-    }
-
-    protected void setMultiplierUsed(boolean multiplierUsed) {
-        this.multiplierUsed = new SimpleBooleanProperty();
-        this.multiplierUsed.set(multiplierUsed);
-    }
-
-    protected void initialize() {
-        this.multiplierUsed = new SimpleBooleanProperty(false);
-    }
-
-    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        objectOutputStream.writeBoolean(this.multiplierUsed.get());
-    }
-
-    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-        this.initialize();
-        this.setMultiplierUsed(objectInputStream.readBoolean());
+    public boolean isMultiplierUsed() {
+        return multiplierUsed;
     }
 }

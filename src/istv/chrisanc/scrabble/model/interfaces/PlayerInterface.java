@@ -1,7 +1,6 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.collections.ObservableList;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,8 +39,6 @@ public interface PlayerInterface {
     void removeLetters(Collection<LetterInterface> letters);
 
     void removeLetter(short index);
-
-    ObservableList<LetterInterface> lettersProperty();
 
     boolean isHuman();
 }

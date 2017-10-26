@@ -6,13 +6,9 @@ import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
-import istv.chrisanc.scrabble.utils.ui.DraggableLetterManager;
 import istv.chrisanc.scrabble.utils.ui.Templates;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,9 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -277,57 +271,13 @@ public class GameController extends BaseController {
      * Displays the board grid
      */
     protected void displayBoardGrid() {
-        ObservableList<ObservableList<SquareInterface>> squares = this.scrabble.getBoard().getSquares();
-
-        for (int i = 0, squaresSize = squares.size(); i < squaresSize; i++) {
-            ObservableList<SquareInterface> squaresLine = squares.get(i);
-
-            for (int j = 0, squaresLineSize = squaresLine.size(); j < squaresLineSize; j++) {
-                StackPane square;
-
-                if (null != squaresLine.get(j).getInformation()) {
-                    Text squareText = new Text(this.scrabble.getI18nMessages().getString(squaresLine.get(j).getInformation()));
-                    squareText.getStyleClass().add("square-legend");
-
-                    square = new StackPane(squareText);
-                } else {
-                    square = new StackPane();
-                }
-
-                square.getStyleClass().addAll("square", squaresLine.get(j).getCssClass());
-
-                // First line
-                if (0 == i) {
-                    square.getStyleClass().add("first-line");
-                }
-
-                // First column
-                if (0 == j) {
-                    square.getStyleClass().add("first-column");
-                }
-
-                if (null == this.scrabble.getBoard().getLetters().get(i).get(j)) {
-                    int finalI = i;
-                    int finalJ = j;
-                    DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
-                        square.getChildren().add((Node) event.getGestureSource());
-                        this.playerLettersContainer.getChildren().remove(event.getGestureSource());
-                        this.playedLetters.put(new BoardPosition((short) finalI, (short) finalJ), letter);
-                    });
-                } else {
-                    Templates.displayLetter(square, this.scrabble.getBoard().getLetters().get(i).get(j), false);
-                }
-
-                this.scrabbleGrid.add(square, j, i);
-            }
-        }
+        Templates.displayBoardGrid(this.scrabble.getI18nMessages(), this.scrabble.getBoard().getSquares(), this.playedLetters, this.scrabble.getBoard().getLetters(), this.playerLettersContainer, this.scrabbleGrid);
     }
 
     /**
      * Displays the player's letters
      */
     protected void displayPlayerLettersList() {
-        // Initializes the letters list
         Templates.displayLetters(this.playerLettersContainer, this.scrabble.getCurrentPlayer().getLetters(), true);
     }
 

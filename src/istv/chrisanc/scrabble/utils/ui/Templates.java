@@ -1,10 +1,14 @@
 package istv.chrisanc.scrabble.utils.ui;
 
+import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -15,6 +19,7 @@ import javafx.scene.text.TextFlow;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.SortedMap;
 
 /**
  * @author Christopher Anciaux
@@ -101,5 +106,50 @@ public class Templates {
         });
 
         parent.getChildren().add(playerContainer);
+    }
+
+    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid) {
+        for (int i = 0, squaresSize = squares.size(); i < squaresSize; i++) {
+            List<SquareInterface> squaresLine = squares.get(i);
+
+            for (int j = 0, squaresLineSize = squaresLine.size(); j < squaresLineSize; j++) {
+                StackPane square;
+
+                if (null != squaresLine.get(j).getInformation()) {
+                    Text squareText = new Text(i18nMessages.getString(squaresLine.get(j).getInformation()));
+                    squareText.getStyleClass().add("square-legend");
+
+                    square = new StackPane(squareText);
+                } else {
+                    square = new StackPane();
+                }
+
+                square.getStyleClass().addAll("square", squaresLine.get(j).getCssClass());
+
+                // First line
+                if (0 == i) {
+                    square.getStyleClass().add("first-line");
+                }
+
+                // First column
+                if (0 == j) {
+                    square.getStyleClass().add("first-column");
+                }
+
+                if (null == boardLetters.get(i).get(j)) {
+                    int finalI = i;
+                    int finalJ = j;
+                    DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
+                        square.getChildren().add((Node) event.getGestureSource());
+                        playerLettersContainer.getChildren().remove(event.getGestureSource());
+                        playedLetters.put(new GameController.BoardPosition((short) finalI, (short) finalJ), letter);
+                    });
+                } else {
+                    Templates.displayLetter(square, boardLetters.get(i).get(j), false);
+                }
+
+                scrabbleGrid.add(square, j, i);
+            }
+        }
     }
 }

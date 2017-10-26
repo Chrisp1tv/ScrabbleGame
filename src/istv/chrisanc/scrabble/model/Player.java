@@ -5,18 +5,15 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -29,7 +26,7 @@ public class Player implements PlayerInterface, Serializable {
     /**
      * The name of the player
      */
-    protected StringProperty name;
+    protected String name;
 
     /**
      * The score of the player. The default value is 0, as a player begins the game without any point
@@ -39,7 +36,7 @@ public class Player implements PlayerInterface, Serializable {
     /**
      * The letters owned by the player in his rack/hands during the game. He can't have more than 7 letters.
      */
-    protected ObservableList<LetterInterface> letters;
+    protected List<LetterInterface> letters;
 
     /**
      * If the player is a human player, the value is set to true. False otherwise
@@ -53,11 +50,11 @@ public class Player implements PlayerInterface, Serializable {
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
-        this.name.set(name);
+        this.name = name;
     }
 
     public String getName() {
-        return name.get();
+        return this.name;
     }
 
     @Override
@@ -85,7 +82,7 @@ public class Player implements PlayerInterface, Serializable {
      */
     @Override
     public List<LetterInterface> getLetters() {
-        return FXCollections.unmodifiableObservableList(this.letters);
+        return Collections.unmodifiableList(this.letters);
     }
 
     /**
@@ -126,17 +123,12 @@ public class Player implements PlayerInterface, Serializable {
     }
 
     @Override
-    public ObservableList<LetterInterface> lettersProperty() {
-        return letters;
-    }
-
-    @Override
     public boolean isHuman() {
         return this.human;
     }
 
     protected void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
     protected void setScore(int score) {
@@ -148,16 +140,15 @@ public class Player implements PlayerInterface, Serializable {
     }
 
     protected void initialize() {
-        this.name = new SimpleStringProperty();
+        this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
-        this.letters = FXCollections.observableArrayList();
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.writeBoolean(this.human);
-        objectOutputStream.writeObject(this.name.getValue());
+        objectOutputStream.writeObject(this.name);
         objectOutputStream.writeInt(this.score.getValue());
-        objectOutputStream.writeObject(this.letters.stream().collect(Collectors.toList()));
+        objectOutputStream.writeObject(this.letters);
     }
 
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {

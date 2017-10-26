@@ -10,17 +10,13 @@ import istv.chrisanc.scrabble.model.squares.Pink;
 import istv.chrisanc.scrabble.model.squares.Red;
 import istv.chrisanc.scrabble.model.squares.SkyBlue;
 import istv.chrisanc.scrabble.model.squares.Star;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -35,22 +31,21 @@ public class Board implements BoardInterface, Serializable {
      * The first index represents the lines, the second the columns.
      * There are 15 lines, and 15 columns.
      */
-    protected ObservableList<ObservableList<SquareInterface>> squares;
+    protected List<List<SquareInterface>> squares = new ArrayList<>();
 
     /**
      * All the {@link LetterInterface} placed on the {@link SquareInterface}. The indexes represent the position of the {@link LetterInterface} on the {@link Board}.
      * The first index represents the lines, the second the columns.
      * There are 15 lines, and 15 columns.
      */
-    protected List<List<LetterInterface>> letters;
+    protected List<List<LetterInterface>> letters = new ArrayList<>();
 
     /**
      * All the {@link WordInterface} placed on the {@link Board}.
      */
-    protected ObservableList<WordInterface> playedWords;
+    protected List<WordInterface> playedWords = new ArrayList<>();
 
     public Board() {
-        this.initialize();
         this.buildSquaresList();
         this.buildLettersList();
     }
@@ -59,8 +54,8 @@ public class Board implements BoardInterface, Serializable {
      * @return a read-only list of the board's squares
      */
     @Override
-    public ObservableList<ObservableList<SquareInterface>> getSquares() {
-        return FXCollections.unmodifiableObservableList(this.squares);
+    public List<List<SquareInterface>> getSquares() {
+        return this.squares;
     }
 
     @Override
@@ -89,8 +84,8 @@ public class Board implements BoardInterface, Serializable {
     }
 
     @Override
-    public ObservableList<WordInterface> getPlayedWords() {
-        return FXCollections.unmodifiableObservableList(this.playedWords);
+    public List<WordInterface> getPlayedWords() {
+        return Collections.unmodifiableList(this.playedWords);
     }
 
     /**
@@ -107,36 +102,30 @@ public class Board implements BoardInterface, Serializable {
         this.playedWords.addAll(words);
     }
 
-    protected void initialize() {
-        this.squares = FXCollections.observableArrayList();
-        this.letters = FXCollections.observableArrayList();
-        this.playedWords = FXCollections.observableArrayList();
-    }
-
     /**
      * Builds the {@link SquareInterface}'s list according to the Scrabble rules.
      */
     protected void buildSquaresList() {
-        this.squares.addAll(
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList(),
-                FXCollections.observableArrayList()
-        );
+        this.squares.addAll(Arrays.asList(
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>()
+        ));
 
         // Line 1
-        this.squares.get(0).addAll(
+        this.squares.get(0).addAll(Arrays.asList(
                 new Red(),
                 new Square(),
                 new Square(),
@@ -152,10 +141,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new Red()
-        );
+        ));
 
         // Line 2
-        this.squares.get(1).addAll(
+        this.squares.get(1).addAll(Arrays.asList(
                 new Square(),
                 new Pink(),
                 new Square(),
@@ -171,10 +160,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Pink(),
                 new Square()
-        );
+        ));
 
         // Line 3
-        this.squares.get(2).addAll(
+        this.squares.get(2).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new Pink(),
@@ -190,10 +179,10 @@ public class Board implements BoardInterface, Serializable {
                 new Pink(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 4
-        this.squares.get(3).addAll(
+        this.squares.get(3).addAll(Arrays.asList(
                 new SkyBlue(),
                 new Square(),
                 new Square(),
@@ -209,10 +198,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new SkyBlue()
-        );
+        ));
 
         // Line 5
-        this.squares.get(4).addAll(
+        this.squares.get(4).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new Square(),
@@ -228,10 +217,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 6
-        this.squares.get(5).addAll(
+        this.squares.get(5).addAll(Arrays.asList(
                 new Square(),
                 new DarkBlue(),
                 new Square(),
@@ -247,10 +236,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new DarkBlue(),
                 new Square()
-        );
+        ));
 
         // Line 7
-        this.squares.get(6).addAll(
+        this.squares.get(6).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new SkyBlue(),
@@ -266,10 +255,10 @@ public class Board implements BoardInterface, Serializable {
                 new SkyBlue(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 8
-        this.squares.get(7).addAll(
+        this.squares.get(7).addAll(Arrays.asList(
                 new Red(),
                 new Square(),
                 new Square(),
@@ -285,10 +274,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new Red()
-        );
+        ));
 
         // Line 9
-        this.squares.get(8).addAll(
+        this.squares.get(8).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new SkyBlue(),
@@ -304,10 +293,10 @@ public class Board implements BoardInterface, Serializable {
                 new SkyBlue(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 10
-        this.squares.get(9).addAll(
+        this.squares.get(9).addAll(Arrays.asList(
                 new Square(),
                 new DarkBlue(),
                 new Square(),
@@ -323,10 +312,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new DarkBlue(),
                 new Square()
-        );
+        ));
 
         // Line 11
-        this.squares.get(10).addAll(
+        this.squares.get(10).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new Square(),
@@ -342,10 +331,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 12
-        this.squares.get(11).addAll(
+        this.squares.get(11).addAll(Arrays.asList(
                 new SkyBlue(),
                 new Square(),
                 new Square(),
@@ -361,10 +350,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new SkyBlue()
-        );
+        ));
 
         // Line 13
-        this.squares.get(12).addAll(
+        this.squares.get(12).addAll(Arrays.asList(
                 new Square(),
                 new Square(),
                 new Pink(),
@@ -380,10 +369,10 @@ public class Board implements BoardInterface, Serializable {
                 new Pink(),
                 new Square(),
                 new Square()
-        );
+        ));
 
         // Line 14
-        this.squares.get(13).addAll(
+        this.squares.get(13).addAll(Arrays.asList(
                 new Square(),
                 new Pink(),
                 new Square(),
@@ -399,10 +388,10 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Pink(),
                 new Square()
-        );
+        ));
 
         // Line 15
-        this.squares.get(14).addAll(
+        this.squares.get(14).addAll(Arrays.asList(
                 new Red(),
                 new Square(),
                 new Square(),
@@ -418,7 +407,7 @@ public class Board implements BoardInterface, Serializable {
                 new Square(),
                 new Square(),
                 new Red()
-        );
+        ));
     }
 
     /**
@@ -426,42 +415,11 @@ public class Board implements BoardInterface, Serializable {
      */
     protected void buildLettersList() {
         for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
-            this.letters.add(i, FXCollections.observableArrayList());
+            this.letters.add(i, new ArrayList<>());
 
             for (int j = 0; j < BoardInterface.BOARD_SIZE; j++) {
                 this.letters.get(i).add(null);
             }
         }
-    }
-
-    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        SquareInterface[][] squares = new SquareInterface[BoardInterface.BOARD_SIZE][BoardInterface.BOARD_SIZE];
-        LetterInterface[][] letters = new LetterInterface[BoardInterface.BOARD_SIZE][BoardInterface.BOARD_SIZE];
-
-        for(int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
-            for (int j = 0; j < BoardInterface.BOARD_SIZE; j++) {
-                squares[i][j] = this.squares.get(i).get(j);
-                letters[i][j] = this.letters.get(i).get(j);
-            }
-        }
-
-        objectOutputStream.writeObject(squares);
-        objectOutputStream.writeObject(letters);
-        objectOutputStream.writeObject(this.playedWords.stream().collect(Collectors.toList()));
-    }
-
-    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-        this.initialize();
-
-        SquareInterface[][] squares = (SquareInterface[][]) objectInputStream.readObject();
-        LetterInterface[][] letters = (LetterInterface[][]) objectInputStream.readObject();
-
-        for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
-            this.squares.add(i, FXCollections.observableArrayList(squares[i]));
-            this.letters.add(i, FXCollections.observableArrayList(letters[i]));
-        }
-
-        List<WordInterface> playedWords = (List<WordInterface>) objectInputStream.readObject();
-        this.playedWords.addAll(playedWords);
     }
 }

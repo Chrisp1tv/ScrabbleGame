@@ -68,4 +68,30 @@ public class ScoreManager {
 
         return turnScore;
     }
+
+    public static void updateScoreOnceBagIsEmptyAndOnePlayerUsedAllHisLetters(List<PlayerInterface> players, PlayerInterface currentPlayer) {
+        int pointsSumToGiveToCurrentPlayer = 0;
+
+        for (PlayerInterface player : players) {
+            if (currentPlayer != player) {
+                // We subtract the values of the letters of all other players to their respective score
+                for (LetterInterface letter : player.getLetters()) {
+                    player.decreaseScore(letter.getValue());
+                    pointsSumToGiveToCurrentPlayer += letter.getValue();
+                }
+            }
+
+            // We add all the points of the other players to the current player
+            currentPlayer.increaseScore(pointsSumToGiveToCurrentPlayer);
+        }
+    }
+
+    public static void updateScoreAfterPlayersSkippedTheirTurnsTooManyTimes(List<PlayerInterface> players) {
+        // We subtract the letters values of each player to its total points
+        for (PlayerInterface player : players) {
+            for (LetterInterface letter : player.getLetters()) {
+                player.decreaseScore(letter.getValue());
+            }
+        }
+    }
 }

@@ -348,32 +348,14 @@ public class Scrabble extends Application {
     protected boolean gameIsFinished() {
         // If the current player has no more letter and the bag is empty
         if (this.getCurrentPlayer().getLetters().isEmpty() && this.getBag().isEmpty()) {
-            int pointsSumToGiveToCurrentPlayer = 0;
-
-            for (PlayerInterface player : this.getPlayers()) {
-                if (this.getCurrentPlayer() != player) {
-                    // We subtract the values of the letters of all other players to their respective score
-                    for (LetterInterface letter : player.getLetters()) {
-                        player.decreaseScore(letter.getValue());
-                        pointsSumToGiveToCurrentPlayer += letter.getValue();
-                    }
-                }
-
-                // We add all the points of the other players to the current player
-                this.getCurrentPlayer().increaseScore(pointsSumToGiveToCurrentPlayer);
-            }
+            ScoreManager.updateScoreOnceBagIsEmptyAndOnePlayerUsedAllHisLetters(this.getPlayers(), this.getCurrentPlayer());
 
             return true;
         }
 
         // If the players skipped their turns too many times, the game stops
         if (this.getPlayers().size() * Scrabble.MAX_SKIPPED_TURNS_PER_USER <= this.consecutiveTurnsSkipped) {
-            // We subtract the letters values of each player to its total points
-            for (PlayerInterface player : this.players) {
-                for (LetterInterface letter : player.getLetters()) {
-                    player.decreaseScore(letter.getValue());
-                }
-            }
+            ScoreManager.updateScoreAfterPlayersSkippedTheirTurnsTooManyTimes(players);
 
             return true;
         }

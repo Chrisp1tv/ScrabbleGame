@@ -4,18 +4,12 @@ import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -29,10 +23,9 @@ public class Bag implements BagInterface, Serializable {
     /**
      * The letters that the bag contain
      */
-    protected ObservableList<LetterInterface> letters;
+    protected List<LetterInterface> letters = new ArrayList<>();
 
     public Bag(List<LetterInterface> startingLetters) {
-        this.initialize();
         this.letters.addAll(startingLetters);
         Collections.shuffle(this.letters);
     }
@@ -73,20 +66,5 @@ public class Bag implements BagInterface, Serializable {
     @Override
     public boolean isEmpty() {
         return this.letters.isEmpty();
-    }
-
-    protected void initialize() {
-        this.letters = FXCollections.observableArrayList();
-    }
-
-    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        objectOutputStream.writeObject(this.letters.stream().collect(Collectors.toList()));
-    }
-
-    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
-        this.initialize();
-
-        List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
-        this.letters.addAll(letters);
     }
 }
