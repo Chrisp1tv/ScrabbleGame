@@ -440,5 +440,7 @@ public class Scrabble extends Application {
     public BagInterface getBag() {
         return this.bag;
     }
+
+
 }
 
