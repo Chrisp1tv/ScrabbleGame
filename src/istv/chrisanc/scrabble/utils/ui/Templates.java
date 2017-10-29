@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble.utils.ui;
 
 import istv.chrisanc.scrabble.controllers.GameController;
+import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
@@ -8,10 +9,13 @@ import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -108,7 +112,39 @@ public class Templates {
         parent.getChildren().add(playerContainer);
     }
 
-    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid) {
+    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid, BorderPane scrabbleContainer) {
+        double gridCellSize = (100 / (double) BoardInterface.BOARD_SIZE);
+
+        for (ColumnConstraints constraints : scrabbleGrid.getColumnConstraints()) {
+            constraints.setPercentWidth(gridCellSize);
+        }
+
+        for (RowConstraints constraints : scrabbleGrid.getRowConstraints()) {
+            constraints.setPercentHeight(gridCellSize);
+        }
+
+        scrabbleContainer.widthProperty().addListener((observable, oldValue, newValue) -> {
+            double size = newValue.doubleValue() - 500;
+            double maxHeight = scrabbleContainer.getHeight() - 85;
+
+            if (size > maxHeight) {
+                size = maxHeight;
+            }
+
+            scrabbleGrid.setMaxSize(size, size);
+        });
+
+        scrabbleContainer.heightProperty().addListener((observable, oldValue, newValue) -> {
+            double size = newValue.doubleValue() - 85;
+            double maxWidth = scrabbleContainer.getWidth() - 500;
+
+            if (size > maxWidth) {
+                size = maxWidth;
+            }
+
+            scrabbleGrid.setMaxSize(size, size);
+        });
+
         for (int i = 0, squaresSize = squares.size(); i < squaresSize; i++) {
             List<SquareInterface> squaresLine = squares.get(i);
 

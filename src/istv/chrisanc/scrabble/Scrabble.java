@@ -88,8 +88,11 @@ public class Scrabble extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.i18nMessages = ResourceBundle.getBundle("translations/MessagesBundle");
-
         this.primaryStage = primaryStage;
+
+        this.primaryStage.setMinWidth(1168);
+        this.primaryStage.setMinHeight(686);
+
         this.primaryStage.setTitle(this.i18nMessages.getString("Scrabble"));
         this.primaryStage.getIcons().add(new Image("file:resources/icon/icon.png"));
 

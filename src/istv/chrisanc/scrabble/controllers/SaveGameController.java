@@ -50,6 +50,7 @@ public class SaveGameController extends BaseController {
         fileChooser.getExtensionFilters().add(extFilter);
 
         this.externalFile = fileChooser.showSaveDialog(this.dialogStage);
+        this.handleOk();
     }
 
     /**

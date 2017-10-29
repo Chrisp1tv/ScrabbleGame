@@ -2,24 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="/styles/styles.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.ExchangeLettersController">
-    <Pane fx:id="lettersReceiver" layoutX="21.0" layoutY="53.0" prefHeight="175.0" prefWidth="559.0">
-        <Text layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%dragAndDropTheLettersToExchangeHere" textAlignment="CENTER" wrappingWidth="559.0000033378601">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Text>
-    </Pane>
-    <HBox styleClass="tiles" fx:id="playerLettersContainer" layoutX="17.0" layoutY="242.0" prefHeight="75.0" prefWidth="566.0" />
-    <ButtonBar layoutX="20.0" layoutY="346.0" prefHeight="40.0" prefWidth="559.0">
+<VBox styleClass="root-container, exchange-letter-view" stylesheets="/styles/styles.css" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.ExchangeLettersController">
+    <StackPane fx:id="lettersReceiver" styleClass="letters-receiver">
+        <Text text="%dragAndDropTheLettersToExchangeHere" styleClass="letters-receiver-text"/>
+    </StackPane>
+    <HBox styleClass="tiles" fx:id="playerLettersContainer" />
+    <ButtonBar>
         <buttons>
-            <Button fx:id="validateExchangeButton" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#handleValidateExchange" text="%validateAndObtainLetters" ButtonBar.buttonData="LEFT" />
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleCancel" text="%cancel" ButtonBar.buttonData="LEFT" />
+            <Button fx:id="validateExchangeButton" disable="true" mnemonicParsing="false" onAction="#handleValidateExchange" text="%validateAndObtainLetters" ButtonBar.buttonData="LEFT" />
+            <Button mnemonicParsing="false" onAction="#handleCancel" text="%cancel" ButtonBar.buttonData="LEFT" />
         </buttons>
     </ButtonBar>
-</AnchorPane>
+</VBox>

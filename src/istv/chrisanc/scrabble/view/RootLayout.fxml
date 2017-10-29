@@ -4,10 +4,10 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
-<BorderPane prefWidth="1280" prefHeight="720"
-            xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="istv.chrisanc.scrabble.controllers.RootLayoutController"
-            stylesheets="/styles/styles.css">
+            stylesheets="/styles/styles.css"
+            styleClass="root-layout">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu mnemonicParsing="false" text="%help">

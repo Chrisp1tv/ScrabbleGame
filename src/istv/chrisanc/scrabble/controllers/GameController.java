@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -32,6 +32,9 @@ import java.util.TreeMap;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
+    @FXML
+    protected BorderPane scrabbleContainer;
+
     /**
      * The view representation of the Scrabble {@link BoardInterface}
      */
@@ -133,10 +136,15 @@ public class GameController extends BaseController {
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.scrabble.getI18nMessages());
             loader.setLocation(Scrabble.class.getResource("view/ExchangeLetter.fxml"));
-            AnchorPane page = loader.load();
+            VBox page = loader.load();
 
             // Create the dialog stage
             Stage dialogStage = new Stage();
+            dialogStage.setMinWidth(640);
+            dialogStage.setMaxWidth(640);
+            dialogStage.setMinHeight(360);
+            dialogStage.setMaxHeight(360);
+
             dialogStage.setTitle(this.scrabble.getI18nMessages().getString("exchangeLettersWithTheBag"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(this.scrabble.getPrimaryStage());
@@ -175,10 +183,15 @@ public class GameController extends BaseController {
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.scrabble.getI18nMessages());
             loader.setLocation(Scrabble.class.getResource("view/SaveGame.fxml"));
-            AnchorPane page = loader.load();
+            VBox page = loader.load();
 
             // Create the dialog stage
             Stage dialogStage = new Stage();
+            dialogStage.setMinWidth(640);
+            dialogStage.setMaxWidth(640);
+            dialogStage.setMinHeight(200);
+            dialogStage.setMaxHeight(200);
+
             dialogStage.setTitle(this.scrabble.getI18nMessages().getString("save"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(this.scrabble.getPrimaryStage());
@@ -271,7 +284,7 @@ public class GameController extends BaseController {
      * Displays the board grid
      */
     protected void displayBoardGrid() {
-        Templates.displayBoardGrid(this.scrabble.getI18nMessages(), this.scrabble.getBoard().getSquares(), this.playedLetters, this.scrabble.getBoard().getLetters(), this.playerLettersContainer, this.scrabbleGrid);
+        Templates.displayBoardGrid(this.scrabble.getI18nMessages(), this.scrabble.getBoard().getSquares(), this.playedLetters, this.scrabble.getBoard().getLetters(), this.playerLettersContainer, this.scrabbleGrid, this.scrabbleContainer);
     }
 
     /**

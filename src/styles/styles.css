@@ -1,14 +1,62 @@
+/* Root layout */
+
+.root-layout {
+    -fx-min-width: 1152px;
+    -fx-min-height: 648px;
+    -fx-max-width: 1920px;
+    -fx-max-height: 1080px;
+}
+
+.root-container {
+    -fx-alignment: center;
+    -fx-padding: 15px;
+}
+
+/*****
+    Home view
+*****/
+.home-view {
+    -fx-alignment: center;
+    -fx-spacing: 50;
+}
+
+.home-view .game-name {
+    -fx-font-size: 50;
+}
+
+.home-view .menu-buttons {
+    -fx-alignment: center;
+    -fx-font-size: 20;
+    -fx-spacing: 20;
+}
+
+/*****
+    Load Game view
+*****/
+
+.load-game-view > VBox {
+    -fx-spacing: 10;
+}
+
+/*****
+    Game view
+*****/
+
+.game-view {
+
+}
+
 /* Players List */
 
-.players-list {
-    -fx-min-width: 260;
-    -fx-max-width: 260;
-    -fx-padding: 0 25 0 0;
+.game-view .players-list {
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-padding: 0 15 0 0;
     -fx-spacing: 15;
     -fx-alignment: center;
 }
 
-.players-list > .player {
+.game-view .players-list > .player {
     -fx-alignment: center;
     -fx-padding: 5;
     -fx-border-radius: 5;
@@ -17,120 +65,160 @@
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 10, 15, 0, 0);
 }
 
-.players-list .player.active {
+.game-view .players-list .player.active {
     -fx-background-color: #38a4a5;
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.3), 10, 20, 0, 0);
 }
 
-.player .inner-player {
+.game-view .player .inner-player {
     -fx-padding: 0 15 0 15;
     -fx-alignment: center;
 }
 
-.player .player-number {
+.game-view .player .player-number {
     -fx-font-size: 250%;
 }
 
-.player .player-information {
+.game-view .player .player-information {
     -fx-padding: 0 0 0 15;
     -fx-alignment: center-left;
 }
 
-.player .player-name {
+.game-view .player .player-name {
     -fx-font-size: 150%;
 }
 
-.player .player-points {
+.game-view .player .player-points {
 
 }
 
 /* Scrabble Grid and Squares */
 
-.scrabble-grid {
+.game-view .scrabble-grid {
     -fx-alignment: center;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 25, 0.0, 0, 0);
 }
 
-.scrabble-grid * {
-    -fx-min-height: 45;
-    -fx-max-height: 45;
-    -fx-min-width: 45;
-    -fx-max-width: 45;
+.game-view .scrabble-grid * {
     -fx-column-halignment: center;
     -fx-row-valignment: center;
 }
 
-.square {
+.scrabble-grid .square {
     -fx-background-insets: 0, 0 2 2 0;
     -fx-text-alignment: center;
 }
 
-.square .square-legend {
+.scrabble-grid .square .square-legend {
     -fx-font-weight: bold;
     -fx-fill: #ffffff;
 }
 
-.square.first-line {
+.scrabble-grid .square.first-line {
     -fx-background-insets: 0, 2 2 2 0;
 }
 
-.square.first-column {
+.scrabble-grid .square.first-column {
     -fx-background-insets: 0, 0 2 2 2;
 }
 
-.square.first-line.first-column {
+.scrabble-grid .square.first-line.first-column {
     -fx-background-insets: 0, 2;
 }
 
-.normal-square {
+.scrabble-grid .normal-square {
     -fx-background-color: #2a6768, #2fa569;
-    /*-fx-effect: innershadow(one-pass-box, rgba(0, 0, 0, 0.25), 10, 0.2, -3, 5);*/
 }
 
-.dark-blue, .pink, .star, .red, .sky-blue {
+.scrabble-grid .dark-blue, .scrabble-grid .pink, .scrabble-grid .star, .scrabble-grid .red, .scrabble-grid .sky-blue {
     -fx-effect: innershadow(one-pass-box, rgba(255, 255, 255, 0.25), 3, 0.2, -3, 3);
 }
 
-.dark-blue {
+.scrabble-grid .dark-blue {
     -fx-background-color: #2a6768, #0090cd;
 }
 
-.pink, .star {
+.scrabble-grid .pink, .scrabble-grid .star {
     -fx-background-color: #2a6768, #ff99cc;
 }
 
-.red {
+.scrabble-grid .red {
     -fx-background-color: #2a6768, #dc002f;
 }
 
-.sky-blue {
+.scrabble-grid .sky-blue {
     -fx-background-color: #2a6768, #97c5e6;
 }
 
 /* Control buttons */
 
-.scrabble-control-buttons {
-    -fx-min-width: 260;
-    -fx-max-width: 260;
-    -fx-padding: 0 0 0 25;
+.game-view .scrabble-control-buttons {
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-padding: 0 0 0 15;
     -fx-spacing: 10;
     -fx-alignment: center-left;
 }
 
+/*****
+    Exchange Letter view
+*****/
+
+.exchange-letter-view {
+    -fx-alignment: center;
+    -fx-spacing: 30;
+}
+
+.exchange-letter-view .letters-receiver {
+    -fx-padding: 50;
+}
+
+.exchange-letter-view .letters-receiver-text {
+    -fx-font-size: 24;
+    -fx-text-alignment: center;
+}
+
+.exchange-letter-view Button {
+    -fx-content-display: center;
+    -fx-alignment: center;
+}
+
+/*****
+    Save Game view
+*****/
+.save-game-view {
+    -fx-spacing: 20;
+    -fx-alignment: center;
+}
+
+.save-game-view .form {
+    -fx-vgap: 15;
+    -fx-hgap: 15;
+}
+
+.save-game-view Button {
+    -fx-content-display: center;
+    -fx-alignment: center;
+}
+
+/*****
+    Common modules
+*****/
+
 /* Tiles / Letters */
 
 .tiles {
-    -fx-padding: 5 0 0 0;
+    -fx-padding: 5 0 10 0;
     -fx-spacing: 10;
     -fx-alignment: center;
 }
 
 .tile {
-    -fx-padding: 10;
     -fx-background-color: #e9e7d2;
 }
 
 .tiles > .tile {
+    -fx-padding: 10;
     -fx-effect: dropshadow(one-pass-box, rgba(195, 194, 173, 0.8), 4, 1, 0, 5);
     -fx-border-radius: 5 5 5 5;
     -fx-background-radius: 5 5 5 5;
