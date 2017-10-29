@@ -279,6 +279,7 @@ public class Scrabble extends Application {
         this.getCurrentPlayer().removeLetters(playedLetters.values());
         this.giveLettersToCurrentPlayerToFillHisRack();
 
+        this.reinitializeSkippedTurns();
         this.nextTurn();
     }
 
@@ -293,6 +294,7 @@ public class Scrabble extends Application {
         this.getCurrentPlayer().removeLetters(letters);
         this.getCurrentPlayer().addLetters(this.getBag().exchangeLetters(letters));
 
+        this.reinitializeSkippedTurns();
         this.nextTurn();
     }
 
@@ -300,8 +302,8 @@ public class Scrabble extends Application {
      * Skips the turn
      */
     public void skipTurn() {
-        this.consecutiveTurnsSkipped++;
-        // TODO @Bouaggad Abdessamade
+        this.increaseNumberOfSkippedTurns();
+        this.nextTurn();
     }
 
     /**
@@ -414,6 +416,14 @@ public class Scrabble extends Application {
         this.bag = bag;
     }
 
+    protected void increaseNumberOfSkippedTurns() {
+        this.consecutiveTurnsSkipped++;
+    }
+
+    protected void reinitializeSkippedTurns() {
+        this.consecutiveTurnsSkipped = 0;
+    }
+
     public LanguageInterface getLanguage() {
         return this.language;
     }
@@ -440,7 +450,5 @@ public class Scrabble extends Application {
     public BagInterface getBag() {
         return this.bag;
     }
-
-
 }
 

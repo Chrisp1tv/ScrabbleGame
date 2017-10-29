@@ -170,7 +170,7 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleSkipTurn() {
-        this.scrabble.nextTurn();
+        this.scrabble.skipTurn();
     }
 
     /**
