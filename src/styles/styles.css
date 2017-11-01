@@ -233,6 +233,23 @@
 }
 
 /*****
+    Game Ended view
+*****/
+.game-ended-view {
+    -fx-alignment: center;
+    -fx-spacing: 30;
+}
+
+.game-ended-view .winner {
+    -fx-font-size: 30;
+}
+
+.game-ended-view .scoreboard {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/*****
     Common modules
 *****/
 

@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble;
 
 import istv.chrisanc.scrabble.controllers.GameController;
+import istv.chrisanc.scrabble.controllers.GameEndedController;
 import istv.chrisanc.scrabble.controllers.HomeController;
 import istv.chrisanc.scrabble.controllers.LoadGameController;
 import istv.chrisanc.scrabble.controllers.NewGameController;
@@ -218,7 +219,22 @@ public class Scrabble extends Application {
      * Shows the EndGame, that is to say the message congratulating the player or encouraging him to retry wby playing a new game.
      */
     public void showEndGame() {
-        // TODO @Bouaggad Abdessamade
+        try {
+            // End game
+            FXMLLoader loader = new FXMLLoader();
+            loader.setResources(this.i18nMessages);
+            loader.setLocation(Scrabble.class.getResource("view/GameEnded.fxml"));
+            VBox gameEnded = loader.load();
+
+            // Set home into the center of the root layout
+            rootLayout.setCenter(gameEnded);
+
+            GameEndedController controller = loader.getController();
+            controller.setScrabble(this);
+            controller.initializeInterface();
+        } catch (IOException e) {
+            this.showGeneralApplicationError(e);
+        }
     }
 
     /**

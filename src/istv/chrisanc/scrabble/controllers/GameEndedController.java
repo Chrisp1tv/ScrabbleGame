@@ -1,24 +1,31 @@
 package istv.chrisanc.scrabble.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import java.util.Collections;
 
 /**
  * This is the controller which recaps the game, announces the winner, and redirects the user to the home if he wants to.
  *
  * @author Christopher Anciaux
  * @author Abdessamade Bouaggad
- * TODO @Bouaggad Abdessamade
  */
 public class GameEndedController extends BaseController {
+    @FXML
+    protected Text winnerText;
+
+    @FXML
+    protected VBox scoreboardVBox;
+
+    public void initializeInterface() {
+        this.orderPlayersByNumberPoints();
+        this.displayWinnerText();
+        this.displayScoreboard();
+    }
+
 	@FXML
 	protected void handleGoHome() {
 		this.scrabble.showHome();
@@ -29,61 +36,17 @@ public class GameEndedController extends BaseController {
 		this.scrabble.showNewGame();
 	}
 
+	protected void orderPlayersByNumberPoints() {
+        Collections.sort(this.scrabble.getPlayers(), (PlayerInterface p1, PlayerInterface p2) -> -Integer.compare(p1.getScore(), p2.getScore()));
+    }
 
-	@FXML
-	protected void handleQuit() {
-        System.exit(0);
-	}
+    protected void displayWinnerText() {
+        this.winnerText.setText(this.scrabble.getI18nMessages().getString("theWinnerIs") + " " + this.scrabble.getPlayers().get(0).getName());
+    }
 
-	protected void showWinner() {
-
-		//int temp=0;
-		//ObservableList<Person> personData = FXCollections.observableArrayList();
-		//ArrayList<Integer> totalPoints = new ArrayList<>();
-		List<PlayerInterface> players = this.scrabble.getPlayers();
-
-		/**
-		// Get Score Of Each Player
-		for(PlayerInterface p : players) {
-			totalPoints.add(p.getScore());
-		}
-
-		//Sort Players
-		Collections.sort(totalPoints);
-		ArrayList<Integer> totalPointsSorted = new ArrayList<>();
-
-		for(int i=totalPoints.size()-1;i>=0;i--) {
-			totalPointsSorted.add(totalPoints.get(i));
-		}
-
-		System.out.println("The Winner Is ");
-		**/
-
-
-		Collections.sort(players,new Comparator<PlayerInterface>() {
-
-			@Override
-			public int compare(PlayerInterface p1, PlayerInterface p2) {
-				if(p1.getScore()>p2.getScore()) {
-					return 1;
-				} else if(p1.getScore()<p2.getScore()) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-
-		});
-
-		//System.out.println("The Winner Is >> "+players.get(players.size()-1).getName());
-
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("CONGRATULATIONS !");
-		alert.setHeaderText(null);
-		alert.setContentText("The Winner Is >> "+players.get(players.size()-1).getName());
-
-		alert.showAndWait();
-
-
-	}
+    protected void displayScoreboard() {
+        for (int i = 0, playersSize = this.scrabble.getPlayers().size(); i < playersSize; i++) {
+            this.scoreboardVBox.getChildren().add(new Text((i+1) + ". " + this.scrabble.getPlayers().get(i).getName()));
+        }
+    }
 }
