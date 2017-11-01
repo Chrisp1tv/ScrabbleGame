@@ -112,15 +112,16 @@ public class Templates {
         parent.getChildren().add(playerContainer);
     }
 
-    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid, BorderPane scrabbleContainer) {
+    public static void initializeBoardGrid(GridPane scrabbleGrid, BorderPane scrabbleContainer) {
         double gridCellSize = (100 / (double) BoardInterface.BOARD_SIZE);
 
-        for (ColumnConstraints constraints : scrabbleGrid.getColumnConstraints()) {
-            constraints.setPercentWidth(gridCellSize);
-        }
-
-        for (RowConstraints constraints : scrabbleGrid.getRowConstraints()) {
-            constraints.setPercentHeight(gridCellSize);
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setPercentWidth(gridCellSize);
+        RowConstraints rowConstraints = new RowConstraints();
+        rowConstraints.setPercentHeight(gridCellSize);
+        for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {
+            scrabbleGrid.getColumnConstraints().add(columnConstraints);
+            scrabbleGrid.getRowConstraints().addAll(rowConstraints);
         }
 
         scrabbleContainer.widthProperty().addListener((observable, oldValue, newValue) -> {
@@ -144,7 +145,9 @@ public class Templates {
 
             scrabbleGrid.setMaxSize(size, size);
         });
+    }
 
+    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid) {
         for (int i = 0, squaresSize = squares.size(); i < squaresSize; i++) {
             List<SquareInterface> squaresLine = squares.get(i);
 

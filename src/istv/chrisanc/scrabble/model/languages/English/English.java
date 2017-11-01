@@ -22,6 +22,10 @@ public class English extends Language {
         super(EnglishDictionary.class);
     }
 
+    public String getName() {
+        return "utils.languages.english";
+    }
+
     protected List<String> getAuthorizedLetters() {
         return this.letters;
     }

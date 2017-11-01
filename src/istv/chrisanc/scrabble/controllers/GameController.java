@@ -95,6 +95,7 @@ public class GameController extends BaseController {
     public void initializeInterface() {
         this.initializePlayedLetters();
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
+        this.initializeBoardGrid();
         this.displayBoardGrid();
         this.displayPlayerLettersList();
         this.listenCurrentPlayer();
@@ -283,8 +284,15 @@ public class GameController extends BaseController {
     /**
      * Displays the board grid
      */
+    protected void initializeBoardGrid() {
+        Templates.initializeBoardGrid(this.scrabbleGrid, this.scrabbleContainer);
+    }
+
+    /**
+     * Displays the board grid
+     */
     protected void displayBoardGrid() {
-        Templates.displayBoardGrid(this.scrabble.getI18nMessages(), this.scrabble.getBoard().getSquares(), this.playedLetters, this.scrabble.getBoard().getLetters(), this.playerLettersContainer, this.scrabbleGrid, this.scrabbleContainer);
+        Templates.displayBoardGrid(this.scrabble.getI18nMessages(), this.scrabble.getBoard().getSquares(), this.playedLetters, this.scrabble.getBoard().getLetters(), this.playerLettersContainer, this.scrabbleGrid);
     }
 
     /**

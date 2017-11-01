@@ -11,7 +11,7 @@
       <ButtonBar>
          <buttons>
                <Button mnemonicParsing="false" onAction="#handleQuit" text="%getBackHome" ButtonBar.buttonData="LEFT"/>
-               <Button mnemonicParsing="false" onAction="#handleChooseFile" text="%loadGameFromExternalFile" ButtonBar.buttonData="RIGHT" />
+               <Button mnemonicParsing="false" onAction="#handleChooseFile" text="%loadGameFromExternalFile" ButtonBar.buttonData="LEFT" />
          </buttons>
       </ButtonBar>
     </VBox>

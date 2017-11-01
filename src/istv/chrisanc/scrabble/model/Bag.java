@@ -58,9 +58,19 @@ public class Bag implements BagInterface, Serializable {
         }
 
         // We put back the letters given by the user, in the bag
-        this.letters.addAll(lettersToPutBackInTheBag);
+        this.putBackLetters(lettersToPutBackInTheBag);
 
         return lettersToGetFromTheBag;
+    }
+
+    @Override
+    public void putBackLetters(List<LetterInterface> letters) {
+        this.letters.addAll(letters);
+    }
+
+    @Override
+    public void putBackLetter(LetterInterface letter) {
+        this.letters.add(letter);
     }
 
     @Override

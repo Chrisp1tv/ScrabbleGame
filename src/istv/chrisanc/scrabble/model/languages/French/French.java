@@ -22,6 +22,10 @@ public class French extends Language {
         super(FrenchDictionary.class);
     }
 
+    public String getName() {
+        return "utils.languages.french";
+    }
+
     protected List<String> getAuthorizedLetters() {
         return this.letters;
     }

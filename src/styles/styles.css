@@ -20,14 +20,45 @@
     -fx-spacing: 50;
 }
 
-.home-view .game-name {
-    -fx-font-size: 50;
-}
-
 .home-view .menu-buttons {
     -fx-alignment: center;
     -fx-font-size: 20;
     -fx-spacing: 20;
+}
+
+/*****
+    New Game view
+*****/
+.new-game-view {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.new-game-view * {
+    -fx-alignment: center;
+}
+
+.new-game-view .game-information {
+    -fx-hgap: 20;
+    -fx-vgap: 20;
+    -fx-padding: 0 0 15 0;
+}
+
+.new-game-view .game-information > * {
+    -fx-alignment: center;
+    -fx-pref-width: 150;
+}
+
+.new-game-view .players-information {
+    -fx-spacing: 5;
+}
+
+.new-game-view .players-information {
+    -fx-spacing: 10;
+}
+
+.new-game-view .players-information .player {
+    -fx-spacing: 15;
 }
 
 /*****
@@ -204,6 +235,12 @@
 /*****
     Common modules
 *****/
+
+/* Title */
+
+.title {
+    -fx-font-size: 50;
+}
 
 /* Tiles / Letters */
 

@@ -1,16 +1,16 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
-import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
-
 import java.util.List;
 
 /**
  * @author Christopher Anciaux
  */
 public interface LanguageInterface {
+    String getName();
+
     DictionaryInterface getDictionary();
 
-    List<LetterInterface> getBagLettersDistribution() throws InitializationBagException;
+    List<LetterInterface> getBagLettersDistribution();
 
     LetterInterface getLetter(String letter);
 }

@@ -23,11 +23,6 @@ public class EnglishDictionary extends SerializedDictionary {
     }
 
     @Override
-    public String getName() {
-        return "utils.dictionaries.english";
-    }
-
-    @Override
     protected String getSourceFileName() {
         return "English.dictionary";
     }

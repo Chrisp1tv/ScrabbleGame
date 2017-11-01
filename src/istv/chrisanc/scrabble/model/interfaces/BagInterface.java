@@ -23,5 +23,9 @@ public interface BagInterface {
 
     List<LetterInterface> exchangeLetters(List<LetterInterface> lettersToPutBackInTheBag) throws EmptyBagException, NotEnoughLettersException;
 
+    void putBackLetters(List<LetterInterface> letters);
+
+    void putBackLetter(LetterInterface letter);
+
     boolean isEmpty();
 }

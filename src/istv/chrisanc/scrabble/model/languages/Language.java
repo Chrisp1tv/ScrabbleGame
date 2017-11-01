@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.model.languages;
 
-import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
 import istv.chrisanc.scrabble.model.Letter;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
@@ -28,7 +27,7 @@ public abstract class Language implements LanguageInterface, Serializable {
     }
 
     @Override
-    public List<LetterInterface> getBagLettersDistribution() throws InitializationBagException {
+    public List<LetterInterface> getBagLettersDistribution() {
         List<LetterInterface> letters = new ArrayList<>();
 
         for (int i = 0; i < this.getLettersDistribution().length; i++) {

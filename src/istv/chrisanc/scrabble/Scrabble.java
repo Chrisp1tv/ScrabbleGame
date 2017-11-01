@@ -7,7 +7,6 @@ import istv.chrisanc.scrabble.controllers.NewGameController;
 import istv.chrisanc.scrabble.controllers.RootLayoutController;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
-import istv.chrisanc.scrabble.exceptions.model.Bag.InitializationBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
@@ -36,10 +35,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * This class represents the "main" class of the ScrabbleGame. It starts, manages and ends the game.
@@ -47,6 +49,16 @@ import java.util.SortedMap;
  * @author Christopher Anciaux
  */
 public class Scrabble extends Application {
+    /**
+     * The minimal number of players of a Scrabble game
+     */
+    public static final short MIN_PLAYERS = 2;
+
+    /**
+     * The maximal number of players of a Scrabble game
+     */
+    public static final short MAX_PLAYERS = 4;
+
     /**
      * The maximum number of turns that each user can skip
      */
@@ -125,19 +137,19 @@ public class Scrabble extends Application {
      * Shows the NewGame wizard, allowing the player to enter his name, the number of players etc
      */
     public void showNewGame() {
-        // TODO @Bouaggad Abdessamade
         try {
-            // Load game
+            // New game
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.i18nMessages);
             loader.setLocation(Scrabble.class.getResource("view/NewGame.fxml"));
-            AnchorPane game = loader.load();
+            VBox newGame = loader.load();
 
             // Set home into the center of the root layout
-            rootLayout.setCenter(game);
+            rootLayout.setCenter(newGame);
 
             NewGameController controller = loader.getController();
             controller.setScrabble(this);
+            controller.initializeInterface();
         } catch (IOException e) {
             this.showGeneralApplicationError(e);
         }
@@ -287,7 +299,6 @@ public class Scrabble extends Application {
      * Handles the logic of letters exchanging
      *
      * @param letters The letters to be exchanged
-     *
      * @throws EmptyBagException if the bag is empty
      */
     public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException, NotEnoughLettersException {
@@ -326,6 +337,28 @@ public class Scrabble extends Application {
 
         if (!this.getCurrentPlayer().isHuman()) {
             // TODO: ask IA to play
+        }
+    }
+
+    protected PlayerInterface determineFirstPlayer(BagInterface bag, List<PlayerInterface> players) throws EmptyBagException {
+        NavigableMap<LetterInterface, PlayerInterface> playersDrawing = new TreeMap<>((o1, o2) -> o1.toString().compareTo(o2.toString()));
+
+        for (PlayerInterface player : players) {
+            playersDrawing.put(bag.drawLetter(), player);
+        }
+
+        for (NavigableMap.Entry<LetterInterface, PlayerInterface> playerDrawing : playersDrawing.entrySet()) {
+            bag.putBackLetter(playerDrawing.getKey());
+        }
+
+        return playersDrawing.firstEntry().getValue();
+    }
+
+    protected void distributeLettersToAllPlayers(BagInterface bag, List<PlayerInterface> players) throws EmptyBagException {
+        for (PlayerInterface player : players) {
+            for (int i = 0; i < PlayerInterface.BASE_NUMBER_OF_LETTERS; i++) {
+                player.addLetter(bag.drawLetter());
+            }
         }
     }
 
@@ -396,8 +429,16 @@ public class Scrabble extends Application {
     /**
      * @see #initializeScrabbleGame(LanguageInterface, List, PlayerInterface, BagInterface, BoardInterface)
      */
-    protected void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players, PlayerInterface currentPlayer) throws InitializationBagException {
-        this.initializeScrabbleGame(language, players, currentPlayer, new Bag(language.getBagLettersDistribution()), new Board());
+    public void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players) {
+        try {
+            BagInterface bag = new Bag(language.getBagLettersDistribution());
+            PlayerInterface firstPlayer = this.determineFirstPlayer(bag, players);
+
+            this.distributeLettersToAllPlayers(bag, players);
+            this.initializeScrabbleGame(language, players, firstPlayer, bag, new Board());
+        } catch (EmptyBagException e) {
+            this.showGeneralApplicationError(e);
+        }
     }
 
     /**
@@ -411,7 +452,7 @@ public class Scrabble extends Application {
     protected void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, BoardInterface board) {
         this.language = language;
         this.board = board;
-        this.players = players;
+        this.players = new ArrayList<>(players);
         this.currentPlayer = new SimpleObjectProperty<>(currentPlayer);
         this.bag = bag;
     }

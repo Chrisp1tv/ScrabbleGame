@@ -10,11 +10,6 @@ import java.util.List;
  */
 public interface DictionaryInterface {
     /**
-     * @return the name of the dictionary
-     */
-    String getName();
-
-    /**
      * @param word The word we want to check existence
      *
      * @return true if the word exists, false otherwise
