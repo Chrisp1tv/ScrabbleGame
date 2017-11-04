@@ -12,16 +12,13 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <p>
- * This class represents the bag used in a Scrabble game. It holds in all the pieces ({@link LetterInterface}) at the start
- * of the game, and manages the draw, exchanges of {@link LetterInterface} etc.
- *
  * @author Christopher Anciaux
  * @author Eguinane Chavatte
+ * @see BagInterface
  */
 public class Bag implements BagInterface, Serializable {
     /**
-     * The letters that the bag contain
+     * The letters of the bag
      */
     protected List<LetterInterface> letters = new ArrayList<>();
 

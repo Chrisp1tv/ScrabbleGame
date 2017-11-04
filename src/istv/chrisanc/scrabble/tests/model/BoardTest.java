@@ -7,9 +7,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Tests de {@link Board} features.
+ *
  * @author Christopher Anciaux
  */
 public class BoardTest {
+    /**
+     * Checks that the board construction is correct
+     */
     @Test
     public void checkBoardConstruct() {
         BoardInterface board = new Board();

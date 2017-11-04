@@ -21,7 +21,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
- * This class contains all the logic relative to words searching in the virtual language.
+ * This class contains all the logic relative to words searching in the virtual dictionary.
  *
  * @author Christopher Anciaux
  */

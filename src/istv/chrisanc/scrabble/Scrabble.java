@@ -65,20 +65,44 @@ public class Scrabble extends Application {
      */
     protected static final short MAX_SKIPPED_TURNS_PER_USER = 3;
 
+    /**
+     * The translated messages in the current locale
+     */
     protected ResourceBundle i18nMessages;
 
+    /**
+     * The primary stage
+     */
     protected Stage primaryStage;
 
+    /**
+     * The root layout, handling About action and general interface
+     */
     protected BorderPane rootLayout;
 
+    /**
+     * The language of the current Scrabble game
+     */
     protected LanguageInterface language;
 
+    /**
+     * The board of the current Scrabble game
+     */
     protected BoardInterface board;
 
+    /**
+     * The players of the current Scrabble game
+     */
     protected List<PlayerInterface> players;
 
+    /**
+     * The current player
+     */
     protected SimpleObjectProperty<PlayerInterface> currentPlayer;
 
+    /**
+     * The bag of the current Scrabble game
+     */
     protected BagInterface bag;
 
     /**
@@ -154,7 +178,6 @@ public class Scrabble extends Application {
         } catch (IOException e) {
             this.showGeneralApplicationError(e);
         }
-
     }
 
     /**
@@ -315,6 +338,7 @@ public class Scrabble extends Application {
      * Handles the logic of letters exchanging
      *
      * @param letters The letters to be exchanged
+     *
      * @throws EmptyBagException if the bag is empty
      */
     public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException, NotEnoughLettersException {
@@ -356,6 +380,15 @@ public class Scrabble extends Application {
         }
     }
 
+    /**
+     * Determines the player who should be play first, according to the Scrabble rules
+     *
+     * @param bag     The bag of the Scrabble game
+     * @param players The players of the Scrabble game
+     *
+     * @return the player who should play first
+     * @throws EmptyBagException if the bag is empty
+     */
     protected PlayerInterface determineFirstPlayer(BagInterface bag, List<PlayerInterface> players) throws EmptyBagException {
         NavigableMap<LetterInterface, PlayerInterface> playersDrawing = new TreeMap<>((o1, o2) -> o1.toString().compareTo(o2.toString()));
 
@@ -370,6 +403,14 @@ public class Scrabble extends Application {
         return playersDrawing.firstEntry().getValue();
     }
 
+    /**
+     * Distributes all the letters to each letters
+     *
+     * @param bag     The bag of the Scrabble game
+     * @param players The players of the Scrabble game
+     *
+     * @throws EmptyBagException if the bag is empty
+     */
     protected void distributeLettersToAllPlayers(BagInterface bag, List<PlayerInterface> players) throws EmptyBagException {
         for (PlayerInterface player : players) {
             for (int i = 0; i < PlayerInterface.BASE_NUMBER_OF_LETTERS; i++) {
@@ -418,8 +459,7 @@ public class Scrabble extends Application {
     }
 
     /**
-     * Initializes the root layout and tries to load the last opened
-     * person file
+     * Initializes the root layout and tries to load the last opened person file
      */
     protected void initializeRootLayout() {
         try {
@@ -494,7 +534,7 @@ public class Scrabble extends Application {
     }
 
     /**
-     * @return The {@link PlayerInterface} who should play this turn
+     * @return The player who should play this turn
      */
     public PlayerInterface getCurrentPlayer() {
         return this.currentPlayer.get();

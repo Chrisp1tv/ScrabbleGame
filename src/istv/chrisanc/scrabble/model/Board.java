@@ -19,29 +19,25 @@ import java.util.List;
 import java.util.SortedMap;
 
 /**
- * <p>
- * This class represents the board used during the Scrabble. It has {@link SquareInterface} where pieces ({@link LetterInterface}) can be placed on.
- *
  * @author Christopher Anciaux
  * @author Eguinane Chavatte
+ * @see BoardInterface
  */
 public class Board implements BoardInterface, Serializable {
     /**
-     * All the {@link SquareInterface} of the {@link Board}. The Indexes represent the position of the {@link SquareInterface} on the {@link Board}.
-     * The first index represents the lines, the second the columns.
-     * There are 15 lines, and 15 columns.
+     * All the squares of the board. The Indexes represent the position of the squares on the board
+     * The first index represents the lines, the second the columns
      */
     protected List<List<SquareInterface>> squares = new ArrayList<>();
 
     /**
-     * All the {@link LetterInterface} placed on the {@link SquareInterface}. The indexes represent the position of the {@link LetterInterface} on the {@link Board}.
-     * The first index represents the lines, the second the columns.
-     * There are 15 lines, and 15 columns.
+     * All the letters placed on the squares. The indexes represent the position of the letters on the board
+     * The first index represents the lines, the second the columns
      */
     protected List<List<LetterInterface>> letters = new ArrayList<>();
 
     /**
-     * All the {@link WordInterface} placed on the {@link Board}.
+     * All the words placed on the board
      */
     protected List<WordInterface> playedWords = new ArrayList<>();
 
@@ -88,11 +84,6 @@ public class Board implements BoardInterface, Serializable {
         return Collections.unmodifiableList(this.playedWords);
     }
 
-    /**
-     * Add the given {@link WordInterface} to the board.
-     *
-     * @param word The {@link WordInterface} to add to the board
-     */
     public void addWord(WordInterface word) {
         this.playedWords.add(word);
     }
@@ -103,7 +94,7 @@ public class Board implements BoardInterface, Serializable {
     }
 
     /**
-     * Builds the {@link SquareInterface}'s list according to the Scrabble rules.
+     * Builds the squares list according to the Scrabble rules.
      */
     protected void buildSquaresList() {
         this.squares.addAll(Arrays.asList(
@@ -411,7 +402,7 @@ public class Board implements BoardInterface, Serializable {
     }
 
     /**
-     * Builds the {@link LetterInterface}'s list according to the Scrabble rules.
+     * Builds the letters list according to the Scrabble rules.
      */
     protected void buildLettersList() {
         for (int i = 0; i < BoardInterface.BOARD_SIZE; i++) {

@@ -16,11 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p>
- * This class represents a player of the Scrabble. The player has {@link LetterInterface} in his rack/hands, a score, a name etc.
- *
  * @author Christopher Anciaux
  * @author Eguinane Chavatte
+ * @see PlayerInterface
  */
 public class Player implements PlayerInterface, Serializable {
     /**
@@ -29,24 +27,22 @@ public class Player implements PlayerInterface, Serializable {
     protected String name;
 
     /**
-     * The score of the player. The default value is 0, as a player begins the game without any point
+     * The score of the player
+     * The default value is 0, as a player begins the game without any point
      */
     protected IntegerProperty score;
 
     /**
-     * The letters owned by the player in his rack/hands during the game. He can't have more than 7 letters.
+     * The letters owned by the player in his rack/hands during the game
+     * He can't have more than 7 letters.
      */
     protected List<LetterInterface> letters;
 
     /**
-     * If the player is a human player, the value is set to true. False otherwise
+     * If the player is a human player, the value is set to true, false otherwise
      */
     protected boolean human;
 
-    /**
-     * @param name  The player's name
-     * @param human True if the player is a human, false otherwise
-     */
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
@@ -85,9 +81,6 @@ public class Player implements PlayerInterface, Serializable {
         return Collections.unmodifiableList(this.letters);
     }
 
-    /**
-     * @param letter the {@link LetterInterface} to be added in the rack of the player
-     */
     @Override
     public void addLetter(LetterInterface letter) {
         this.letters.add(letter);
@@ -106,17 +99,11 @@ public class Player implements PlayerInterface, Serializable {
         }
     }
 
-    /**
-     * @param letter the {@link LetterInterface} to be removed from the rack of the player
-     */
     @Override
     public void removeLetter(LetterInterface letter) {
         this.letters.remove(letter);
     }
 
-    /**
-     * @param index the index of the {@link LetterInterface} to be removed from the rack of the player
-     */
     @Override
     public void removeLetter(short index) {
         this.letters.remove(index);

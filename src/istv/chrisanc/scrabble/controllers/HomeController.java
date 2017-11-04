@@ -26,7 +26,7 @@ public class HomeController extends BaseController {
     }
 
     /**
-     * Closes the application.
+     * Closes the application
      */
     @FXML
     protected void handleExit() {

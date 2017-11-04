@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 /**
- * This controller manages the saving of a game during the player is playing. It is triggered once the user asks the program
+ * This controller manages the saving of a game while the player is playing. It is triggered once the user asks the program
  * to save the game.
  *
  * @author Christopher Anciaux

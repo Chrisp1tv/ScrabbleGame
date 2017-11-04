@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
 import java.util.SortedMap;
 
 /**
+ * This class contains (mostly) all the programmatically displaying of the application.
+ *
  * @author Christopher Anciaux
  */
 public class Templates {

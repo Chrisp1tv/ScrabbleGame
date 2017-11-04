@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * This class allows developer to get an instance of the requested dictionary, as dictionaries can't be instanced directly.
+ *
  * @author Christopher Anciaux
  */
 abstract public class DictionaryFactory {

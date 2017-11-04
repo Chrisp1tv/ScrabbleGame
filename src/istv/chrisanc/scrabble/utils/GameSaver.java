@@ -20,8 +20,14 @@ import java.nio.file.Files;
  * @author Christopher Anciaux
  */
 public class GameSaver {
+    /**
+     * The extension of the saved files
+     */
     public static final String GAME_SAVES_FILES_EXTENSION = ".scrabbleSave";
 
+    /**
+     * The directory where to save the "user saves"
+     */
     public static final String GAME_SAVES_DIRECTORY = System.getProperty("user.home") + File.separator + ".scrabbleGame";
 
     /**

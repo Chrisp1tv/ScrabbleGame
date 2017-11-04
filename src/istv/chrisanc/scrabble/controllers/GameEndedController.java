@@ -14,9 +14,15 @@ import java.util.Collections;
  * @author Abdessamade Bouaggad
  */
 public class GameEndedController extends BaseController {
+    /**
+     * The text announcing the winner of the game, to be updated programmatically
+     */
     @FXML
     protected Text winnerText;
 
+    /**
+     * The Scoreboard, listing the players ordered according to their respective points
+     */
     @FXML
     protected VBox scoreboardVBox;
 
@@ -26,24 +32,39 @@ public class GameEndedController extends BaseController {
         this.displayScoreboard();
     }
 
+    /**
+     * Redirects to the Home action
+     */
 	@FXML
 	protected void handleGoHome() {
 		this.scrabble.showHome();
 	}
 
+    /**
+     * Redirects to the NewGame action
+     */
 	@FXML
 	protected void handleNewGame() {
 		this.scrabble.showNewGame();
 	}
 
+    /**
+     * Orders the players by their number of points (the first one has the most points)
+     */
 	protected void orderPlayersByNumberPoints() {
         Collections.sort(this.scrabble.getPlayers(), (PlayerInterface p1, PlayerInterface p2) -> -Integer.compare(p1.getScore(), p2.getScore()));
     }
 
+    /**
+     * Updates the winner text to display the winner of the game
+     */
     protected void displayWinnerText() {
         this.winnerText.setText(this.scrabble.getI18nMessages().getString("theWinnerIs") + " " + this.scrabble.getPlayers().get(0).getName());
     }
 
+    /**
+     * Updates the scoreboard to display the players
+     */
     protected void displayScoreboard() {
         for (int i = 0, playersSize = this.scrabble.getPlayers().size(); i < playersSize; i++) {
             this.scoreboardVBox.getChildren().add(new Text((i+1) + ". " + this.scrabble.getPlayers().get(i).getName()));

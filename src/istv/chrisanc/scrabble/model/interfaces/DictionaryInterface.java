@@ -3,7 +3,6 @@ package istv.chrisanc.scrabble.model.interfaces;
 import java.util.List;
 
 /**
- * <p>
  * This class represents a dictionary, used to check words existence and to find words having given letters.
  *
  * @author Christopher Anciaux

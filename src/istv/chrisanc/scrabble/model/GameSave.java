@@ -10,19 +10,33 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * This class represents a save of a Scrabble game.
- *
  * @author Christopher Anciaux
+ * @see GameSaveInterface
  */
 public class GameSave implements Serializable, GameSaveInterface {
+    /**
+     * The language used in this Scrabble game
+     */
     protected LanguageInterface language;
 
+    /**
+     * The actual state of the board
+     */
     protected BoardInterface board;
 
+    /**
+     * The players playing this game
+     */
     protected List<PlayerInterface> players;
 
+    /**
+     * The current player (the one who has to play once the game save has been loaded)
+     */
     protected PlayerInterface currentPlayer;
 
+    /**
+     * The actual state of the bag
+     */
     protected BagInterface bag;
 
     public GameSave(LanguageInterface language, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag) {

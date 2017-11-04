@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.model;
 
-import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
@@ -12,21 +11,34 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <p>
- * This class represents a word played on the {@link BoardInterface}
- *
  * @author Christopher Anciaux
  * @author Eguinane Chavatte
+ * @see WordInterface
  */
 public class Word implements WordInterface, Serializable {
+    /**
+     * The player who created the word with his letters
+     */
     protected PlayerInterface player;
 
+    /**
+     * The letters forming the word
+     */
     protected List<LetterInterface> letters;
 
+    /**
+     * True if the word is horizontal, false if it is vertical
+     */
     protected boolean horizontal;
 
+    /**
+     * The line of the first letter of the word
+     */
     protected short startLine;
 
+    /**
+     * The column of the first letter of the word
+     */
     protected short startColumn;
 
     public Word(PlayerInterface player, Collection<LetterInterface> letters, boolean horizontal, short startLine, short startColumn) {
@@ -37,37 +49,22 @@ public class Word implements WordInterface, Serializable {
         this.player = player;
     }
 
-    /**
-     * @return the player who played the word on the board
-     */
     public PlayerInterface getPlayer() {
         return player;
     }
 
-    /**
-     * @return the word's letters
-     */
     public List<LetterInterface> getLetters() {
         return Collections.unmodifiableList(letters);
     }
 
-    /**
-     * @return true if the word was played horizontally, false if it was played vertically
-     */
     public boolean isHorizontal() {
         return horizontal;
     }
 
-    /**
-     * @return the line's index of the first word's {@link LetterInterface}
-     */
     public short getStartLine() {
         return startLine;
     }
 
-    /**
-     * @return the line's index of the first word's {@link LetterInterface}
-     */
     public short getEndLine() {
         if (isHorizontal()) {
             return getStartLine();
@@ -76,16 +73,10 @@ public class Word implements WordInterface, Serializable {
         }
     }
 
-    /**
-     * @return the column's index of the first word's {@link LetterInterface}
-     */
     public short getStartColumn() {
         return startColumn;
     }
 
-    /**
-     * @return the column's index of the last word's {@link LetterInterface}
-     */
     public short getEndColumn() {
         if (isHorizontal()) {
             return (short) (getStartColumn() + (this.letters.size() - 1));

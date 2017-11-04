@@ -1,7 +1,6 @@
 package istv.chrisanc.scrabble.utils;
 
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
 /**
  * <p>
@@ -10,8 +9,8 @@ import istv.chrisanc.scrabble.model.interfaces.WordInterface;
  * @author Christopher Anciaux
  */
 public class WordFinder {
-    public static WordInterface findWord(BoardInterface board) {
+/*    public static WordInterface findWord(BoardInterface board) {
         // TODO
         // TODO: Check if a word is playable on the board here, if not, throw an exception
-    }
+    }*/
 }

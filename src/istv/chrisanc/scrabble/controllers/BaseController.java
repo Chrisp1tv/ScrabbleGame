@@ -11,7 +11,7 @@ abstract public class BaseController {
     protected Scrabble scrabble;
 
     /**
-     * Is called by the main application to give a reference back to itself.
+     * Is called by the main application to give a reference back to itself
      *
      * @param scrabble The main application
      */

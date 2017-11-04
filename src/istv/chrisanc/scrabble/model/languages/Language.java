@@ -15,6 +15,9 @@ import java.util.List;
  * @author Christopher Anciaux
  */
 public abstract class Language implements LanguageInterface, Serializable {
+    /**
+     * The {@link Class} representation of the dictionary linked to the language
+     */
     protected Class<? extends DictionaryInterface> dictionaryClass;
 
     protected Language(Class<? extends DictionaryInterface> dictionaryClass) {

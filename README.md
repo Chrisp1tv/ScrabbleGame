@@ -7,11 +7,7 @@ A basic Scrabble Game developed by a small group of Valenciennes university stud
 - Letters drawing in the virtual letters bag
 - Letters positioning on the board and score counting
 - Possibility to get 5 helps during the game
-- IA drawing's management
-
-## How to use the game
-
-<!-- TODO -->
+- AI drawing's management
 
 ## Developers
 
@@ -19,4 +15,4 @@ A basic Scrabble Game developed by a small group of Valenciennes university stud
 - Basquin Julien (@Julien-Basquin)
 - Bouaggad Abdessamade (@abdelgfx)
 - Chavatte Eguinane (@Xoreas)
-- Deletré Anthony (@Kikibou)
+- Delétré Anthony (@Kikibou)

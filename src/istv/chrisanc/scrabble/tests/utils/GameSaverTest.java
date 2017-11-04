@@ -26,12 +26,18 @@ public class GameSaverTest {
 
     protected static String testSavePath = "testSave" + GameSaver.GAME_SAVES_FILES_EXTENSION;
 
+    /**
+     * Tests if a game can be save to the dedicated directory
+     */
     @Test
     public void saveGameToGameSavesDirectory() throws Exception {
         GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSavePath);
         GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSavePath));
     }
 
+    /**
+     * Tests if game saves finding works as expected
+     */
     @Test
     public void findGameSaves() throws Exception {
         GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, GameSaverTest.testSavePath);
@@ -42,6 +48,9 @@ public class GameSaverTest {
         GameSaver.deleteGameSave(saves[0]);
     }
 
+    /**
+     * Tests if a saved game can be loaded correctly
+     */
     @Test
     public void loadGame() throws Exception {
         GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSavePath);

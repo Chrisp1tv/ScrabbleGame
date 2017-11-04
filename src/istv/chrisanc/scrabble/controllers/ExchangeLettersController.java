@@ -18,20 +18,19 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
- * This controller manages the exchange of {@link LetterInterface} between the {@link BagInterface} and the {@link PlayerInterface}'s
- * {@link LetterInterface}.
+ * This controller manages the exchange of a letter between the bag and the player.
  *
  * @author Christopher Anciaux
  */
 public class ExchangeLettersController extends BaseController {
     /**
-     * The element on which we want to drop the letters to be put back in the {@link BagInterface}
+     * The element on which we want to drop the letters to be put back in the bag
      */
     @FXML
     protected Pane lettersReceiver;
 
     /**
-     * The element containing the {@link PlayerInterface}'s {@link LetterInterface}
+     * The element containing the player's letters
      */
     @FXML
     protected HBox playerLettersContainer;

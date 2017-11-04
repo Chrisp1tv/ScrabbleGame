@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.SortedMap;
 
 /**
- * <p>
  * This class manages the checking of played words on the Scrabble game. It checks if played words on a turn are valid, that is
  * to say if these words respect the Scrabble rules.
  * TODO: Some optimization of the code is possible, would be interesting to do it once other tasks have been done
@@ -26,8 +25,22 @@ import java.util.SortedMap;
  * @author Anthony Delétré
  */
 abstract public class PlayedTurnValidityChecker {
+    /**
+     * The minimal number of letters in a word
+     */
     protected final static short MINIMAL_NUMBER_OF_LETTERS_IN_WORD = 2;
 
+    /**
+     * Finds all the played words of the current if the turn is valid
+     *
+     * @param dictionary    The dictionary used to check words existence
+     * @param board         The actual board
+     * @param playedLetters The letters played in the current turn
+     * @param player        The player who played this turn
+     *
+     * @return The played words of the current turn
+     * @throws InvalidPlayedTurnException if the turn isn't valid, that is to say it doesn't respect all Scrabble rules
+     */
     public static List<WordInterface> findPlayedWords(DictionaryInterface dictionary, BoardInterface board, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, PlayerInterface player) throws InvalidPlayedTurnException {
         boolean horizontal;
         List<WordInterface> playedWords = new ArrayList<>();
@@ -66,6 +79,14 @@ abstract public class PlayedTurnValidityChecker {
         return playedWords;
     }
 
+    /**
+     * Checks whether the played letters have been played horizontally or not
+     *
+     * @param playedLetters The letters played in the current turn
+     *
+     * @return True if the letters have been played horizontally, false otherwise
+     * @throws InvalidPlayedTurnException if the letters haven't been played horizontally, nor vertically
+     */
     protected static boolean playedLettersAreDisposedHorizontally(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
         Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
 
@@ -105,6 +126,14 @@ abstract public class PlayedTurnValidityChecker {
         return horizontal;
     }
 
+    /**
+     * Checks if a turn has been played on the center square, that is to say that at least one letter has been putted on
+     * the center square
+     *
+     * @param playedLetters The letters played in the current turn
+     *
+     * @return true if one of the played letters have been played on the center square, false otherwise
+     */
     protected static boolean isTurnPlayedOnTheCenterSquare(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) {
         int centerSquarePosition = BoardInterface.BOARD_SIZE / 2;
 
@@ -117,6 +146,15 @@ abstract public class PlayedTurnValidityChecker {
         return false;
     }
 
+    /**
+     * Checks if the played letters are all next to each other (it just checks that all played letters are next to each other,
+     * without considering letters played in a previous turn and already disposed on the board)
+     *
+     * @param playedLetters The letters played in the current turn
+     * @param horizontal    True if the played letters are disposed horizontally, false otherwise
+     *
+     * @return true if the played letters are all next to each other, false otherwise
+     */
     protected static boolean allPlayedLettersAreNextToEachOther(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
         Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
         Map.Entry<GameController.BoardPosition, LetterInterface> currentLetter;
@@ -140,6 +178,15 @@ abstract public class PlayedTurnValidityChecker {
         return true;
     }
 
+    /**
+     * Checks if the played letters are all disposed next to each other or/and next to already played letters
+     *
+     * @param board         The actual board
+     * @param playedLetters The letters played in the current turn
+     * @param horizontal    True if the played letters are disposed horizontally, false otherwise
+     *
+     * @return true if the played letters are all next to each other or to already played letters
+     */
     protected static boolean allPlayedLettersAreDisposedNextToOtherLetters(BoardInterface board, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
         // First, we check that all played letters are linked to other letters, without any "hole" (a square without letter on)
         // between the first and the last played letter
@@ -168,26 +215,79 @@ abstract public class PlayedTurnValidityChecker {
         return false;
     }
 
+    /**
+     * Checks if the given letter has an adjacent board letter
+     *
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @return true if the letter has an adjacent board letter, false otherwise
+     */
     protected static boolean hasAdjacentBoardLetter(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
         return PlayedTurnValidityChecker.playedLetterHasBoardLetterAbove(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterAtRight(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterBelow(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterAtLeft(board, playedLetter);
     }
 
+    /**
+     * Checks if the given letter has a board letter to its left
+     *
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @return true if the latter has a letter to its left, false otherwise
+     */
     protected static boolean playedLetterHasBoardLetterAtLeft(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getColumn() > 0 && null != board.getLetters().get(playedLetter.getKey().getLine()).get(playedLetter.getKey().getColumn() - 1);
     }
 
+    /**
+     * Checks if the given letter has a board letter to its right
+     *
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @return true if the latter has a letter to its right, false otherwise
+     */
     protected static boolean playedLetterHasBoardLetterAtRight(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getColumn() < BoardInterface.BOARD_SIZE - 1 && null != board.getLetters().get(playedLetter.getKey().getLine()).get(playedLetter.getKey().getColumn() + 1);
     }
 
+    /**
+     * Checks if the given letter has a board letter above
+     *
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @return true if the latter has a letter above, false otherwise
+     */
     protected static boolean playedLetterHasBoardLetterAbove(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getLine() > 0 && null != board.getLetters().get(playedLetter.getKey().getLine() - 1).get(playedLetter.getKey().getColumn());
     }
 
+    /**
+     * Checks if the given letter has a board letter below
+     *
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @return true if the latter has a letter below, false otherwise
+     */
     protected static boolean playedLetterHasBoardLetterBelow(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getLine() < BoardInterface.BOARD_SIZE - 1 && null != board.getLetters().get(playedLetter.getKey().getLine() + 1).get(playedLetter.getKey().getColumn());
     }
 
+    /**
+     * Adds the given word to the actual played words if the given word exists in the current language
+     *
+     * @param dictionary  The dictionary used to check words existence
+     * @param playedWords The actual played words
+     * @param player      The player who played the word
+     * @param wordLetters The word letters
+     * @param horizontal  True if the word is horizontal, false otherwise
+     * @param startLine   The line of the first letter of the word
+     * @param startColumn The column of the first letter of the word
+     *
+     * @throws InvalidPlayedTurnException if the word doesn't exist in the given dictionary
+     */
     protected static void addWordAfterChecking(DictionaryInterface dictionary, List<WordInterface> playedWords, PlayerInterface player, List<LetterInterface> wordLetters, boolean horizontal, short startLine, short startColumn) throws InvalidPlayedTurnException {
         if (!dictionary.wordExists(LetterListToStringTransformer.transform(wordLetters))) {
             throw new InvalidPlayedTurnException("exceptions.invalidPlayedTurn.nonExistentWord");
@@ -196,13 +296,25 @@ abstract public class PlayedTurnValidityChecker {
         playedWords.add(new Word(player, wordLetters, horizontal, startLine, startColumn));
     }
 
+    /**
+     * Finds all the words formed by the given played letters
+     *
+     * @param dictionary    The dictionary used to check words existence
+     * @param board         The actual board
+     * @param boardEmpty    True if the board is empty, false otherwise
+     * @param playedLetters The played letters
+     * @param playedWords   The played words
+     * @param player        The player who played the letters
+     * @param horizontal    True if the letters have been disposed horizontally, false otherwise
+     *
+     * @throws InvalidPlayedTurnException if one of the formed words don't exist
+     */
     protected static void findAllFormedWords(DictionaryInterface dictionary, BoardInterface board, boolean boardEmpty, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<WordInterface> playedWords, PlayerInterface player, boolean horizontal) throws InvalidPlayedTurnException {
         if (boardEmpty) {
             PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, new ArrayList<>(playedLetters.values()), horizontal, playedLetters.firstKey().getLine(), playedLetters.firstKey().getColumn());
 
             return;
         }
-
 
         Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
 
@@ -277,6 +389,18 @@ abstract public class PlayedTurnValidityChecker {
         }
     }
 
+    /**
+     * Checks if a word can be formed vertically from one played letter, and if so, checks if this word exists and adds
+     * it to the played words
+     *
+     * @param dictionary   The dictionary used to check words existence
+     * @param player       The player who played the word
+     * @param playedWords  The actual played words
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @throws InvalidPlayedTurnException if the formed word doesn't exist
+     */
     protected static void addVerticalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
         if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAbove(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterBelow(board, playedLetter)) {
             return;
@@ -307,6 +431,18 @@ abstract public class PlayedTurnValidityChecker {
         PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, false, startLine, playedLetter.getKey().getColumn());
     }
 
+    /**
+     * Checks if a word can be formed horizontally from one played letter, and if so, checks if this word exists and adds
+     * it to the played words
+     *
+     * @param dictionary   The dictionary used to check words existence
+     * @param player       The player who played the word
+     * @param playedWords  The actual played words
+     * @param board        The actual board
+     * @param playedLetter The played letter
+     *
+     * @throws InvalidPlayedTurnException if the formed word doesn't exist
+     */
     protected static void addHorizontalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
         if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAtLeft(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterAtRight(board, playedLetter)) {
             return;

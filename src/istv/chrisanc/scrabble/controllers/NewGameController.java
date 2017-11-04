@@ -20,30 +20,57 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
+ * This controller handles the creation of a new Scrabble game. It asks the player for the number of players, the language
+ * of the game and more, to start a new game.
+ *
  * @author Christopher Anciaux
  * @author Abdessamade Bouaggad
  */
 public class NewGameController extends BaseController {
+    /**
+     * The default number of players
+     */
     protected final static Integer DEFAULT_NUMBER_OF_PLAYERS = 2;
 
+    /**
+     * The maximum number of characters in player's name
+     */
     protected final static short PLAYER_NAME_MAX_CHARACTERS = 20;
 
+    /**
+     * The ChoiceBox allowing users to choice a language to start the game
+     */
     @FXML
     protected ChoiceBox<LanguageInterface> languageChoiceBox;
 
+    /**
+     * The TextField allowing user to change the number of players
+     */
     @FXML
     protected TextField numberPlayersField;
 
+    /**
+     * Element containing all the information about each player
+     */
     @FXML
     protected VBox playersInformationVBox;
 
+    /**
+     * Number of players who will play the game
+     */
     protected int numberPlayers;
 
+    /**
+     * Initializes the interface
+     */
     public void initializeInterface() {
         this.initializeLanguageChoiceBox();
         this.initializeNumberPlayersField();
     }
 
+    /**
+     * Initializes the language ChoiceBox, retrieving all the available languages
+     */
     protected void initializeLanguageChoiceBox() {
         ResourceBundle i18nMessages = this.scrabble.getI18nMessages();
         List<LanguageInterface> availableLanguages = Arrays.asList(new French(), new English());
@@ -63,6 +90,9 @@ public class NewGameController extends BaseController {
         });
     }
 
+    /**
+     * Initializes the field of number of players, setting the default value and the rules that the inputted value must respect
+     */
     protected void initializeNumberPlayersField() {
         this.numberPlayersField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.isEmpty()) {
@@ -104,7 +134,7 @@ public class NewGameController extends BaseController {
 	}
 
 	/**
-	 * Redirects to Home
+	 * Redirects to Home action
 	 */
 	@FXML
 	protected void handleCancel() {
@@ -115,6 +145,9 @@ public class NewGameController extends BaseController {
         return Scrabble.MIN_PLAYERS <= this.numberPlayers && this.numberPlayers <= Scrabble.MAX_PLAYERS;
     }
 
+    /**
+     * Updates the form of players information, according to the number of players inputted
+     */
     protected void updatePlayersForm() {
         if (this.playersInformationVBox.getChildren().size() > this.numberPlayers) {
             for (int i = this.numberPlayers, oldNumberPlayers = this.playersInformationVBox.getChildren().size(); i < oldNumberPlayers; i++) {
@@ -129,6 +162,13 @@ public class NewGameController extends BaseController {
         }
     }
 
+    /**
+     * Creates and returns the created form containing the fields about a player
+     *
+     * @param i The number of the player
+     *
+     * @return the form containing the fields that can be inputted about the player
+     */
     protected HBox getPlayerInformationForm(int i) {
         HBox playerInformationHBox = new HBox();
         playerInformationHBox.getStyleClass().add("player");

@@ -28,7 +28,7 @@ public class LetterToStringTransformer {
      *
      * @return the transformed {@link String} to {@link LetterInterface}
      * @throws IllegalArgumentException if the corresponding {@link LetterInterface} isn't found or an
-     *                                               error occurred during creation of the letter
+     *                                  error occurred during creation of the letter
      */
     public static LetterInterface reverseTransform(String letter, LanguageInterface language) {
         return language.getLetter(letter);

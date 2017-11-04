@@ -5,15 +5,18 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import java.io.Serializable;
 
 /**
- * <p>
- * This class defines a letter piece used in the Scrabble, represented by the letter itself,
- * and the value of the letter (the number of points it can give to the player).
- *
  * @author Christopher Anciaux
+ * @see LetterInterface
  */
 public class Letter implements LetterInterface, Serializable {
+    /**
+     * The letter represented by this object
+     */
     protected String letter;
 
+    /**
+     * The value (the number of points) that can be given by using the letter
+     */
     protected byte value;
 
     public Letter(String letter, byte value) {

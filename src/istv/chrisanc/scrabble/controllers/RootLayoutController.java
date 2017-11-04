@@ -10,7 +10,7 @@ import javafx.scene.control.Alert;
  */
 public class RootLayoutController extends BaseController {
     /**
-     * Opens an about dialog.
+     * Opens an about dialog
      */
     @FXML
     protected void handleAbout() {

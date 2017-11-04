@@ -1,9 +1,8 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
 /**
- * <p>
- * This class represents a square on the board, that is to say a position where a {@link PlayerInterface} can put a
- * {@link LetterInterface} on the board.
+ * This class represents a square on the board, that is to say a position where a player can put a
+ * letter on the board.
  *
  * @author Christopher Anciaux
  */
@@ -16,7 +15,13 @@ public interface SquareInterface {
 
     String getCssClass();
 
+    /**
+     * @return true if the multiplier of the square has already been used, false otherwise
+     */
     boolean isMultiplierUsed();
 
+    /**
+     * Makes the multiplier used
+     */
     void makeMultiplierUsed();
 }

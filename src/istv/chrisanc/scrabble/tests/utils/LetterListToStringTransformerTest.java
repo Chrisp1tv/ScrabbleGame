@@ -22,6 +22,9 @@ public class LetterListToStringTransformerTest {
 
     private static List<LetterInterface> letters;
 
+    /**
+     * Tests if transforming a letters list to a {@link String} works as expected
+     */
     @Test
     public void transform() throws Exception {
         String word = LetterListToStringTransformer.transform(LetterListToStringTransformerTest.letters);
@@ -29,6 +32,9 @@ public class LetterListToStringTransformerTest {
         assertEquals("ACW", word);
     }
 
+    /**
+     * Tests if transforming a {@link String} to a letters list works as expected
+     */
     @Test
     public void reverseTransform() throws Exception {
         List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW", new French());

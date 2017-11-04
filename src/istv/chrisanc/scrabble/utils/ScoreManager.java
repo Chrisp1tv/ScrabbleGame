@@ -18,10 +18,29 @@ import java.util.Set;
  * @author Eguinane Chavatte
  */
 public class ScoreManager {
+    /**
+     * Calculates and returns the score obtained by the given turn
+     *
+     * @param playedLetters The played letters
+     * @param playedWords   The played words
+     * @param board         The actual board
+     *
+     * @return the amount of points given by the played turn
+     */
     public static int getTurnScore(Collection<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board) {
         return ScoreManager.getTurnScore(playedLetters, playedWords, board, true);
     }
 
+    /**
+     * Calculates and returns the score obtained by the given turn
+     *
+     * @param playedLetters     The played letters
+     * @param playedWords       The played words
+     * @param board             The actual board
+     * @param updateMultipliers True if the method must update the board multipliers, false otherwise
+     *
+     * @return the amount of points given by the played turn
+     */
     public static int getTurnScore(Collection<LetterInterface> playedLetters, List<WordInterface> playedWords, BoardInterface board, boolean updateMultipliers) {
         int i, j, turnScore = PlayerInterface.BASE_NUMBER_OF_LETTERS == playedLetters.size() ? 50 : 0;
         Set<SquareInterface> squaresToMakeUsed = new HashSet<>();
@@ -69,6 +88,12 @@ public class ScoreManager {
         return turnScore;
     }
 
+    /**
+     * Updates the score of all the players when a Scrabble game ended after one player played all his letters and the bag is empty
+     *
+     * @param players       The players
+     * @param currentPlayer The player who hasn't any other letter
+     */
     public static void updateScoreOnceBagIsEmptyAndOnePlayerUsedAllHisLetters(List<PlayerInterface> players, PlayerInterface currentPlayer) {
         int pointsSumToGiveToCurrentPlayer = 0;
 
@@ -86,6 +111,11 @@ public class ScoreManager {
         }
     }
 
+    /**
+     * Updates the score of all the players when a Scrabble game ended after players skip their turns too many times
+     *
+     * @param players The players
+     */
     public static void updateScoreAfterPlayersSkippedTheirTurnsTooManyTimes(List<PlayerInterface> players) {
         // We subtract the letters values of each player to its total points
         for (PlayerInterface player : players) {

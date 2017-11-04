@@ -2,10 +2,7 @@ package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
-import istv.chrisanc.scrabble.model.interfaces.BagInterface;
-import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,11 +29,14 @@ import java.util.TreeMap;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
+    /**
+     * The container of the Scrabble game
+     */
     @FXML
     protected BorderPane scrabbleContainer;
 
     /**
-     * The view representation of the Scrabble {@link BoardInterface}
+     * The view representation of the Scrabble board
      */
     @FXML
     protected GridPane scrabbleGrid;
@@ -48,7 +48,7 @@ public class GameController extends BaseController {
     protected VBox playersListContainer;
 
     /**
-     * The container of the {@link LetterInterface} possessed by the {@link PlayerInterface}
+     * The container of the letters possessed by the player
      */
     @FXML
     protected HBox playerLettersContainer;
@@ -73,21 +73,20 @@ public class GameController extends BaseController {
 
     /**
      * The button used to cancel the current turn and take back the letters disposed on the Board that aren't validated by
-     * the player.
+     * the player
      */
     @FXML
     protected Button takeBackLettersButton;
 
     /**
-     * The letters being played (put on the board) by the user. The index is a list with, at index 0, the line of the letter,
-     * and at index 1 the column of the letter. The value is the played letter. The played letters are ordered in the grid order
-     * (from top to bottom and from left to right)
+     * The letters being played (put on the board) by the user
+     * The played letters are ordered in the grid order (from top to bottom and from left to right)
      */
     protected SortedMap<BoardPosition, LetterInterface> playedLetters = new TreeMap<>();
 
     /**
      * Initializes the controller
-     * <p>
+     *
      * When this method is triggered, the Scrabble game itself is already completely initialized by {@link NewGameController}
      * which handles the creation of a Scrabble game, or by {@link LoadGameController} which loads an already-started Scrabble
      * game
@@ -102,8 +101,7 @@ public class GameController extends BaseController {
     }
 
     /**
-     * Validates the letters played by the player. This method is triggered when the user clicks on the "Validate the played
-     * letters"
+     * Validates the letters played by the player
      */
     @FXML
     protected void handleValidatePlayedLetters() {
@@ -125,8 +123,7 @@ public class GameController extends BaseController {
     }
 
     /**
-     * Exchanges a {@link LetterInterface} with the {@link BagInterface}. This method is triggered when the user clicks
-     * on the "Exchange a letter with the bag" button
+     * Exchanges a letter with the bag
      */
     @FXML
     protected void handleExchangeLetterWithBag() {
@@ -167,7 +164,7 @@ public class GameController extends BaseController {
     }
 
     /**
-     * Skips the user turn, this method is triggered when the user clicks on the "Skip your turn" button
+     * Skips the user turn
      */
     @FXML
     protected void handleSkipTurn() {
@@ -282,7 +279,7 @@ public class GameController extends BaseController {
     }
 
     /**
-     * Displays the board grid
+     * Initializes the board grid
      */
     protected void initializeBoardGrid() {
         Templates.initializeBoardGrid(this.scrabbleGrid, this.scrabbleContainer);
@@ -321,8 +318,14 @@ public class GameController extends BaseController {
      * @author Christopher Anciaux
      */
     public static class BoardPosition implements Comparable<BoardPosition> {
+        /**
+         * The line on which the letter has been played
+         */
         protected short line;
 
+        /**
+         * The column on which the letter has been played
+         */
         protected short column;
 
         public BoardPosition(short line, short column) {

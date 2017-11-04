@@ -18,6 +18,12 @@ abstract public class DraggableLetterManager {
         void manipulateLetter(LetterInterface letter, DragEvent dragEvent);
     }
 
+    /**
+     * Adds to the letter the possibility to be dragged on another element.
+     *
+     * @param letterElement The element to be dragged
+     * @param letter        The corresponding letter object
+     */
     public static void makeLetterDraggable(Node letterElement, LetterInterface letter) {
         // When an user starts to drag a letter
         letterElement.setOnDragDetected(event -> {
@@ -39,6 +45,13 @@ abstract public class DraggableLetterManager {
         });
     }
 
+    /**
+     * Makes an element ready to receive a letter, that is to say to be the element on which letters are dragged on
+     *
+     * @param lettersReceiver    The element to make ready to receive letters
+     * @param allowOneLetterOnly True if one letter only can be dragged on the element
+     * @param onLetterDragDone   Action when a letter has been dragged on the element
+     */
     public static void makeElementReadyToReceiveLetter(Pane lettersReceiver, boolean allowOneLetterOnly, DraggedLetterHandler onLetterDragDone) {
         // Determines if the user can drag the element on the lettersReceiver
         lettersReceiver.setOnDragOver(event -> {

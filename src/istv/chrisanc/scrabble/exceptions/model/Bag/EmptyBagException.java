@@ -1,14 +1,13 @@
 package istv.chrisanc.scrabble.exceptions.model.Bag;
 
-import istv.chrisanc.scrabble.model.interfaces.BagInterface;
-import istv.chrisanc.scrabble.model.Player;
-
 /**
- * This {@link Exception} should be thrown when a {@link Player} tries to draw a letter when the {@link BagInterface} is empty.
+ * This {@link Exception} should be thrown when a player tries to draw a letter when the bag is empty.
  *
  * @author Christopher Anciaux
  */
 public class EmptyBagException extends Exception {
+    private static final long serialVersionUID = -5791350247760210867L;
+
     public EmptyBagException() {
         super("exceptions.model.bag.emptyBag");
     }

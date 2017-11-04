@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.utils;
 
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 
@@ -34,7 +33,7 @@ public class LetterListToStringTransformer {
      *
      * @return the transformed {@link String} to {@link List}
      */
-    public static List<LetterInterface> reverseTransform(String word, LanguageInterface language) throws LetterToStringTransformationException {
+    public static List<LetterInterface> reverseTransform(String word, LanguageInterface language) {
         List<LetterInterface> letters = new ArrayList<>();
 
         for (int i = 0; i < word.length(); i++) {
