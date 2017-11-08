@@ -149,14 +149,14 @@ public class NewGameController extends BaseController {
      * Updates the form of players information, according to the number of players inputted
      */
     protected void updatePlayersForm() {
+        // If the user entered a smaller number of players than the previous value
         if (this.playersInformationVBox.getChildren().size() > this.numberPlayers) {
-            for (int i = this.numberPlayers, oldNumberPlayers = this.playersInformationVBox.getChildren().size(); i < oldNumberPlayers; i++) {
-                this.playersInformationVBox.getChildren().remove(i);
-            }
+            this.playersInformationVBox.getChildren().subList(this.numberPlayers, this.playersInformationVBox.getChildren().size()).clear();
 
             return;
         }
 
+        // If the user entered a greater number of players than the previous value
         for (int i = this.playersInformationVBox.getChildren().size(); i < this.numberPlayers; i++) {
             this.playersInformationVBox.getChildren().add(this.getPlayerInformationForm(i));
         }
