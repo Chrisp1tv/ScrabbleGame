@@ -98,7 +98,8 @@ public class Templates {
         numberOfHelp.getStyleClass().add("player-help");
 
         Text boundPlayerHelp = new Text();
-        boundPlayerHelp.textProperty().bind(player.scoreProperty().asString());
+       // boundPlayerHelp.textProperty().bind(player.playerHelpProperty().asString());
+        boundPlayerHelp.textProperty().set("5");
         Text playerHelpLegend = new Text(" " + i18nMessages.getString("help"));
         numberOfHelp.getChildren().addAll(boundPlayerHelp, playerHelpLegend);
 

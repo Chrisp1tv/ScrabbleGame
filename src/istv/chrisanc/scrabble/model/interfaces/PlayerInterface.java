@@ -52,7 +52,7 @@ public interface PlayerInterface {
 
     int getHelp();
 
-    ReadOnlyIntegerProperty playerHelpProperty();
+    //ReadOnlyIntegerProperty playerHelpProperty();
 
     /**
      * @return true if the player is human, false otherwise

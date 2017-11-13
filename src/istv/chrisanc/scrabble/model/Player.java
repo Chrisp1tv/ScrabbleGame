@@ -52,18 +52,18 @@ public class Player implements PlayerInterface, Serializable {
      * Number of hint the player can get.
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
-    //protected int help;
+    protected int help;
 
-    protected IntegerProperty help;
+   // protected IntegerProperty help;
 
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
         if(human){
-        	this.help.set(5);
-        }else{
-        	this.help.set(help.get()-1);
+        	this.help=5;
+        } else{
+        	this.help=-1;
         }
     }
 
@@ -93,14 +93,14 @@ public class Player implements PlayerInterface, Serializable {
 
     @Override
     public int getHelp(){
-    	return help.get();
+    	return help;
     }
 
 
-    @Override
+   /** @Override
     public ReadOnlyIntegerProperty playerHelpProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.help);
-    }
+    }**/
 
 
     /**
@@ -182,7 +182,7 @@ public class Player implements PlayerInterface, Serializable {
 
 
     private void decreaseHelp(){
-    	this.help.set(help.get()-1);
+    	this.help=-1;
     }
 
     /*
@@ -191,7 +191,7 @@ public class Player implements PlayerInterface, Serializable {
      * If the player has no help anymore, it return "0"
      */
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
-    	if(this.help.get()>0){
+    	if(this.help>0){
     		this.decreaseHelp();
     		WordFinder WF = new WordFinder();
     		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
