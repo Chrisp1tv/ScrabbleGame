@@ -101,6 +101,17 @@ public class GameController extends BaseController {
     }
 
     /**
+     * Help the player to play his turn
+     */
+
+    @FXML
+    protected void handlePlayerHelp() {
+
+
+
+    }
+
+    /**
      * Validates the letters played by the player
      */
     @FXML

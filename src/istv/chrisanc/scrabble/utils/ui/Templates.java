@@ -91,8 +91,21 @@ public class Templates {
         Text playerPointsLegend = new Text(" " + i18nMessages.getString("points"));
         playerPoints.getChildren().addAll(boundPlayerPoints, playerPointsLegend);
 
+
+        /// Player Help ******************************************************
+
+        TextFlow numberOfHelp = new TextFlow();
+        numberOfHelp.getStyleClass().add("player-help");
+
+        Text boundPlayerHelp = new Text();
+        boundPlayerHelp.setText("10");;
+        Text playerHelpLegend = new Text(" " + i18nMessages.getString("help"));
+        numberOfHelp.getChildren().addAll(boundPlayerHelp, playerHelpLegend);
+
+        /// *******************************************************************
+
         // Assembling all elements of the player frame and adding it to the list of players
-        innerVBox.getChildren().addAll(playerName, playerPoints);
+        innerVBox.getChildren().addAll(playerName, playerPoints,numberOfHelp);
         innerHBox.getChildren().addAll(playerNumber, innerVBox);
 
         playerContainer.getChildren().add(innerHBox);
