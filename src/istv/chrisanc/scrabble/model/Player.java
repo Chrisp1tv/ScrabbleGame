@@ -184,7 +184,7 @@ public class Player implements PlayerInterface, Serializable {
     		WordFinder WF = new WordFinder();
     		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
     	}else{
-    		throw new NoHelpException;//n ope
+    		throw new NoHelpException;
     	}
     }
     
