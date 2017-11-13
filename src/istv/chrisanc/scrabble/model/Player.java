@@ -1,7 +1,11 @@
 package istv.chrisanc.scrabble.model;
 
+import istv.chrisanc.scrabble.utils.WordFinder;
+import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -14,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christopher Anciaux
@@ -43,10 +48,21 @@ public class Player implements PlayerInterface, Serializable {
      */
     protected boolean human;
 
+    /**
+     * Number of hint the player can get.
+     * the value is set to 5 at the begin and decrease for each help the played asks.
+     */
+    protected int help;
+    
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
+        if(human){
+        	this.help=5;
+        }else{
+        	this.help=-1;
+        }
     }
 
     public String getName() {
@@ -148,4 +164,28 @@ public class Player implements PlayerInterface, Serializable {
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);
     }
+    
+    public int getHelp(){
+    	return help;
+    }
+    
+    private void decreaseHelp(){
+    	this.help-=1;
+    }
+    
+    /*
+     * Let the player have a hint in order to know what is the best word he can do
+     * for a price of 1 help.
+     * If the player has no help anymore, it return "0"
+     */
+    public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
+    	if(this.help>0){
+    		this.decreaseHelp();
+    		WordFinder WF = new WordFinder();
+    		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
+    	}else{
+    		throw new NoHelpException;
+    	}
+    }
+    
 }
