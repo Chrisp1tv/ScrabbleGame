@@ -107,7 +107,7 @@ public class GameController extends BaseController {
     @FXML
     protected void handlePlayerHelp() {
 
-    	// A Faire
+
 
     }
 
