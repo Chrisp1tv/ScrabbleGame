@@ -21,7 +21,7 @@ public class GameEndedController extends BaseController {
     protected Text winnerText;
 
     /**
-     * The Scoreboard, listing the players ordered according to their respective points
+     * The Scoreboard, listing the players ordered according to their respective score
      */
     @FXML
     protected VBox scoreboardVBox;

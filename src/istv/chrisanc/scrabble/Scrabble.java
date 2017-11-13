@@ -404,7 +404,7 @@ public class Scrabble extends Application {
     }
 
     /**
-     * Distributes all the letters to each letters
+     * Distributes all the letters to each player
      *
      * @param bag     The bag of the Scrabble game
      * @param players The players of the Scrabble game
@@ -459,7 +459,7 @@ public class Scrabble extends Application {
     }
 
     /**
-     * Initializes the root layout and tries to load the last opened person file
+     * Initializes the root layout
      */
     protected void initializeRootLayout() {
         try {

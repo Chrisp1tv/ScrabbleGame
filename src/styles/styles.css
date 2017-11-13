@@ -66,6 +66,7 @@
 *****/
 
 .load-game-view > VBox {
+    -fx-alignment: center;
     -fx-spacing: 10;
 }
 
