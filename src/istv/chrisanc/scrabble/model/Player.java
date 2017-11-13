@@ -52,16 +52,18 @@ public class Player implements PlayerInterface, Serializable {
      * Number of hint the player can get.
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
-    protected int help;
-    
+    //protected int help;
+
+    protected IntegerProperty help;
+
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
         if(human){
-        	this.help=5;
+        	this.help.set(5);
         }else{
-        	this.help=-1;
+        	this.help.set(help.get()-1);
         }
     }
 
@@ -88,6 +90,18 @@ public class Player implements PlayerInterface, Serializable {
     public ReadOnlyIntegerProperty scoreProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
     }
+
+    @Override
+    public int getHelp(){
+    	return help.get();
+    }
+
+
+    @Override
+    public ReadOnlyIntegerProperty playerHelpProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.help);
+    }
+
 
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
@@ -164,22 +178,20 @@ public class Player implements PlayerInterface, Serializable {
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);
     }
-    
-    public int getHelp(){
-    	return help;
-    }
-    
+
+
+
     private void decreaseHelp(){
-    	this.help-=1;
+    	this.help.set(help.get()-1);
     }
-    
+
     /*
      * Let the player have a hint in order to know what is the best word he can do
      * for a price of 1 help.
      * If the player has no help anymore, it return "0"
      */
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
-    	if(this.help>0){
+    	if(this.help.get()>0){
     		this.decreaseHelp();
     		WordFinder WF = new WordFinder();
     		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
@@ -187,5 +199,5 @@ public class Player implements PlayerInterface, Serializable {
     		throw new NoHelpException;
     	}
     }
-    
+
 }
