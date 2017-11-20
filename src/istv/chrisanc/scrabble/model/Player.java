@@ -69,7 +69,8 @@ public class Player implements PlayerInterface, Serializable {
         if(human){
         	this.help = new SimpleIntegerProperty(5);
         } else{
-        	this.help = new SimpleIntegerProperty(-1);
+
+        	this.help = new SimpleIntegerProperty(0);
         }
     }
 
@@ -193,9 +194,7 @@ public class Player implements PlayerInterface, Serializable {
     		alert.setContentText("Vous n'avez plus d\'aides possibles !");
     		alert.showAndWait();
     	} else {
-
     		// Decrease Help
-
     	this.help.set(this.help.get()-1);
     	}
     	}

@@ -112,6 +112,8 @@ public class GameController extends BaseController {
     @FXML
     protected void handlePlayerHelp() {
 
+
+
     	this.scrabble.getCurrentPlayer().decreaseHelp();
     	// Test -- Show in the console
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
