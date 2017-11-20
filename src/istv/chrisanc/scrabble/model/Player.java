@@ -6,9 +6,12 @@ import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.exceptions.NoHelpException;
+import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -21,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Christopher Anciaux
@@ -214,15 +218,22 @@ public class Player implements PlayerInterface, Serializable {
      * Let the player have a hint in order to know what is the best word he can do
      * for a price of 1 help.
      * If the player has no help anymore, it return "0"
+     * the list returned by findWord function must be sorted by score
      */
 
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
     	if(this.help.get()>0){
     		this.decreaseHelp();
     		WordFinder WF = new WordFinder();
-    		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
+    		List<WordInterface> playableWords = null;
+			try {
+				playableWords = (List<WordInterface>) WF.findWord(board, this, dictionary);
+			} catch (LetterToStringTransformationException e) {
+				e.printStackTrace();
+			}
+    		return playableWords.get(playableWords.size());
     	}else{
-    		throw new NoHelpException;
+    		throw new NoHelpException();
     	}
     }
 
