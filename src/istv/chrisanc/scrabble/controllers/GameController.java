@@ -113,7 +113,7 @@ public class GameController extends BaseController {
     protected void handlePlayerHelp() {
 
     	this.scrabble.getCurrentPlayer().decreaseHelp();
-    	// Test
+    	// Test -- Show in the console
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
     	this.refreshScrabbleInterface();
     	this.refreshBoard();
