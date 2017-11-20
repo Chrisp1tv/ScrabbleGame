@@ -10,15 +10,15 @@ import java.util.TreeMap;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import istv.chrisanc.scrabble.model.Player;
 import istv.chrisanc.scrabble.model.Word;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
-import istv.chrisanc.scrabble.utils.interfaces.AIInterface;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.AIInterface;
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 
 /**
  * This class contains the behaviour of the AI
@@ -30,7 +30,7 @@ public class AI extends Player implements AIInterface
 
 	public AI(String name)
 	{
-		super(name);
+		super(name, false);
 	}
 
 	//Draw letters from the bag until the AI has 7 letters or until the bag is empty
@@ -47,17 +47,12 @@ public class AI extends Player implements AIInterface
 
 	
 	@Override
-	public void playTurn(BoardInterface board, BagInterface bag, DictionaryInterface dictionary) 
+	public void playTurn(BoardInterface board, BagInterface bag, DictionaryInterface dictionary, LanguageInterface language) 
 	{
 		Map<WordInterface, Integer> listOfWords = new TreeMap<WordInterface, Integer>();
 		
 		//Finding all the words which can be played
-		try {
-			listOfWords = WordFinder.findWord(board, this, dictionary);
-		} catch (LetterToStringTransformationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			listOfWords = WordFinder.findWord(board, this, dictionary, language);
 		
 		//If words can be played, one of them is randomly chose and added to the list of played words
 		//Else, a random amount of letters (between 0 and 7) are removed from the hand and put in the bag
@@ -79,12 +74,15 @@ public class AI extends Player implements AIInterface
 			int number = (int)Math.random()*(7+1);
 			for(int i = 0; i < number; i++)
 				lettersToRemove.add(this.letters.get(i));
-			try {
-				this.addLetters(bag.exchangeLetters(lettersToRemove));
-			} catch (EmptyBagException | NotEnoughLettersException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					this.addLetters(bag.exchangeLetters(lettersToRemove));
+				} catch (EmptyBagException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NotEnoughLettersException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
 		
 		//At the end, letters are took from the bag if there are less than 7 letters in the hand

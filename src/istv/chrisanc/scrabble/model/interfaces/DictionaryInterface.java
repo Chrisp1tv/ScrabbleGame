@@ -1,6 +1,7 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
 import java.util.List;
+import java.util.NavigableSet;
 
 /**
  * This class represents a dictionary, used to check words existence and to find words having given letters.
@@ -14,6 +15,11 @@ public interface DictionaryInterface {
      * @return true if the word exists, false otherwise
      */
     boolean wordExists(String word);
+    
+    /**
+     * @return the list of words in the dictionary
+     */
+    NavigableSet<String> getWords();
 
     /**
      * @param letters The letters used to find words (the found words should have only these letters and no others !)

@@ -14,38 +14,40 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import istv.chrisanc.scrabble.utils.interfaces.AIInterface;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.AIInterface;
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
+import istv.chrisanc.scrabble.model.Player;
 import istv.chrisanc.scrabble.model.Word;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.letters.B;
-import istv.chrisanc.scrabble.model.letters.M;
-import istv.chrisanc.scrabble.model.letters.N;
-import istv.chrisanc.scrabble.model.letters.O;
-import istv.chrisanc.scrabble.model.letters.T;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.AI;
-import istv.chrisanc.scrabble.utils.dictionaries.DictionaryFactory;
+import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 
 public class AITest {
 	private static AIInterface AI;
 	private static BagInterface bag;
 	private static BoardInterface board;
 	private static DictionaryInterface dictionary;
+	private static LanguageInterface language;
+	private static PlayerInterface player;
 
 	@Before
 	public void setUp() throws Exception {
 		AI = new AI("AI");
-		bag = new Bag();
+		bag = new Bag(language.getBagLettersDistribution());
 		board = new Board();
+		player = new Player("test", false);
 		List<LetterInterface> letters =  new ArrayList<LetterInterface>();
-		letters = Arrays.asList(new B(), new O(), new N());
-		board.addWord(new Word(letters, true, (short)6, (short)6));
-		DictionaryFactory dictionaryFactory = new DictionaryFactory();
-		dictionary = dictionaryFactory.getDictionary(DictionaryFactory.FRENCH);
+		letters = Arrays.asList(LetterToStringTransformer.reverseTransform("B", language),
+				LetterToStringTransformer.reverseTransform("O", language),
+				LetterToStringTransformer.reverseTransform("N", language));
+		board.addWord(new Word(player, letters, true, (short)6, (short)6));
+		dictionary = language.getDictionary();
 	}
 
 	@Test
@@ -58,7 +60,7 @@ public class AITest {
 	@Test
 	public void testPlayTurn() {
 		AI.drawLetters(bag);
-		AI.playTurn(board, bag, dictionary);
+		AI.playTurn(board, bag, dictionary, language);
 		assertEquals(2, board.getPlayedWords().size());
 	}
 

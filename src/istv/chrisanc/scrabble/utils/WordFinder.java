@@ -1,14 +1,12 @@
 package istv.chrisanc.scrabble.utils;
 
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import istv.chrisanc.scrabble.model.Word;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
-import istv.chrisanc.scrabble.model.letters.Joker;
-import istv.chrisanc.scrabble.model.letters.P;
-import istv.chrisanc.scrabble.utils.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +35,7 @@ public class WordFinder {
      *
      * @return A list of playable words sorted by their score
      */
-    public static Set<WordInterface> findWord(BoardInterface board, PlayerInterface player, DictionaryInterface dictionary) throws LetterToStringTransformationException {
+    public static Map<WordInterface, Integer> findWord(BoardInterface board, PlayerInterface player, DictionaryInterface dictionary, LanguageInterface language){
     	//Creation of 2 Lists :
     	//- a list of the player's letters
     	//- a list of words formed with the first list
@@ -99,7 +97,7 @@ public class WordFinder {
     		Map<String, List<LetterInterface>> listOfPlayableWordsWithLetters = new HashMap<String, List<LetterInterface>>();
     		//TODO Long, � v�rifier
     		for(String p : listOfPlayableWords)
-    			listOfPlayableWordsWithLetters.put(p, LetterListToStringTransformer.reverseTransform(p));
+    			listOfPlayableWordsWithLetters.put(p, LetterListToStringTransformer.reverseTransform(p, language));
 
     		//Creation of a list to stock words from the dictionary and containing the played word (w)
     		List<String> listOfWordsContainingTheWord = dictionary.findWordsHavingLettersInOrder(w.getLetters());
@@ -185,61 +183,61 @@ public class WordFinder {
 				//Conversion of playable words from String to Letters and then to Word
 				for(String s : playableWordsStartingWithPlayedWordsMatched)
 				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s);
+					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
 					if(w.isHorizontal())
-						word = new Word(conversion, true, w.getStartLine(), w.getStartColumn());
+						word = new Word(player, conversion, true, w.getStartLine(), w.getStartColumn());
 					else
-						word = new Word(conversion, false, w.getStartLine(), w.getStartColumn());
+						word = new Word(player, conversion, false, w.getStartLine(), w.getStartColumn());
 					
-					if(PlayedTurnValidityChecker.isPlayable(board, word, dictionary))
+					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
 						wordListOfPlayableWords.add(word);
 				}
 				for(String s : playableWordsEndingWithPlayedWordsMatched)
 				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s);
+					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
 					if(w.isHorizontal())
-						word = new Word(conversion, true, w.getStartLine(), (short) (w.getEndColumn() - conversion.size()));
+						word = new Word(player, conversion, true, w.getStartLine(), (short) (w.getEndColumn() - conversion.size()));
 					else
-						word = new Word(conversion, false, (short) (w.getEndLine() - conversion.size()), w.getStartColumn());
+						word = new Word(player, conversion, false, (short) (w.getEndLine() - conversion.size()), w.getStartColumn());
 					
-					if(PlayedTurnValidityChecker.isPlayable(board, word, dictionary))
+					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
 						wordListOfPlayableWords.add(word);
 				}
 				for(String s: horizontalPlayableWordsMatched)
 				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s);
+					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
 					if(w.isHorizontal())
 					{
-						word = new Word(conversion, true, w.getStartLine(), (short) (w.getStartColumn()-findSizePrefix(conversion, w)));
-						if(PlayedTurnValidityChecker.isPlayable(board, word, dictionary))
+						word = new Word(player, conversion, true, w.getStartLine(), (short) (w.getStartColumn()-findSizePrefix(conversion, w)));
+						if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
 							wordListOfPlayableWords.add(word);
 					}
 					else
 					{
-						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s);
+						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s, player, language);
 						for(WordInterface placement : possiblePlacementForTheWord)
-							if(PlayedTurnValidityChecker.isPlayable(board, placement, dictionary))
+							if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, placement, dictionary))
 								wordListOfPlayableWords.add(placement);
 					}
 				}
 				for(String s : verticalPlayableWordsMatched)
 				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s);
+					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
 					if(w.isHorizontal())
 					{
-						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s);
+						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s, player, language);
 						for(WordInterface placement : possiblePlacementForTheWord)
-							if(PlayedTurnValidityChecker.isPlayable(board, placement, dictionary))
+							if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, placement, dictionary))
 								wordListOfPlayableWords.add(placement);
 					}
 					else
 					{
-						word = new Word(conversion, true, (short) (w.getStartLine()-findSizePrefix(conversion, w)), w.getStartColumn());
-						if(PlayedTurnValidityChecker.isPlayable(board, word, dictionary))
+						word = new Word(player, conversion, true, (short) (w.getStartLine()-findSizePrefix(conversion, w)), w.getStartColumn());
+						if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
 							wordListOfPlayableWords.add(word);
 					}	
 				}
@@ -249,16 +247,15 @@ public class WordFinder {
    			if(wordsWithLettersAvailable.contains(LetterListToStringTransformer.transform(wordBasedOnPlayedWords.getLetters())))
    				finalList.add(wordBasedOnPlayedWords);
     	
-    	/*//Creation of a map containing the playable words and their amount of points
+    	//Creation of a map containing the playable words and their amount of points
     	Map<WordInterface, Integer> finalListWithPoints = new TreeMap<WordInterface, Integer>();
     	for(WordInterface w : finalList)
     	{
-    		List<WordInterface> adjacentWords = PlayedTurnValidityChecker.AdjacentWord(board, w, dictionary);
+    		List<WordInterface> adjacentWords = PlayedTurnValidityChecker_Alternatif.AdjacentWord(board, w, dictionary, player);
     		finalListWithPoints.put(w, ScoreManager.getTurnScore(w.getLetters(), adjacentWords, board));
     	}
     	
-    	return finalListWithPoints;*/
-    	return finalList;
+    	return finalListWithPoints;
     }
 
     //Return the size of a word's prefix
@@ -285,13 +282,13 @@ public class WordFinder {
      * @return					A list of all the possible positions for the wordToPlace
      * @throws LetterToStringTransformationException
      */
-    private static Set<WordInterface> possiblePlacement(WordInterface placedWord, String wordToPlace) throws LetterToStringTransformationException
+    private static Set<WordInterface> possiblePlacement(WordInterface placedWord, String wordToPlace, PlayerInterface player, LanguageInterface language)
     {
     	//List containing all the possible positions to place a word based on an already placed word
     	Set<WordInterface> possibility = new HashSet<WordInterface>();
     	//Conversion of words into their letters
     	List<LetterInterface> placedWordLetters = placedWord.getLetters();
-    	List<LetterInterface> wordToPlaceLetters = LetterListToStringTransformer.reverseTransform(wordToPlace);
+    	List<LetterInterface> wordToPlaceLetters = LetterListToStringTransformer.reverseTransform(wordToPlace, language);
     	
     	//Comparison of the letters of the two words.
     	//If their letters are equals, the playable word is added to the list of possible placement
@@ -302,9 +299,9 @@ public class WordFinder {
     			if(placedWordLetters.get(i).equals(wordToPlaceLetters.get(j)))
     			{
     				if(placedWord.isHorizontal())
-    					possibility.add(new Word(wordToPlaceLetters, false, (short)(placedWord.getStartLine()-j), (short)(placedWord.getStartColumn()+i)));
+    					possibility.add(new Word(player, wordToPlaceLetters, false, (short)(placedWord.getStartLine()-j), (short)(placedWord.getStartColumn()+i)));
     				else
-    					possibility.add(new Word(wordToPlaceLetters, true, (short)(placedWord.getStartLine()+i), (short)(placedWord.getStartColumn()-j)));
+    					possibility.add(new Word(player, wordToPlaceLetters, true, (short)(placedWord.getStartLine()+i), (short)(placedWord.getStartColumn()-j)));
     			}
     		}
     	}

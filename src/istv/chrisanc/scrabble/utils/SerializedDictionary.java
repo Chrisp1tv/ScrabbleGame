@@ -41,6 +41,11 @@ abstract public class SerializedDictionary implements DictionaryInterface {
     public boolean wordExists(String word) {
         return this.words.contains(word);
     }
+    
+	@Override
+	public NavigableSet<String> getWords() {
+		return words;
+	}
 
     @Override
     public List<String> findWordsHavingLetters(List<LetterInterface> letters) {
