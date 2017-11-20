@@ -58,7 +58,6 @@ public class Player implements PlayerInterface, Serializable {
     protected IntegerProperty help;
 
 
-
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
@@ -92,11 +91,6 @@ public class Player implements PlayerInterface, Serializable {
     @Override
     public ReadOnlyIntegerProperty scoreProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
-    }
-
-    @Override
-    public ReadOnlyIntegerProperty playerHelpProperty() {
-        return IntegerProperty.readOnlyIntegerProperty(this.help);
     }
 
     /**
@@ -176,9 +170,18 @@ public class Player implements PlayerInterface, Serializable {
         this.letters.addAll(letters);
     }
 
+    /**
+     * Decrease the number of hints everytime the button "Help" is clicked
+     */
+
     public void decreaseHelp(){
 
+    	// Test if the player is a Human not an IA
+
     	if(human) {
+
+    		// Test if the player has the possibility to get a hint
+
     	if(this.help.get()==0) {
     		Alert alert = new Alert(AlertType.INFORMATION);
     		alert.setTitle("Ouups !");
@@ -186,14 +189,24 @@ public class Player implements PlayerInterface, Serializable {
     		alert.setContentText("Vous n'avez plus d\'aides possibles !");
     		alert.showAndWait();
     	} else {
+
+    		// Decrease Help
+
     	this.help.set(this.help.get()-1);
     	}
     	}
     }
 
+    // Return Help as Integer to display it on the board
+
+	@Override
+	public int getHelp() {
+		return this.help.get();
+	}
+
     @Override
-    public void increaseHelp(){
-    	this.help.set(this.help.get()+1);
+    public ReadOnlyIntegerProperty playerHelpProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.help);
     }
 
 
@@ -202,6 +215,7 @@ public class Player implements PlayerInterface, Serializable {
      * for a price of 1 help.
      * If the player has no help anymore, it return "0"
      */
+
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
     	if(this.help.get()>0){
     		this.decreaseHelp();

@@ -93,6 +93,7 @@ public class GameController extends BaseController {
      * which handles the creation of a Scrabble game, or by {@link LoadGameController} which loads an already-started Scrabble
      * game
      */
+
     public void initializeInterface() {
         this.initializePlayedLetters();
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
@@ -102,13 +103,14 @@ public class GameController extends BaseController {
         this.listenCurrentPlayer();
     }
 
+
     /**
      * Help the player to play his turn
      */
 
+
     @FXML
     protected void handlePlayerHelp() {
-
 
     	this.scrabble.getCurrentPlayer().decreaseHelp();
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());

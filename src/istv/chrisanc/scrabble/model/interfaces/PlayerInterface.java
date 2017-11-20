@@ -52,8 +52,6 @@ public interface PlayerInterface {
 
     int getHelp();
 
-    void increaseHelp();
-
     void decreaseHelp();
 
     ReadOnlyIntegerProperty playerHelpProperty();
@@ -61,5 +59,6 @@ public interface PlayerInterface {
     /**
      * @return true if the player is human, false otherwise
      */
+
     boolean isHuman();
 }
