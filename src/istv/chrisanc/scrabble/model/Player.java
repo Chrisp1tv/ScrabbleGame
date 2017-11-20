@@ -54,18 +54,18 @@ public class Player implements PlayerInterface, Serializable {
      * Number of hint the player can get.
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
-    protected int help;
+    //protected int help;
 
-   // protected IntegerProperty help;
+    protected IntegerProperty help;
 
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
         if(human){
-        	this.help=5;
+        	this.help = new SimpleIntegerProperty(5);
         } else{
-        	this.help=-1;
+        	this.help = new SimpleIntegerProperty(-1);
         }
     }
 
@@ -95,14 +95,13 @@ public class Player implements PlayerInterface, Serializable {
 
     @Override
     public int getHelp(){
-    	return help;
+    	return help.get();
     }
 
-
-   /** @Override
+    @Override
     public ReadOnlyIntegerProperty playerHelpProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.help);
-    }**/
+    }
 
 
     /**
@@ -181,6 +180,27 @@ public class Player implements PlayerInterface, Serializable {
         this.letters.addAll(letters);
     }
 
+    public void decreaseHelp(){
+
+    	if(human) {
+    	if(this.help.get()==0) {
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ouups !");
+    		alert.setHeaderText(null);
+    		alert.setContentText("Vous n'avez plus d\'aides possibles !");
+    		alert.showAndWait();
+    	} else {
+    	this.help.set(this.help.get()-1);
+    	}
+    	}
+    }
+
+    @Override
+    public void increaseHelp(){
+    	this.help.set(this.help.get()+1);
+    }
+
+    /**
 
     @Override
     public void decreaseHelp(){
@@ -189,7 +209,6 @@ public class Player implements PlayerInterface, Serializable {
     		alert.setTitle("Ouups !");
     		alert.setHeaderText(null);
     		alert.setContentText("Vous n'avez plus d\'aides possibles !");
-
     		alert.showAndWait();
     	} else {
     	this.help=this.help-1;
@@ -199,7 +218,7 @@ public class Player implements PlayerInterface, Serializable {
     @Override
     public void increaseHelp(){
     	this.help=this.help+1;
-    }
+    } **/
 
     /*
      * Let the player have a hint in order to know what is the best word he can do
@@ -207,7 +226,7 @@ public class Player implements PlayerInterface, Serializable {
      * If the player has no help anymore, it return "0"
      */
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
-    	if(this.help>0){
+    	if(this.help.get()>0){
     		this.decreaseHelp();
     		WordFinder WF = new WordFinder();
     		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);

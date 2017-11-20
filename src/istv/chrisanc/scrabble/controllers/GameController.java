@@ -3,7 +3,9 @@ package istv.chrisanc.scrabble.controllers;
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.ui.Templates;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -109,15 +111,19 @@ public class GameController extends BaseController {
 
 
     	this.scrabble.getCurrentPlayer().decreaseHelp();
+
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
 
     	this.refreshScrabbleInterface();
+    	this.refreshBoard();
+
 
     }
 
     /**
      * Validates the letters played by the player
      */
+
     @FXML
     protected void handleValidatePlayedLetters() {
         try {
