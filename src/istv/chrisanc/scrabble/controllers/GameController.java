@@ -3,6 +3,11 @@ package istv.chrisanc.scrabble.controllers;
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import istv.chrisanc.scrabble.utils.LetterListToStringTransformer;
 import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -106,8 +112,18 @@ public class GameController extends BaseController {
 
     @FXML
     protected void handlePlayerHelp() {
+    	
+    	
+    	
+    	String findWord = LetterListToStringTransformer.transform(findWord(this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getLanguage().getDictionary()));
 
-
+    	Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Aide");
+		alert.setHeaderText(null);
+		alert.setContentText(findWord);
+		alert.showAndWait();
+		
+    	
     	this.scrabble.getCurrentPlayer().decreaseHelp();
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
 
