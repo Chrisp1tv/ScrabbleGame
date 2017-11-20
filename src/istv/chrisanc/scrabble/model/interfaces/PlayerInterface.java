@@ -59,6 +59,5 @@ public interface PlayerInterface {
     /**
      * @return true if the player is human, false otherwise
      */
-
     boolean isHuman();
 }

@@ -6,12 +6,9 @@ import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
-import istv.chrisanc.scrabble.exceptions.NoHelpException;
-import istv.chrisanc.scrabble.exceptions.utils.LetterToStringTransformationException;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -24,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Christopher Anciaux
@@ -58,16 +54,16 @@ public class Player implements PlayerInterface, Serializable {
      * Number of hint the player can get.
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
+    // protected int help;
 
     protected IntegerProperty help;
-
 
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
         if(human){
-        	this.help = new SimpleIntegerProperty(5);
+        	this.help= new SimpleIntegerProperty(5);
         } else{
 
         	this.help = new SimpleIntegerProperty(0);
@@ -98,10 +94,22 @@ public class Player implements PlayerInterface, Serializable {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
     }
 
+
+    @Override
+    public int getHelp(){
+    	return help.get();
+    }
+
+
+   @Override
+    public ReadOnlyIntegerProperty playerHelpProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.help);
+    }
+
+
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
      */
-
     @Override
     public List<LetterInterface> getLetters() {
         return Collections.unmodifiableList(this.letters);
@@ -175,64 +183,34 @@ public class Player implements PlayerInterface, Serializable {
         this.letters.addAll(letters);
     }
 
-    /**
-     * Decrease the number of hints everytime the button "Help" is clicked
-     */
 
+    @Override
     public void decreaseHelp(){
-
-    	// Test if the player is a Human not an IA
-
-    	if(human) {
-
-    		// Test if the player has the possibility to get a hint
-
     	if(this.help.get()==0) {
     		Alert alert = new Alert(AlertType.INFORMATION);
     		alert.setTitle("Ouups !");
     		alert.setHeaderText(null);
     		alert.setContentText("Vous n'avez plus d\'aides possibles !");
+
     		alert.showAndWait();
     	} else {
     		// Decrease Help
     	this.help.set(this.help.get()-1);
     	}
-    	}
     }
-
-    // Return Help as Integer to display it on the board
-
-	@Override
-	public int getHelp() {
-		return this.help.get();
-	}
-
-    @Override
-    public ReadOnlyIntegerProperty playerHelpProperty() {
-        return IntegerProperty.readOnlyIntegerProperty(this.help);
-    }
-
 
     /*
      * Let the player have a hint in order to know what is the best word he can do
      * for a price of 1 help.
      * If the player has no help anymore, it return "0"
-     * the list returned by findWord function must be sorted by score
      */
-
     public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
     	if(this.help.get()>0){
     		this.decreaseHelp();
     		WordFinder WF = new WordFinder();
-    		List<WordInterface> playableWords = null;
-			try {
-				playableWords = (List<WordInterface>) WF.findWord(board, this, dictionary);
-			} catch (LetterToStringTransformationException e) {
-				e.printStackTrace();
-			}
-    		return playableWords.get(playableWords.size());
+    		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
     	}else{
-    		throw new NoHelpException();
+    		throw new NoHelpException;
     	}
     }
 

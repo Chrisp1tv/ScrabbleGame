@@ -62,7 +62,6 @@ public class Templates {
         }
     }
 
-
     public static void displayPlayer(Pane parent, ObjectProperty<PlayerInterface> currentPlayerProperty, PlayerInterface player, int playerIndex, ResourceBundle i18nMessages) {
         // Layout of each player frame
         StackPane playerContainer = new StackPane();
@@ -100,7 +99,7 @@ public class Templates {
 
         Text boundPlayerHelp = new Text();
         boundPlayerHelp.textProperty().bind(player.playerHelpProperty().asString());
-       // boundPlayerHelp.textProperty().set(""+player.getHelp());
+        //boundPlayerHelp.textProperty().set(""+player.getHelp());
         Text playerHelpLegend = new Text(" " + i18nMessages.getString("help"));
         numberOfHelp.getChildren().addAll(boundPlayerHelp, playerHelpLegend);
 
