@@ -5,12 +5,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="istv.chrisanc.scrabble.controllers.GameController"
-            fx:id="scrabbleContainer"
-            styleClass="root-container,game-view">
+<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view"
+            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="istv.chrisanc.scrabble.controllers.GameController">
     <center>
-        <GridPane fx:id="scrabbleGrid" styleClass="scrabble-grid" />
+        <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid"/>
     </center>
     <left>
         <VBox fx:id="playersListContainer" styleClass="players-list"/>
@@ -23,6 +22,7 @@
                     text="%takeBackLetters"/>
             <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag"
                     text="%exchangeLettersWithTheBag"/>
+            <Button fx:id="askHelpButton" onAction="#handleAskHelp" text="%playTheBestTurn"/>
             <Button onAction="#handleSkipTurn" text="%skipMyTurn"/>
             <Button onAction="#handleSaveGame" text="%save"/>
             <Button onAction="#handleQuitGame" text="%quit"/>

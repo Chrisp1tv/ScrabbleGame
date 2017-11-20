@@ -50,6 +50,12 @@ public interface PlayerInterface {
 
     void removeLetter(short index);
 
+    int getAvailableHelps();
+
+    void decreaseAvailableHelps();
+
+    ReadOnlyIntegerProperty availableHelpsProperty();
+
     /**
      * @return true if the player is human, false otherwise
      */

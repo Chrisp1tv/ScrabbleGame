@@ -21,6 +21,8 @@ import java.util.List;
  * @see PlayerInterface
  */
 public class Player implements PlayerInterface, Serializable {
+    protected static final int NUMBER_OF_HELPS_FOR_HUMAN_PLAYER = 5;
+
     /**
      * The name of the player
      */
@@ -43,10 +45,18 @@ public class Player implements PlayerInterface, Serializable {
      */
     protected boolean human;
 
+    /**
+     * The available helps of the player
+     */
+    protected IntegerProperty availableHelps;
+
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
+        if (this.isHuman()) {
+            this.availableHelps = new SimpleIntegerProperty(Player.NUMBER_OF_HELPS_FOR_HUMAN_PLAYER);
+        }
     }
 
     public String getName() {
@@ -71,6 +81,20 @@ public class Player implements PlayerInterface, Serializable {
     @Override
     public ReadOnlyIntegerProperty scoreProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
+    }
+
+    public int getAvailableHelps() {
+        return availableHelps.get();
+    }
+
+    @Override
+    public ReadOnlyIntegerProperty availableHelpsProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.availableHelps);
+    }
+
+    @Override
+    public void decreaseAvailableHelps() {
+        this.setAvailableHelps(this.getAvailableHelps() - 1);
     }
 
     /**
@@ -126,15 +150,21 @@ public class Player implements PlayerInterface, Serializable {
         this.human = human;
     }
 
+    protected void setAvailableHelps(int availableHelps) {
+        this.availableHelps.set(availableHelps);
+    }
+
     protected void initialize() {
         this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
+        this.availableHelps = new SimpleIntegerProperty(0);
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.writeBoolean(this.human);
         objectOutputStream.writeObject(this.name);
         objectOutputStream.writeInt(this.score.getValue());
+        objectOutputStream.writeInt(this.getAvailableHelps());
         objectOutputStream.writeObject(this.letters);
     }
 
@@ -144,6 +174,7 @@ public class Player implements PlayerInterface, Serializable {
         this.setHuman(objectInputStream.readBoolean());
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
+        this.setAvailableHelps(objectInputStream.readInt());
 
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);

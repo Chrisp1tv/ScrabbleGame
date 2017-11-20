@@ -60,6 +60,12 @@ public class GameController extends BaseController {
     protected VBox controlButtons;
 
     /**
+     * The button used to ask for help
+     */
+    @FXML
+    protected Button askHelpButton;
+
+    /**
      * The button used to exchange a letter with the bag
      */
     @FXML
@@ -107,8 +113,19 @@ public class GameController extends BaseController {
     }
 
     /**
+     * Helps the player to play his turn by playing the best turn possible for him
+     */
+    @FXML
+    protected void handleAskHelp() {
+        this.scrabble.getCurrentPlayer().decreaseAvailableHelps();
+
+        // TODO: ask IA to play for the current player
+    }
+
+    /**
      * Validates the letters played by the player
      */
+
     @FXML
     protected void handleValidatePlayedLetters() {
         try {
@@ -310,6 +327,7 @@ public class GameController extends BaseController {
     protected void listenCurrentPlayer() {
         this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
             this.controlButtons.setDisable(!newValue.isHuman());
+            this.askHelpButton.setDisable(0 >= newValue.getAvailableHelps());
 
             if (newValue.isHuman()) {
                 this.playerLettersContainer.setDisable(false);
