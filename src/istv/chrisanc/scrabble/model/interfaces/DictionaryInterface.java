@@ -21,6 +21,13 @@ public interface DictionaryInterface {
      * @return a list of the found words
      */
     List<String> findWordsHavingLetters(List<LetterInterface> letters);
+    
+    /**
+     * @param letters The letters used to find words (the found words should have only these letters in this order)
+     * 
+     * @return A list of the found words
+     */
+    List<String> findWordsHavingLettersInOrder(List<LetterInterface> letters);
 
     /**
      * @param minLength        The minimum number of letters in the searched words

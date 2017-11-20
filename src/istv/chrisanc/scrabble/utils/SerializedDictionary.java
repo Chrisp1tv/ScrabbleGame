@@ -78,6 +78,48 @@ abstract public class SerializedDictionary implements DictionaryInterface {
 
         return words;
     }
+    
+    @Override
+    public List<String> findWordsHavingLettersInOrder(List<LetterInterface> letters)
+    {
+    	int i, j;
+    	List<String> words = new ArrayList<>();
+    	String word = LetterListToStringTransformer.transform(letters);
+    	
+    	for(String w:this.words)
+    	{
+    		i = 0;
+    		j = 0;
+    		while(w.length() >= word.length() && i < w.length() && j < word.length())
+    		{
+    			//Check if the letters are equals
+    			if(w.charAt(i) == word.charAt(j))
+    			{
+    				i++;
+    				j++;
+    			}
+    			//If the letters are not equals, we return at the beginning of word and check again
+    			else
+    			{
+    				j = 0;
+    				if(w.charAt(i) == word.charAt(j))
+    				{
+    					i++;
+    					j++;
+    				}
+    				//If the letters are still not equals, we continue in the word of the dictionary
+    				else
+    					i++;
+    			}
+    			//If the word is included in the word of the dictionary, it is added to the list
+    			if(j == word.length())
+    				words.add(w);
+    		}
+    	}
+    	
+    	//Return the list of words from the dictionary which contains the word
+    	return words;
+    }
 
     @Override
     public List<String> findWordsStartingWithAndHavingLetters(int minLength, int maxLength, List<LetterInterface> startingLetters, List<LetterInterface> availableLetters) {
