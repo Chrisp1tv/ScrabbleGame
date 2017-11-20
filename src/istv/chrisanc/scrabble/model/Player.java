@@ -1,16 +1,10 @@
 package istv.chrisanc.scrabble.model;
 
-import istv.chrisanc.scrabble.utils.WordFinder;
-import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Christopher Anciaux
@@ -28,6 +21,8 @@ import java.util.Map;
  * @see PlayerInterface
  */
 public class Player implements PlayerInterface, Serializable {
+    protected static final int NUMBER_OF_HELPS_FOR_HUMAN_PLAYER = 5;
+
     /**
      * The name of the player
      */
@@ -51,22 +46,16 @@ public class Player implements PlayerInterface, Serializable {
     protected boolean human;
 
     /**
-     * Number of hint the player can get.
-     * the value is set to 5 at the begin and decrease for each help the played asks.
+     * The available helps of the player
      */
-    // protected int help;
-
-    protected IntegerProperty help;
+    protected IntegerProperty availableHelps;
 
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
-        if(human){
-        	this.help= new SimpleIntegerProperty(5);
-        } else{
-
-        	this.help = new SimpleIntegerProperty(0);
+        if (this.isHuman()) {
+            this.availableHelps = new SimpleIntegerProperty(Player.NUMBER_OF_HELPS_FOR_HUMAN_PLAYER);
         }
     }
 
@@ -94,18 +83,19 @@ public class Player implements PlayerInterface, Serializable {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
     }
 
+    public int getAvailableHelps() {
+        return availableHelps.get();
+    }
 
     @Override
-    public int getHelp(){
-    	return help.get();
+    public ReadOnlyIntegerProperty availableHelpsProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.availableHelps);
     }
 
-
-   @Override
-    public ReadOnlyIntegerProperty playerHelpProperty() {
-        return IntegerProperty.readOnlyIntegerProperty(this.help);
+    @Override
+    public void decreaseAvailableHelps() {
+        this.setAvailableHelps(this.getAvailableHelps() - 1);
     }
-
 
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
@@ -160,15 +150,21 @@ public class Player implements PlayerInterface, Serializable {
         this.human = human;
     }
 
+    protected void setAvailableHelps(int availableHelps) {
+        this.availableHelps.set(availableHelps);
+    }
+
     protected void initialize() {
         this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
+        this.availableHelps = new SimpleIntegerProperty(0);
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.writeBoolean(this.human);
         objectOutputStream.writeObject(this.name);
         objectOutputStream.writeInt(this.score.getValue());
+        objectOutputStream.writeInt(this.getAvailableHelps());
         objectOutputStream.writeObject(this.letters);
     }
 
@@ -178,40 +174,9 @@ public class Player implements PlayerInterface, Serializable {
         this.setHuman(objectInputStream.readBoolean());
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
+        this.setAvailableHelps(objectInputStream.readInt());
 
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);
     }
-
-
-    @Override
-    public void decreaseHelp(){
-    	if(this.help.get()==0) {
-    		Alert alert = new Alert(AlertType.INFORMATION);
-    		alert.setTitle("Ouups !");
-    		alert.setHeaderText(null);
-    		alert.setContentText("Vous n'avez plus d\'aides possibles !");
-
-    		alert.showAndWait();
-    	} else {
-    		// Decrease Help
-    	this.help.set(this.help.get()-1);
-    	}
-    }
-
-    /*
-     * Let the player have a hint in order to know what is the best word he can do
-     * for a price of 1 help.
-     * If the player has no help anymore, it return "0"
-     */
-    public WordInterface help(BoardInterface board,DictionaryInterface dictionary) throws NoHelpException{
-    	if(this.help.get()>0){
-    		this.decreaseHelp();
-    		WordFinder WF = new WordFinder();
-    		Map<WordInterface , Integer> playableWords = WF.findWord(board, this, dictionary);
-    	}else{
-    		throw new NoHelpException;
-    	}
-    }
-
 }

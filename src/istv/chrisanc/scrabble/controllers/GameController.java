@@ -3,23 +3,13 @@ package istv.chrisanc.scrabble.controllers;
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-
-import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
-import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
-import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
-import istv.chrisanc.scrabble.model.interfaces.WordInterface;
-import istv.chrisanc.scrabble.utils.LetterListToStringTransformer;
-
-import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.ui.Templates;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -70,6 +60,12 @@ public class GameController extends BaseController {
     protected VBox controlButtons;
 
     /**
+     * The button used to ask for help
+     */
+    @FXML
+    protected Button askHelpButton;
+
+    /**
      * The button used to exchange a letter with the bag
      */
     @FXML
@@ -101,7 +97,6 @@ public class GameController extends BaseController {
      * which handles the creation of a Scrabble game, or by {@link LoadGameController} which loads an already-started Scrabble
      * game
      */
-
     public void initializeInterface() {
         this.initializePlayedLetters();
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
@@ -111,36 +106,14 @@ public class GameController extends BaseController {
         this.listenCurrentPlayer();
     }
 
-
     /**
-     * Help the player to play his turn
+     * Helps the player to play his turn by playing the best turn possible for him
      */
-
-
     @FXML
-    protected void handlePlayerHelp() {
+    protected void handleAskHelp() {
+        this.scrabble.getCurrentPlayer().decreaseAvailableHelps();
 
-
-/**
-    	String findWord = LetterListToStringTransformer.transform(findWord(this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getLanguage().getDictionary()));
-
-
-
-    	Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Aide");
-		alert.setHeaderText(null);
-		alert.setContentText(findWord);
-		alert.showAndWait();
-
-**/
-
-    	this.scrabble.getCurrentPlayer().decreaseHelp();
-    	// Test -- Show in the console
-    	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
-    	this.refreshScrabbleInterface();
-    	this.refreshBoard();
-
-
+        // TODO: ask IA to play for the current player
     }
 
     /**
@@ -149,7 +122,6 @@ public class GameController extends BaseController {
 
     @FXML
     protected void handleValidatePlayedLetters() {
-
         try {
             this.scrabble.playLetters(this.playedLetters);
         } catch (InvalidPlayedTurnException e) {
@@ -350,6 +322,7 @@ public class GameController extends BaseController {
     protected void listenCurrentPlayer() {
         this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
             this.controlButtons.setDisable(!newValue.isHuman());
+            this.askHelpButton.setDisable(0 >= newValue.getAvailableHelps());
 
             if (newValue.isHuman()) {
                 this.refreshScrabbleInterface();

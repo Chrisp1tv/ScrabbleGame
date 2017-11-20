@@ -5,26 +5,30 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.GameController">
+<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view"
+            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="istv.chrisanc.scrabble.controllers.GameController">
     <center>
-        <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid" />
+        <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid"/>
     </center>
     <left>
-        <VBox fx:id="playersListContainer" styleClass="players-list" />
+        <VBox fx:id="playersListContainer" styleClass="players-list"/>
     </left>
     <right>
         <VBox fx:id="controlButtons" styleClass="scrabble-control-buttons">
-         	<Button fx:id="playerHelpButton" onAction="#handlePlayerHelp" text="%help" />
-            <Button fx:id="validatePlayedLettersButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters" text="%validatePlayedLetters" />
-            <Button fx:id="takeBackLettersButton" mnemonicParsing="false" onAction="#handleTakeBackLetters" text="%takeBackLetters" />
-            <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag" text="%exchangeLettersWithTheBag" />
-            <Button onAction="#handleSkipTurn" text="%skipMyTurn" />
-            <Button onAction="#handleSaveGame" text="%save" />
-            <Button onAction="#handleQuitGame" text="%quit" />
+            <Button fx:id="validatePlayedLettersButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters"
+                    text="%validatePlayedLetters"/>
+            <Button fx:id="takeBackLettersButton" mnemonicParsing="false" onAction="#handleTakeBackLetters"
+                    text="%takeBackLetters"/>
+            <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag"
+                    text="%exchangeLettersWithTheBag"/>
+            <Button fx:id="askHelpButton" onAction="#handleAskHelp" text="%playTheBestTurn"/>
+            <Button onAction="#handleSkipTurn" text="%skipMyTurn"/>
+            <Button onAction="#handleSaveGame" text="%save"/>
+            <Button onAction="#handleQuitGame" text="%quit"/>
         </VBox>
     </right>
     <bottom>
-        <HBox fx:id="playerLettersContainer" styleClass="tiles" />
+        <HBox fx:id="playerLettersContainer" styleClass="tiles"/>
     </bottom>
 </BorderPane>
