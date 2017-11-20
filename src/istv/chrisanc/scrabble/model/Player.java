@@ -12,6 +12,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -57,14 +59,16 @@ public class Player implements PlayerInterface, Serializable {
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
     protected int help;
-    
+
+   // protected IntegerProperty help;
+
     public Player(String name, boolean human) {
         this.initialize();
         this.human = human;
         this.name = name;
         if(human){
         	this.help=5;
-        }else{
+        } else{
         	this.help=-1;
         }
     }
@@ -92,6 +96,18 @@ public class Player implements PlayerInterface, Serializable {
     public ReadOnlyIntegerProperty scoreProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
     }
+
+    @Override
+    public int getHelp(){
+    	return help;
+    }
+
+
+   /** @Override
+    public ReadOnlyIntegerProperty playerHelpProperty() {
+        return IntegerProperty.readOnlyIntegerProperty(this.help);
+    }**/
+
 
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
@@ -168,15 +184,27 @@ public class Player implements PlayerInterface, Serializable {
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);
     }
-    
-    public int getHelp(){
-    	return help;
+
+
+    @Override
+    public void decreaseHelp(){
+    	if(this.help==0) {
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ouups !");
+    		alert.setHeaderText(null);
+    		alert.setContentText("Vous n'avez plus d\'aides possibles !");
+
+    		alert.showAndWait();
+    	} else {
+    	this.help=this.help-1;
+    	}
     }
-    
-    private void decreaseHelp(){
-    	this.help-=1;
+
+    @Override
+    public void increaseHelp(){
+    	this.help=this.help+1;
     }
-    
+
     /*
      * Let the player have a hint in order to know what is the best word he can do
      * for a price of 1 help.
@@ -198,5 +226,5 @@ public class Player implements PlayerInterface, Serializable {
     		throw new NoHelpException();
     	}
     }
-    
+
 }

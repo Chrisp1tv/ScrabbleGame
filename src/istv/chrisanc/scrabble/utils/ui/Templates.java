@@ -98,11 +98,14 @@ public class Templates {
         numberOfHelp.getStyleClass().add("player-help");
 
         Text boundPlayerHelp = new Text();
-        boundPlayerHelp.setText("10");;
+       // boundPlayerHelp.textProperty().bind(player.playerHelpProperty().asString());
+        boundPlayerHelp.textProperty().set(""+player.getHelp());
         Text playerHelpLegend = new Text(" " + i18nMessages.getString("help"));
         numberOfHelp.getChildren().addAll(boundPlayerHelp, playerHelpLegend);
 
         /// *******************************************************************
+
+
 
         // Assembling all elements of the player frame and adding it to the list of players
         innerVBox.getChildren().addAll(playerName, playerPoints,numberOfHelp);

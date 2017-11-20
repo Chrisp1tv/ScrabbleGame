@@ -1,7 +1,7 @@
 package istv.chrisanc.scrabble.exceptions;
 
 	/**
-	 * @author Chavatte Eguinane
+	 * @author  Chavatte Eguinane
 	 */
 public class NoHelpException extends Exception{
 	public NoHelpException() {
