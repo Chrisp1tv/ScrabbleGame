@@ -2,9 +2,7 @@ package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
-import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
-import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.ui.DraggableLetterManager;
 import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.collections.FXCollections;
@@ -23,6 +21,10 @@ import javafx.stage.Stage;
  * @author Christopher Anciaux
  */
 public class ExchangeLettersController extends BaseController {
+    protected static final int EXCHANGE_LETTERS_STAGE_WIDTH = 640;
+
+    protected static final int EXCHANGE_LETTERS_STAGE_HEIGHT = 360;
+
     /**
      * The element on which we want to drop the letters to be put back in the bag
      */

@@ -21,12 +21,4 @@ public class RootLayoutController extends BaseController {
 
         alert.showAndWait();
     }
-
-    /**
-     * Closes the application.
-     */
-    @FXML
-    protected void handleExit() {
-        System.exit(0);
-    }
 }

@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -47,11 +49,18 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         // First, we count how many letters we have of each unique letter in the given letters and store this info in a Map
         Map<LetterInterface, Integer> nbLettersAvailable = countOccurrencesOfEachLetter(letters);
         int nbJokers = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
+        Pattern pattern = Pattern.compile("[" + LetterListToStringTransformer.transform(letters) + "]+");
 
         // If there isn't any joker in the given letters, we use a regular expression to filter the words.
         if (0 == nbJokers) {
             // If there isn't any joker in the given letters, we use a Regex to filter the words.
-            this.words.stream().filter(word -> word.matches("[" + LetterListToStringTransformer.transform(letters) + "]+")).forEach(words::add);
+            for (String word : this.words) {
+                Matcher matcher = pattern.matcher(word);
+
+                if (matcher.matches()) {
+                    words.add(word);
+                }
+            }
 
             // Now, we must check that each letter in each found word isn't present more times than it is in the given letters
             Iterator<String> wordsIterator = words.iterator();
@@ -79,9 +88,15 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         int nbJokersAvailable = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
 
         // We define the regular expression pattern, which depends on joker's presence
-        String pattern = LetterListToStringTransformer.transform(startingLetters) + "[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+";
+        Pattern pattern = Pattern.compile(LetterListToStringTransformer.transform(startingLetters) + "[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+");
 
-        words.addAll(this.words.stream().filter(word -> word.length() >= minLength && word.length() <= maxLength && word.matches(pattern)).collect(Collectors.toList()));
+        for (String word : this.words) {
+            Matcher matcher = pattern.matcher(word);
+
+            if (word.length() >= minLength && word.length() <= maxLength && matcher.matches()) {
+                words.add(word);
+            }
+        }
 
         // Now, we must check that each letter in each found word isn't present more times than it is in the given letters
         Iterator<String> wordsIterator = words.iterator();
@@ -105,9 +120,15 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         int nbJokersAvailable = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
 
         // We define the regular expression pattern, which depends on joker's presence
-        String pattern = "[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+" + LetterListToStringTransformer.transform(endingLetters);
+        Pattern pattern = Pattern.compile("[" + (nbJokersAvailable > 0 ? "A-Z" : LetterListToStringTransformer.transform(availableLetters)) + "]+" + LetterListToStringTransformer.transform(endingLetters));
 
-        words.addAll(this.words.stream().filter(word -> word.length() >= minLength && word.length() <= maxLength && word.matches(pattern)).collect(Collectors.toList()));
+        for (String word : this.words) {
+            Matcher matcher = pattern.matcher(word);
+
+            if (word.length() >= minLength && word.length() <= maxLength && matcher.matches()) {
+                words.add(word);
+            }
+        }
 
         // Now, we must check that each letter in each found word isn't present more times than it is in the given letters
         Iterator<String> wordsIterator = words.iterator();

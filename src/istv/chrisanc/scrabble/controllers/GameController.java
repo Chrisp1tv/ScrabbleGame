@@ -96,8 +96,14 @@ public class GameController extends BaseController {
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
         this.initializeBoardGrid();
         this.displayBoardGrid();
-        this.displayPlayerLettersList();
         this.listenCurrentPlayer();
+
+        if (this.scrabble.getCurrentPlayer().isHuman()) {
+            this.displayPlayerLettersList();
+        } else {
+            this.playerLettersContainer.setDisable(true);
+            this.controlButtons.setDisable(true);
+        }
     }
 
     /**
@@ -109,9 +115,8 @@ public class GameController extends BaseController {
             this.scrabble.playLetters(this.playedLetters);
         } catch (InvalidPlayedTurnException e) {
             this.showAlertOfInvalidTurn(e);
+            this.refreshScrabbleInterface();
         }
-
-        this.refreshScrabbleInterface();
     }
 
     /**
@@ -138,10 +143,10 @@ public class GameController extends BaseController {
 
             // Create the dialog stage
             Stage dialogStage = new Stage();
-            dialogStage.setMinWidth(640);
-            dialogStage.setMaxWidth(640);
-            dialogStage.setMinHeight(360);
-            dialogStage.setMaxHeight(360);
+            dialogStage.setMinWidth(ExchangeLettersController.EXCHANGE_LETTERS_STAGE_WIDTH);
+            dialogStage.setMaxWidth(ExchangeLettersController.EXCHANGE_LETTERS_STAGE_WIDTH);
+            dialogStage.setMinHeight(ExchangeLettersController.EXCHANGE_LETTERS_STAGE_HEIGHT);
+            dialogStage.setMaxHeight(ExchangeLettersController.EXCHANGE_LETTERS_STAGE_HEIGHT);
 
             dialogStage.setTitle(this.scrabble.getI18nMessages().getString("exchangeLettersWithTheBag"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -185,10 +190,10 @@ public class GameController extends BaseController {
 
             // Create the dialog stage
             Stage dialogStage = new Stage();
-            dialogStage.setMinWidth(640);
-            dialogStage.setMaxWidth(640);
-            dialogStage.setMinHeight(200);
-            dialogStage.setMaxHeight(200);
+            dialogStage.setMinWidth(SaveGameController.STAGE_WIDTH);
+            dialogStage.setMaxWidth(SaveGameController.STAGE_WIDTH);
+            dialogStage.setMinHeight(SaveGameController.STAGE_HEIGHT);
+            dialogStage.setMaxHeight(SaveGameController.STAGE_HEIGHT);
 
             dialogStage.setTitle(this.scrabble.getI18nMessages().getString("save"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -307,7 +312,10 @@ public class GameController extends BaseController {
             this.controlButtons.setDisable(!newValue.isHuman());
 
             if (newValue.isHuman()) {
+                this.playerLettersContainer.setDisable(false);
                 this.refreshScrabbleInterface();
+            } else {
+                this.playerLettersContainer.setDisable(true);
             }
         });
     }

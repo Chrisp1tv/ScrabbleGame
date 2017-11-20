@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Christopher Anciaux
@@ -35,7 +35,7 @@ public class Bag implements BagInterface, Serializable {
 
         Collections.shuffle(this.letters);
 
-        LetterInterface letter = letters.get(new Random().nextInt(this.letters.size()));
+        LetterInterface letter = letters.get(ThreadLocalRandom.current().nextInt(0, this.letters.size()));
         this.letters.remove(letter);
 
         return letter;

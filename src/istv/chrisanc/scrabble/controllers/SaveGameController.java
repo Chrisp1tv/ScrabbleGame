@@ -19,6 +19,10 @@ import java.io.File;
  * @author Christopher Anciaux
  */
 public class SaveGameController extends BaseController {
+    protected static final int STAGE_WIDTH = 640;
+
+    protected static final int STAGE_HEIGHT = 200;
+
     /**
      * The game save file name that has to be written in the saves directory
      */
