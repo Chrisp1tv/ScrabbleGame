@@ -54,9 +54,10 @@ public class Player implements PlayerInterface, Serializable {
      * Number of hint the player can get.
      * the value is set to 5 at the begin and decrease for each help the played asks.
      */
-    //protected int help;
 
     protected IntegerProperty help;
+
+
 
     public Player(String name, boolean human) {
         this.initialize();
@@ -94,19 +95,14 @@ public class Player implements PlayerInterface, Serializable {
     }
 
     @Override
-    public int getHelp(){
-    	return help.get();
-    }
-
-    @Override
     public ReadOnlyIntegerProperty playerHelpProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.help);
     }
 
-
     /**
      * @return a read-only list of the owned {@link LetterInterface} by the player
      */
+
     @Override
     public List<LetterInterface> getLetters() {
         return Collections.unmodifiableList(this.letters);
@@ -200,25 +196,6 @@ public class Player implements PlayerInterface, Serializable {
     	this.help.set(this.help.get()+1);
     }
 
-    /**
-
-    @Override
-    public void decreaseHelp(){
-    	if(this.help==0) {
-    		Alert alert = new Alert(AlertType.INFORMATION);
-    		alert.setTitle("Ouups !");
-    		alert.setHeaderText(null);
-    		alert.setContentText("Vous n'avez plus d\'aides possibles !");
-    		alert.showAndWait();
-    	} else {
-    	this.help=this.help-1;
-    	}
-    }
-
-    @Override
-    public void increaseHelp(){
-    	this.help=this.help+1;
-    } **/
 
     /*
      * Let the player have a hint in order to know what is the best word he can do

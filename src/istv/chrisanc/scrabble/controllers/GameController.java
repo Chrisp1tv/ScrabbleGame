@@ -111,7 +111,6 @@ public class GameController extends BaseController {
 
 
     	this.scrabble.getCurrentPlayer().decreaseHelp();
-
     	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
 
     	this.refreshScrabbleInterface();
@@ -126,6 +125,7 @@ public class GameController extends BaseController {
 
     @FXML
     protected void handleValidatePlayedLetters() {
+
         try {
             this.scrabble.playLetters(this.playedLetters);
         } catch (InvalidPlayedTurnException e) {
