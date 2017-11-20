@@ -3,12 +3,16 @@ package istv.chrisanc.scrabble.controllers;
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import istv.chrisanc.scrabble.utils.LetterListToStringTransformer;
+
+import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.utils.ui.Templates;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -97,6 +101,7 @@ public class GameController extends BaseController {
      * which handles the creation of a Scrabble game, or by {@link LoadGameController} which loads an already-started Scrabble
      * game
      */
+
     public void initializeInterface() {
         this.initializePlayedLetters();
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
@@ -106,9 +111,11 @@ public class GameController extends BaseController {
         this.listenCurrentPlayer();
     }
 
+
     /**
      * Help the player to play his turn
      */
+
 
     @FXML
     protected void handlePlayerHelp() {
@@ -122,20 +129,23 @@ public class GameController extends BaseController {
 		alert.setHeaderText(null);
 		alert.setContentText(findWord);
 		alert.showAndWait();
-		
-    	
-    	this.scrabble.getCurrentPlayer().decreaseHelp();
-    	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
 
+    	this.scrabble.getCurrentPlayer().decreaseHelp();
+    	// Test -- Show in the console
+    	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
     	this.refreshScrabbleInterface();
+    	this.refreshBoard();
+
 
     }
 
     /**
      * Validates the letters played by the player
      */
+
     @FXML
     protected void handleValidatePlayedLetters() {
+
         try {
             this.scrabble.playLetters(this.playedLetters);
         } catch (InvalidPlayedTurnException e) {
