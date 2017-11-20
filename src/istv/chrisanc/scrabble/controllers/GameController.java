@@ -108,6 +108,10 @@ public class GameController extends BaseController {
     protected void handlePlayerHelp() {
 
 
+    	this.scrabble.getCurrentPlayer().decreaseHelp();
+    	System.out.println(this.scrabble.getCurrentPlayer().getHelp());
+
+    	this.refreshScrabbleInterface();
 
     }
 

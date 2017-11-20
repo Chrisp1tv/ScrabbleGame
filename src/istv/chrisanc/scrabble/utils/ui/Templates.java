@@ -99,7 +99,7 @@ public class Templates {
 
         Text boundPlayerHelp = new Text();
        // boundPlayerHelp.textProperty().bind(player.playerHelpProperty().asString());
-        boundPlayerHelp.textProperty().set("5");
+        boundPlayerHelp.textProperty().set(""+player.getHelp());
         Text playerHelpLegend = new Text(" " + i18nMessages.getString("help"));
         numberOfHelp.getChildren().addAll(boundPlayerHelp, playerHelpLegend);
 

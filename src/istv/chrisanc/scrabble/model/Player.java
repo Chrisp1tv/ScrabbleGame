@@ -9,6 +9,8 @@ import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -180,9 +182,23 @@ public class Player implements PlayerInterface, Serializable {
     }
 
 
+    @Override
+    public void decreaseHelp(){
+    	if(this.help==0) {
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ouups !");
+    		alert.setHeaderText(null);
+    		alert.setContentText("Vous n'avez plus d\'aides possibles !");
 
-    private void decreaseHelp(){
-    	this.help=-1;
+    		alert.showAndWait();
+    	} else {
+    	this.help=this.help-1;
+    	}
+    }
+
+    @Override
+    public void increaseHelp(){
+    	this.help=this.help+1;
     }
 
     /*

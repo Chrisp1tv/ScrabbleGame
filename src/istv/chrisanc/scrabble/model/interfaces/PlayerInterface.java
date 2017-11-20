@@ -52,6 +52,10 @@ public interface PlayerInterface {
 
     int getHelp();
 
+    void increaseHelp();
+
+    void decreaseHelp();
+
     //ReadOnlyIntegerProperty playerHelpProperty();
 
     /**
