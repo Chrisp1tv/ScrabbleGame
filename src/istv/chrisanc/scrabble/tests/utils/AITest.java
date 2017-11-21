@@ -25,6 +25,8 @@ import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
+import istv.chrisanc.scrabble.model.languages.French.French;
+import istv.chrisanc.scrabble.model.languages.French.FrenchDictionary;
 import istv.chrisanc.scrabble.utils.AI;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 
@@ -39,6 +41,8 @@ public class AITest {
 	@Before
 	public void setUp() throws Exception {
 		AI = new AI("AI");
+		language = new French();
+		dictionary = FrenchDictionary.getInstance();
 		bag = new Bag(language.getBagLettersDistribution());
 		board = new Board();
 		player = new Player("test", false);
@@ -46,8 +50,7 @@ public class AITest {
 		letters = Arrays.asList(LetterToStringTransformer.reverseTransform("B", language),
 				LetterToStringTransformer.reverseTransform("O", language),
 				LetterToStringTransformer.reverseTransform("N", language));
-		board.addWord(new Word(player, letters, true, (short)6, (short)6));
-		dictionary = language.getDictionary();
+		board.addWord(new Word(player, letters, true, (short)7, (short)7));
 	}
 
 	@Test

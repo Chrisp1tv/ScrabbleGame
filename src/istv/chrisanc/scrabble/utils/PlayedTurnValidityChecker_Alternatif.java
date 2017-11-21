@@ -71,7 +71,8 @@ public class PlayedTurnValidityChecker_Alternatif {
 		if(word.isHorizontal())
 		{
 			// First letter			
-			if(!(board.getLetters().get(word.getStartLine()).get(word.getStartColumn()-1) == null)){
+			if(word.getStartColumn()-1 > 0 && 
+					!(board.getLetters().get(word.getStartLine()).get(word.getStartColumn()-1) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -151,7 +152,8 @@ public class PlayedTurnValidityChecker_Alternatif {
 		else{
 
 			// First letter
-			if(!(board.getLetters().get(word.getStartLine()-1).get(word.getStartColumn()) == null)){
+			if(word.getStartLine()-1 > 0 && 
+					!(board.getLetters().get(word.getStartLine()-1).get(word.getStartColumn()) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -171,7 +173,8 @@ public class PlayedTurnValidityChecker_Alternatif {
 			}
 
 			// Last letter
-			if(!(board.getLetters().get(word.getEndLine()+1).get(word.getStartColumn()) == null)){
+			if(word.getEndLine()+1 < size && 
+					!(board.getLetters().get(word.getEndLine()+1).get(word.getStartColumn()) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -236,11 +239,14 @@ public class PlayedTurnValidityChecker_Alternatif {
     public static List<WordInterface> AdjacentWord(BoardInterface board, WordInterface word, DictionaryInterface dictionary, PlayerInterface player) {
         List<WordInterface> wordsList = new ArrayList<>();
         List<LetterInterface> wordLetters = word.getLetters();
+        //Size of the board
+        short size = BoardInterface.BOARD_SIZE;
 
         //Check if letters of the word are attached to an other word and check if this combination means something
         if (word.isHorizontal()) {
             // First letter			
-        	if(!(board.getLetters().get(word.getStartLine()).get(word.getStartColumn()-1) == null)){
+        	if(word.getStartColumn()-1 > 0 && 
+        			!(board.getLetters().get(word.getStartLine()).get(word.getStartColumn()-1) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -264,7 +270,8 @@ public class PlayedTurnValidityChecker_Alternatif {
             }
 
             // Last letter
-        	if(!(board.getLetters().get(word.getEndLine()).get(word.getEndColumn()+1) == null)){
+        	if(word.getEndColumn()+1 < size && 
+        			!(board.getLetters().get(word.getEndLine()).get(word.getEndColumn()+1) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -327,7 +334,8 @@ public class PlayedTurnValidityChecker_Alternatif {
         // Verification of adjacent squares for a vertical Word
         else {
             // First letter
-			if(!(board.getLetters().get(word.getStartLine()-1).get(word.getStartColumn()) == null)){
+			if(word.getStartLine()-1 > 0 && 
+					!(board.getLetters().get(word.getStartLine()-1).get(word.getStartColumn()) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;
@@ -350,7 +358,8 @@ public class PlayedTurnValidityChecker_Alternatif {
             }
 
             // Last letter
-			if(!(board.getLetters().get(word.getEndLine()+1).get(word.getStartColumn()) == null)){
+			if(word.getEndLine()+1 < size && 
+					!(board.getLetters().get(word.getEndLine()+1).get(word.getStartColumn()) == null)){
 
 				//verification of the beginning letters to find the complete word
 				int w=1;

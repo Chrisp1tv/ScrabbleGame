@@ -9,6 +9,7 @@ import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -87,9 +88,39 @@ public class WordFinder {
     				wordsToAdd.add(s);
     		}
     		
+    		//Add to a new list words that can only be played with the letters of the player and based on already played words
+    		Set<String> wordsToUse = new HashSet<String>();
+    		for(String s : wordsToAdd)
+    		{
+    			List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform(s, language);
+    			
+    			for(int i = 0; i < w.getLetters().size(); i++)
+    			{
+    				letters.remove(w.getLetters().get(i));
+    			}
+    			
+    			if(player.getLetters().size() >= letters.size())
+    			{
+    				int i = 0;
+    				boolean contains = true;
+    				while(contains && i < letters.size())
+    				{
+    					if(!player.getLetters().contains(letters.get(i)))
+    						contains = false;
+    					i++;
+    				}
+    				
+    				if(contains)
+    					wordsToUse.add(s);
+    			}
+    		}
+    			
+    		
     		//Conversion of the playable words's list into a String HashSet
     		//Playable words are linked with a played word
-    		playableWords.put(w, wordsToAdd);
+    		playableWords.put(w, wordsToUse);
+    		
+    		//System.out.println(playableWords.size());
     		
     		//Conversion of playable words into a list of their letters
     		//For each playable word (String) is associated their letters (List<LetterInterface>)
@@ -105,15 +136,15 @@ public class WordFinder {
     		//Creation of 4 lists to stock words
     		List<String> horizontalPlayableWordsMatched = new ArrayList<String>();
     		List<String> verticalPlayableWordsMatched = new ArrayList<String>();
-    		Set<String> playableWordsStartingWithPlayedWordsMatched = new HashSet<String>();
-			Set<String> playableWordsEndingWithPlayedWordsMatched = new HashSet<String>();
+    		/*Set<String> playableWordsStartingWithPlayedWordsMatched = new HashSet<String>();
+			Set<String> playableWordsEndingWithPlayedWordsMatched = new HashSet<String>();*/
     		
     		Set<Entry<String, List<LetterInterface>>> listOfPlayableWordsToCheck = listOfPlayableWordsWithLetters.entrySet();
-    		int cpt = 0;
+    		//int cpt = 0;
     		for(Entry<String, List<LetterInterface>> p : listOfPlayableWordsToCheck)
     		{
-    			cpt++;
-    			System.out.println(cpt);
+    			//cpt++;
+    			//System.out.println(cpt);
     			if(wordsWithLettersAvailable.contains(p.getKey()))
     			{
     				//If the played word is horizontal
@@ -134,20 +165,19 @@ public class WordFinder {
     				}
     			}
     		}
-			//List<String> testList = dictionary.findWordsHavingLettersInOrder(w.getLetters());
-    		List<LetterInterface> listOfLettersAvailable = player.getLetters();
+    		//List<LetterInterface> listOfLettersAvailable = player.getLetters();
     			//Finding all the words in the dictionary starting with the played word
     			//(found words cannot be smaller than the played word based on or longer than the board's size)
 				//TODO OPTIMIZE + MODIFIER : Les mots ne semblent pas se r�cup�rer
-    			playableWordsStartingWithPlayedWordsMatched.addAll(dictionary.findWordsStartingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
+    			//playableWordsStartingWithPlayedWordsMatched.addAll(dictionary.findWordsStartingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
 				//Finding all the words in the dictionary ending with the played word
 				//(found words cannot be smaller than the played word based on or longer than the board's size)
 				//TODO OPTIMIZE + MODIFIER : Les mots ne semblent pas se r�cup�rer
-    			playableWordsEndingWithPlayedWordsMatched.addAll(dictionary.findWordsEndingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
+    			//playableWordsEndingWithPlayedWordsMatched.addAll(dictionary.findWordsEndingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
 				
 				//Deleting the two lists above from the playable words's list of the position (horizontal or vertical).
 				//The remaining list contains playable words of the same position which neither. begin or end by the played word
-				if(w.isHorizontal())
+				/*if(w.isHorizontal())
 				{
 					horizontalPlayableWordsMatched.removeAll(playableWordsStartingWithPlayedWordsMatched);
 					horizontalPlayableWordsMatched.removeAll(playableWordsEndingWithPlayedWordsMatched);
@@ -156,7 +186,7 @@ public class WordFinder {
 				{
 					verticalPlayableWordsMatched.removeAll(playableWordsStartingWithPlayedWordsMatched);
 					verticalPlayableWordsMatched.removeAll(playableWordsEndingWithPlayedWordsMatched);
-				}
+				}*/
 				
 				/*//Creation of lists containing playable words (with their position) matching words which can be played according to the player's letters
 				Set<String> horizontalPlayableWordsMatched = new HashSet<String>();
@@ -179,9 +209,9 @@ public class WordFinder {
 					if(playableWordsEndingWithPlayedWords.contains((String)s))
 						playableWordsEndingWithPlayedWordsMatched.add(s);
 				}*/
-				System.out.println(wordListOfPlayableWords.size());
+				//System.out.println(wordListOfPlayableWords.size());
 				//Conversion of playable words from String to Letters and then to Word
-				for(String s : playableWordsStartingWithPlayedWordsMatched)
+				/*for(String s : playableWordsStartingWithPlayedWordsMatched)
 				{
 					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
@@ -204,7 +234,7 @@ public class WordFinder {
 					
 					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
 						wordListOfPlayableWords.add(word);
-				}
+				}*/
 				for(String s: horizontalPlayableWordsMatched)
 				{
 					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
@@ -217,22 +247,17 @@ public class WordFinder {
 					}
 					else
 					{
-						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s, player, language);
-						for(WordInterface placement : possiblePlacementForTheWord)
-							if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, placement, dictionary))
-								wordListOfPlayableWords.add(placement);
+						wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, w, s, player, language));
 					}
 				}
 				for(String s : verticalPlayableWordsMatched)
 				{
+					//System.out.println(wordListOfPlayableWords.size());
 					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
 					WordInterface word;
 					if(w.isHorizontal())
 					{
-						Set<WordInterface> possiblePlacementForTheWord = possiblePlacement(w, s, player, language);
-						for(WordInterface placement : possiblePlacementForTheWord)
-							if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, placement, dictionary))
-								wordListOfPlayableWords.add(placement);
+						wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, w, s, player, language));
 					}
 					else
 					{
@@ -241,23 +266,50 @@ public class WordFinder {
 							wordListOfPlayableWords.add(word);
 					}	
 				}
+				System.out.println(horizontalPlayableWordsMatched.size());
+				System.out.println(verticalPlayableWordsMatched.size());
+				System.out.println(wordListOfPlayableWords.size());
     		}
+    	
+    	
     	
     	for(WordInterface wordBasedOnPlayedWords : wordListOfPlayableWords)
    			if(wordsWithLettersAvailable.contains(LetterListToStringTransformer.transform(wordBasedOnPlayedWords.getLetters())))
    				finalList.add(wordBasedOnPlayedWords);
     	
     	//Creation of a map containing the playable words and their amount of points
-    	Map<WordInterface, Integer> finalListWithPoints = new TreeMap<WordInterface, Integer>();
+    	//Added a comparator to sort the words by score
+    	Map<WordInterface, Integer> finalListWithPoints = new TreeMap<WordInterface, Integer>(new Comparator<WordInterface>() {
+
+			@Override
+			public int compare(WordInterface word1, WordInterface word2) {
+				List<WordInterface> words1 = PlayedTurnValidityChecker_Alternatif.AdjacentWord(board, word1, dictionary, player);
+				words1.add(word1);
+				List<WordInterface> words2 = PlayedTurnValidityChecker_Alternatif.AdjacentWord(board, word2, dictionary, player);
+				words2.add(word2);
+				Integer score1 = ScoreManager.getTurnScore(word1.getLetters(), words1, board);
+				Integer score2 = ScoreManager.getTurnScore(word1.getLetters(), words2, board);
+				
+				if(score1 <= score2)
+					return -1;
+				else
+					return 1;
+			}
+    		
+		});
+    	
+    	//Add score to words with a map
     	for(WordInterface w : finalList)
     	{
     		List<WordInterface> adjacentWords = PlayedTurnValidityChecker_Alternatif.AdjacentWord(board, w, dictionary, player);
+    		adjacentWords.add(w);
     		finalListWithPoints.put(w, ScoreManager.getTurnScore(w.getLetters(), adjacentWords, board));
     	}
     	
     	return finalListWithPoints;
     }
 
+    //TODO La taille du préfixe est toujours égale à 0
     //Return the size of a word's prefix
     private static short findSizePrefix(List<LetterInterface> letters, WordInterface word)
     {
@@ -265,7 +317,7 @@ public class WordFinder {
     	List<LetterInterface> listToCheck = new ArrayList<LetterInterface>();
     	
     	//Go back in the playable word, check if the list contains the played word and increment the size of the list
-    	while(!(size == letters.size() && listToCheck.containsAll(word.getLetters())))
+    	while(!(size == letters.size() || listToCheck.containsAll(word.getLetters())))
     	{
     		listToCheck.add(letters.get(letters.size()-(size+1)));
     		size++;
@@ -282,7 +334,7 @@ public class WordFinder {
      * @return					A list of all the possible positions for the wordToPlace
      * @throws LetterToStringTransformationException
      */
-    private static Set<WordInterface> possiblePlacement(WordInterface placedWord, String wordToPlace, PlayerInterface player, LanguageInterface language)
+    private static Set<WordInterface> possiblePlacement(BoardInterface board, DictionaryInterface dictionary, WordInterface placedWord, String wordToPlace, PlayerInterface player, LanguageInterface language)
     {
     	//List containing all the possible positions to place a word based on an already placed word
     	Set<WordInterface> possibility = new HashSet<WordInterface>();
@@ -299,9 +351,18 @@ public class WordFinder {
     			if(placedWordLetters.get(i).equals(wordToPlaceLetters.get(j)))
     			{
     				if(placedWord.isHorizontal())
-    					possibility.add(new Word(player, wordToPlaceLetters, false, (short)(placedWord.getStartLine()-j), (short)(placedWord.getStartColumn()+i)));
+    				{
+    					WordInterface word = new Word(player, wordToPlaceLetters, false, (short)(placedWord.getStartLine()-j), (short)(placedWord.getStartColumn()+i));
+    					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
+    						possibility.add(word);
+    				}
+    					
     				else
-    					possibility.add(new Word(player, wordToPlaceLetters, true, (short)(placedWord.getStartLine()+i), (short)(placedWord.getStartColumn()-j)));
+    				{
+    					WordInterface word = new Word(player, wordToPlaceLetters, true, (short)(placedWord.getStartLine()+i), (short)(placedWord.getStartColumn()-j));
+    					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
+    						possibility.add(word);
+    				}
     			}
     		}
     	}
