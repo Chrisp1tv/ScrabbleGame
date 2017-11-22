@@ -9,6 +9,7 @@ import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,25 +94,102 @@ public class WordFinder {
     		for(String s : wordsToAdd)
     		{
     			List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform(s, language);
+    			String lettersString = LetterListToStringTransformer.transform(w.getLetters());
     			
-    			for(int i = 0; i < w.getLetters().size(); i++)
+    			//If the words are in the same position (if the played word is included in the word s)
+    			if(s.contains(lettersString))
     			{
-    				letters.remove(w.getLetters().get(i));
-    			}
-    			
-    			if(player.getLetters().size() >= letters.size())
-    			{
-    				int i = 0;
-    				boolean contains = true;
-    				while(contains && i < letters.size())
+    				//Letters from the played word are removed from the word s to keep only letters that need to be played
+    				for(int i = 0; i < w.getLetters().size(); i++)
     				{
-    					if(!player.getLetters().contains(letters.get(i)))
-    						contains = false;
-    					i++;
+    					letters.remove(w.getLetters().get(i));
     				}
-    				
-    				if(contains)
-    					wordsToUse.add(s);
+
+    				//Remaining letters are compared with the player's letters to know if the word can be played
+    				if(player.getLetters().size() >= letters.size())
+    				{
+    					int i = 0;
+    					boolean contains = true;
+    					while(contains && i < letters.size())
+    					{
+    						if(!player.getLetters().contains(letters.get(i)))
+    							contains = false;
+    						i++;
+    					}
+    					
+    					if(contains)
+						{
+							Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
+							Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
+							for(Map.Entry<LetterInterface, Integer> m : lettersOfPlayerOccurence.entrySet())
+							{
+								if(letters.contains(m.getKey()))
+								{
+									if(m.getValue() < lettersOfWordOccurence.get(m.getKey()))
+									{
+										contains = false;
+									}
+								}
+							}
+						}
+    					if(contains)
+    						wordsToUse.add(s);
+    				}
+    			}
+    			//If the words are not in the same position (if the played word is not included in the word s but at least one letter is present in the two words)
+    			else
+    			{
+    				boolean removed = false;
+    				int i = 0;
+    				while(!removed && i < w.getLetters().size())
+    				{
+    					//One Letter from the played word is removed from the word s to keep only letters that need to be played
+    					if(letters.contains(w.getLetters().get(i)))
+    					{
+    						letters.remove(w.getLetters().get(i));
+    					}
+    					
+    					//Remaining letters are compared with the player's letters to know if the word can be played
+    					if(player.getLetters().size() >= letters.size())
+    					{
+    						int j = 0;
+    						boolean contains = true;
+    						while(contains && j < letters.size())
+    						{
+    							if(!player.getLetters().contains(letters.get(j)))
+    								contains = false;
+    							j++;
+    						}
+    						
+    						if(contains)
+    						{
+    							Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
+    							Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
+    							for(Map.Entry<LetterInterface, Integer> m : lettersOfPlayerOccurence.entrySet())
+    							{
+    								if(letters.contains(m.getKey()))
+    								{
+    									if(m.getValue() < lettersOfWordOccurence.get(m.getKey()))
+    									{
+    										contains = false;
+    									}
+    								}
+    							}
+    						}
+
+    						if(contains)
+    						{
+    							wordsToUse.add(s);
+    							removed = true;
+    						}
+    					}
+
+    					if(!removed)
+    					{
+    						letters = LetterListToStringTransformer.reverseTransform(s, language);
+    						i++;
+    					}
+    				}
     			}
     		}
     			
@@ -266,9 +344,9 @@ public class WordFinder {
 							wordListOfPlayableWords.add(word);
 					}	
 				}
-				System.out.println(horizontalPlayableWordsMatched.size());
-				System.out.println(verticalPlayableWordsMatched.size());
-				System.out.println(wordListOfPlayableWords.size());
+				//System.out.println(horizontalPlayableWordsMatched.size());
+				//System.out.println(verticalPlayableWordsMatched.size());
+				//System.out.println(wordListOfPlayableWords.size());
     		}
     	
     	
@@ -369,5 +447,21 @@ public class WordFinder {
     	
     	//Return the list of possible placement for a word
     	return possibility;
+    }
+    
+    /**
+     * @param letters The given letters we have to count
+     *
+     * @return a map having for key the {@link LetterInterface}, and for value the number of occurrences of the {@link LetterInterface}
+     */
+    private static Map<LetterInterface, Integer> countOccurrencesOfEachLetter(List<LetterInterface> letters) {
+        Set<LetterInterface> uniqueLetters = new HashSet<>(letters);
+        Map<LetterInterface, Integer> nbLetters = new HashMap<>();
+
+        for (LetterInterface uniqueLetter : uniqueLetters) {
+            nbLetters.put(uniqueLetter, Collections.frequency(letters, uniqueLetter));
+        }
+
+        return nbLetters;
     }
 }

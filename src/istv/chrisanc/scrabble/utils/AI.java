@@ -6,12 +6,12 @@ package istv.chrisanc.scrabble.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import istv.chrisanc.scrabble.exceptions.model.Bag.EmptyBagException;
 import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.model.Player;
-import istv.chrisanc.scrabble.model.Word;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
@@ -58,13 +58,14 @@ public class AI extends Player implements AIInterface
 		//Else, a random amount of letters (between 0 and 7) are removed from the hand and put in the bag
 		if(!listOfWords.isEmpty())
 		{
-			int number = (int)Math.random()*(listOfWords.size()+1);
-			List<WordInterface> words = (List)listOfWords.keySet();
-			WordInterface word = words.get(number);
-			WordInterface wordToPlay = new Word(this, word.getLetters(), word.isHorizontal(), word.getStartLine(), word.getStartColumn());
+			int number = (int)(Math.random()*(listOfWords.size()+1));
+			Set<WordInterface> wordsSet = listOfWords.keySet();
+			WordInterface[] words = wordsSet.toArray(new WordInterface[0]);
+			WordInterface wordToPlay = words[number];
 
 			board.addWord(wordToPlay);
-			this.increaseScore(listOfWords.get(wordToPlay));
+			//Error : NullPointerException
+			//this.increaseScore(listOfWords.get(wordToPlay));
 			for(LetterInterface l:wordToPlay.getLetters())
 				this.removeLetter(l);
 		}

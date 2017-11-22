@@ -23,7 +23,6 @@ import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import istv.chrisanc.scrabble.model.languages.French.French;
 import istv.chrisanc.scrabble.model.languages.French.FrenchDictionary;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
-import istv.chrisanc.scrabble.utils.DictionaryFactory;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 
@@ -86,7 +85,6 @@ public class WordFinderTest {
     					words.add(s);
     		}
     		assertNotEquals(0, words.size());
-    	}
-		
+    	}		
 	}
 }
