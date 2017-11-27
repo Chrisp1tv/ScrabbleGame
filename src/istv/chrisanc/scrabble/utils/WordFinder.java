@@ -41,29 +41,29 @@ public class WordFinder {
      *
      * @return A list of playable words sorted by their score
      */
-    public static Map<WordInterface, Integer> findWord(BoardInterface board, PlayerInterface player, DictionaryInterface dictionary, LanguageInterface language) {
-        //Creation of 2 Lists :
-        //- a list of the player's letters
-        //- a list of words formed with the first list
-        LetterInterface lettersAvailable;
-        Set<String> wordsWithLettersAvailable = new HashSet<>();
-
-        //TODO Ajouter et tester cas avec Joker
-        /*if(player.getLetters().contains(Joker.class))
-            wordsWithLettersAvailable = dictionary.getWords();
-    	else
-    	{*/
-        //Add to the list of words all the words which contains the available letters
-        for (int i = 0; i < player.getLetters().size(); i++) {
-            lettersAvailable = player.getLetters().get(i);
-            dictionary.getWords().stream().filter(s -> !wordsWithLettersAvailable.contains(s) && s.contains(LetterToStringTransformer.transform(lettersAvailable))).forEach(wordsWithLettersAvailable::add);
+    public static Map<WordInterface, Integer> findWord(BoardInterface board, PlayerInterface player, DictionaryInterface dictionary, LanguageInterface language) 
+    {
+    	Set<String> wordsWithLettersAvailable = new HashSet<String>();
+    	
+    	//If no word has been played, a list of words is created with only letters of the player
+    	if(board.getPlayedWords().isEmpty())
+        {
+        	wordsWithLettersAvailable = (Set<String>) dictionary.findWordsHavingLetters(player.getLetters());
         }
-        /*}*/
-
-    	/* TODO: The code between the lines 46 and 56 could be replaced by this call ?
-            wordsWithLettersAvailable = new HashSet<>(dictionary.findWordsHavingLetters(player.getLetters()));
-    	 */
-
+        //If words have been played, a list of all the words from the dictionary that contains at least one letter present in the player's letters is created
+    	else
+    	{
+    		LetterInterface lettersAvailable;
+    		
+    		//Add to the list of words all the words which contains the available letters
+    		for(int i = 0; i < player.getLetters().size(); i++)
+    		{
+    			lettersAvailable = player.getLetters().get(i);
+    			for(String s : dictionary.getWords())
+    				if(!wordsWithLettersAvailable.contains(s) && s.contains(LetterToStringTransformer.transform(lettersAvailable)))
+    					wordsWithLettersAvailable.add(s);
+    		}
+    	}
         //Creation of a map with :
         //- words played on the board (key)
         //- a list of words which can be played on a placed word (values)
@@ -81,97 +81,60 @@ public class WordFinder {
 
             // TODO: This part of the code should use the methods DictionaryInterface#findWordsStartingWithAndHavingLetters
             // and DictionaryInterface#findWordsEndingWithAndHavingLetters, or findWordsHavingLettersInOrder
-            for (LetterInterface l : playedWord.getLetters()) {
-                dictionary.getWords().stream().filter(s -> !words.contains(s) && s.contains(LetterToStringTransformer.transform(l))).forEach(words::add);
+            for (LetterInterface letter : playedWord.getLetters()) {
+                dictionary.getWords().stream().filter(s -> !words.contains(s) && s.contains(LetterToStringTransformer.transform(letter))).forEach(words::add);
             }
-
+            
+            //List of words containing the words from the dictionary that contains the played word
+            List<String> wordsContainingLetters = dictionary.findWordsHavingLettersInOrder(playedWord.getLetters());
+            
+            
             Set<String> wordsToAdd = words.stream().filter(wordsWithLettersAvailable::contains).collect(Collectors.toSet());
 
             //Add to a new list words that can only be played with the letters of the player and based on already played words
             Set<String> wordsToUse = new HashSet<>();
-            for (String wordToAdd : wordsToAdd) {
-                List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform(wordToAdd, language);
-                String lettersString = LetterListToStringTransformer.transform(playedWord.getLetters());
+            for (String wordToAdd : wordsToAdd) 
+            {
+            	List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform(wordToAdd, language);
 
-                //If the words are in the same position (if the played word is included in the word s)
-                if (wordToAdd.contains(lettersString)) {
-                    //Letters from the played word are removed from the word s to keep only letters that need to be played
-                    for (int i = 0; i < playedWord.getLetters().size(); i++) {
-                        letters.remove(playedWord.getLetters().get(i));
-                    }
+            	//If the words are in the same position (if the played word is included in the word s)
+            	if (wordsContainingLetters.contains(wordToAdd)) 
+            	{
+            		//Letters from the played word are removed from the word to keep only letters that need to be played
+            		letters = removeAllLetters(letters, playedWord.getLetters());
 
-                    //Remaining letters are compared with the player's letters to know if the word can be played
-                    if (player.getLetters().size() >= letters.size()) {
-                        int i = 0;
-                        boolean contains = true;
-                        while (contains && i < letters.size()) {
-                            if (!player.getLetters().contains(letters.get(i))) {
-                                contains = false;
-                            }
-                            i++;
-                        }
-
-                        if (contains) {
-                            /*
-                            TODO: Use the occurrencesOfPlayerLettersAreEquivalentToWordLetters method to avoid duplicate code
-                             */
-                            Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
-                            Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
-                            for (Map.Entry<LetterInterface, Integer> m : lettersOfPlayerOccurence.entrySet()) {
-                                if (letters.contains(m.getKey())) {
-                                    if (m.getValue() < lettersOfWordOccurence.get(m.getKey())) {
-                                        contains = false;
-                                    }
-                                }
-                            }
-                        }
-                        if (contains) {
-                            wordsToUse.add(wordToAdd);
-                        }
-                    }
-                }
+            		//Remaining letters are compared with the player's letters to know if the word can be played
+            		if (player.getLetters().size() >= letters.size()) 
+            		{
+            			Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
+            			Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
+            			if(occurrencesOfPlayerLettersAreEquivalentToWordLetters(lettersOfPlayerOccurence, lettersOfWordOccurence))
+            				wordsToUse.add(wordToAdd);
+            		}
+            	}
                 //If the words are not in the same position (if the played word is not included in the word s but at least one letter is present in the two words)
                 else {
                     boolean removed = false;
                     int i = 0;
                     while (!removed && i < playedWord.getLetters().size()) {
-                        //One Letter from the played word is removed from the word s to keep only letters that need to be played
+                        //One Letter from the played word is removed from the word to keep only letters that need to be played
                         if (letters.contains(playedWord.getLetters().get(i))) {
                             letters.remove(playedWord.getLetters().get(i));
                         }
 
                         //Remaining letters are compared with the player's letters to know if the word can be played
-                        if (player.getLetters().size() >= letters.size()) {
-                            int j = 0;
-                            boolean contains = true;
-                            while (contains && j < letters.size()) {
-                                if (!player.getLetters().contains(letters.get(j))) {
-                                    contains = false;
-                                }
-                                j++;
-                            }
-
-                            if (contains) {
-                                /*
-                                TODO: Use the occurrencesOfPlayerLettersAreEquivalentToWordLetters method to avoid duplicate code
-                                 */
-                                Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
-                                Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
-                                for (Map.Entry<LetterInterface, Integer> m : lettersOfPlayerOccurence.entrySet()) {
-                                    if (letters.contains(m.getKey())) {
-                                        if (m.getValue() < lettersOfWordOccurence.get(m.getKey())) {
-                                            contains = false;
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (contains) {
-                                wordsToUse.add(wordToAdd);
-                                removed = true;
-                            }
+                        if (player.getLetters().size() >= letters.size()) 
+                        {
+                        	Map<LetterInterface, Integer> lettersOfPlayerOccurence = countOccurrencesOfEachLetter(player.getLetters());
+                			Map<LetterInterface, Integer> lettersOfWordOccurence = countOccurrencesOfEachLetter(letters);
+                			if(occurrencesOfPlayerLettersAreEquivalentToWordLetters(lettersOfPlayerOccurence, lettersOfWordOccurence))
+                			{
+                				wordsToUse.add(wordToAdd);
+                				removed = true;
+                			}
                         }
 
+                        //If the word can't be played, the removed letter is put back and an other one is removed
                         if (!removed) {
                             letters = LetterListToStringTransformer.reverseTransform(wordToAdd, language);
                             i++;
@@ -180,151 +143,75 @@ public class WordFinder {
                 }
             }
 
-            //Conversion of the playable words's list into a String HashSet
+            //Conversion of the playable words's list into a Map
             //Playable words are linked with a played word
             playableWords.put(playedWord, wordsToUse);
 
-            //System.out.println(playableWords.size());
 
             //Conversion of playable words into a list of their letters
             //For each playable word (String) is associated their letters (List<LetterInterface>)
             Set<String> listOfPlayableWords = playableWords.get(playedWord);
             Map<String, List<LetterInterface>> listOfPlayableWordsWithLetters = new HashMap<>();
-            //TODO Long, � v�rifier
             for (String p : listOfPlayableWords) {
                 listOfPlayableWordsWithLetters.put(p, LetterListToStringTransformer.reverseTransform(p, language));
             }
 
-            //Creation of a list to stock words from the dictionary and containing the played word (w)
-            List<String> listOfWordsContainingTheWord = dictionary.findWordsHavingLettersInOrder(playedWord.getLetters());
-
-            //Creation of 4 lists to stock words
-            List<String> horizontalPlayableWordsMatched = new ArrayList<>();
-            List<String> verticalPlayableWordsMatched = new ArrayList<>();
-            /*Set<String> playableWordsStartingWithPlayedWordsMatched = new HashSet<String>();
-            Set<String> playableWordsEndingWithPlayedWordsMatched = new HashSet<String>();*/
+            //Creation of 2 lists to stock words
+            List<String> horizontalPlayableWords = new ArrayList<>();
+            List<String> verticalPlayableWords = new ArrayList<>();
 
             Set<Entry<String, List<LetterInterface>>> listOfPlayableWordsToCheck = listOfPlayableWordsWithLetters.entrySet();
-            //int cpt = 0;
-            //cpt++;
-            //System.out.println(cpt);
             //If the played word is horizontal
             //If the possible word is horizontal (letters added before and/or after the played word) and bigger than the played word
-            listOfPlayableWordsToCheck.stream().filter(p -> wordsWithLettersAvailable.contains(p.getKey())).forEach(p -> {
-                //If the played word is horizontal
-                if (playedWord.isHorizontal()) {
-                    //If the possible word is horizontal (letters added before and/or after the played word) and bigger than the played word
-                    if (listOfWordsContainingTheWord.contains(p.getKey())) {
-                        horizontalPlayableWordsMatched.add(p.getKey());
-                    } else {
-                        verticalPlayableWordsMatched.add(p.getKey());
-                    }
-                } else {
-                    if (listOfWordsContainingTheWord.contains(p.getKey())) {
-                        verticalPlayableWordsMatched.add(p.getKey());
-                    } else {
-                        horizontalPlayableWordsMatched.add(p.getKey());
-                    }
-                }
-            });
-            //List<LetterInterface> listOfLettersAvailable = player.getLetters();
-            //Finding all the words in the dictionary starting with the played word
-            //(found words cannot be smaller than the played word based on or longer than the board's size)
-            //TODO OPTIMIZE + MODIFIER : Les mots ne semblent pas se r�cup�rer
-            //playableWordsStartingWithPlayedWordsMatched.addAll(dictionary.findWordsStartingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
-            //Finding all the words in the dictionary ending with the played word
-            //(found words cannot be smaller than the played word based on or longer than the board's size)
-            //TODO OPTIMIZE + MODIFIER : Les mots ne semblent pas se r�cup�rer
-            //playableWordsEndingWithPlayedWordsMatched.addAll(dictionary.findWordsEndingWithAndHavingLetters(w.getLetters().size(), BoardInterface.BOARD_SIZE, w.getLetters(), listOfLettersAvailable));
-
-            //Deleting the two lists above from the playable words's list of the position (horizontal or vertical).
-            //The remaining list contains playable words of the same position which neither. begin or end by the played word
-                /*if(w.isHorizontal())
-                {
-					horizontalPlayableWordsMatched.removeAll(playableWordsStartingWithPlayedWordsMatched);
-					horizontalPlayableWordsMatched.removeAll(playableWordsEndingWithPlayedWordsMatched);
-				}
-				else
-				{
-					verticalPlayableWordsMatched.removeAll(playableWordsStartingWithPlayedWordsMatched);
-					verticalPlayableWordsMatched.removeAll(playableWordsEndingWithPlayedWordsMatched);
-				}*/
-				
-				/*//Creation of lists containing playable words (with their position) matching words which can be played according to the player's letters
-				Set<String> horizontalPlayableWordsMatched = new HashSet<String>();
-				Set<String> verticalPlayableWordsMatched = new HashSet<String>();
-				Set<String> playableWordsStartingWithPlayedWordsMatched = new HashSet<String>();
-				Set<String> playableWordsEndingWithPlayedWordsMatched = new HashSet<String>();
-				
-				//Checking if playable words can be created with the player's letters
-				for(String s : wordsWithLettersAvailable)
-				{
-					if(horizontalPlayableWords.contains((String)s))
-						horizontalPlayableWordsMatched.add(s);
-					
-					if(verticalPlayableWords.contains((String)s))
-						verticalPlayableWordsMatched.add(s);
-					
-					if(playableWordsStartingWithPlayedWords.contains((String)s))
-						playableWordsStartingWithPlayedWordsMatched.add(s);
-					
-					if(playableWordsEndingWithPlayedWords.contains((String)s))
-						playableWordsEndingWithPlayedWordsMatched.add(s);
-				}*/
-            //System.out.println(wordListOfPlayableWords.size());
-            //Conversion of playable words from String to Letters and then to Word
-				/*for(String s : playableWordsStartingWithPlayedWordsMatched)
-				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
-					WordInterface word;
-					if(w.isHorizontal())
-						word = new Word(player, conversion, true, w.getStartLine(), w.getStartColumn());
-					else
-						word = new Word(player, conversion, false, w.getStartLine(), w.getStartColumn());
-					
-					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
-						wordListOfPlayableWords.add(word);
-				}
-				for(String s : playableWordsEndingWithPlayedWordsMatched)
-				{
-					List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
-					WordInterface word;
-					if(w.isHorizontal())
-						word = new Word(player, conversion, true, w.getStartLine(), (short) (w.getEndColumn() - conversion.size()));
-					else
-						word = new Word(player, conversion, false, (short) (w.getEndLine() - conversion.size()), w.getStartColumn());
-					
-					if(PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary))
-						wordListOfPlayableWords.add(word);
-				}*/
-            for (String s : horizontalPlayableWordsMatched) {
-                List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
-                WordInterface word;
-                if (playedWord.isHorizontal()) {
-                    word = new Word(player, conversion, true, playedWord.getStartLine(), (short) (playedWord.getStartColumn() - findSizePrefix(conversion, playedWord)));
-                    if (PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary)) {
-                        wordListOfPlayableWords.add(word);
-                    }
-                } else {
-                    wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, playedWord, s, player, language));
-                }
+            for(Entry<String, List<LetterInterface>> p : listOfPlayableWordsToCheck)
+            {
+            	//If the played word is horizontal
+            	if (playedWord.isHorizontal()) {
+            		//If the possible word is horizontal (letters added before and/or after the played word) and bigger than the played word
+            		if (wordsContainingLetters.contains(p.getKey())) {
+            			horizontalPlayableWords.add(p.getKey());
+            		} else {
+            			verticalPlayableWords.add(p.getKey());
+            		}
+            	} else {
+            		if (wordsContainingLetters.contains(p.getKey())) {
+            			verticalPlayableWords.add(p.getKey());
+            		} else {
+            			horizontalPlayableWords.add(p.getKey());
+            		}
+            	}
             }
-            for (String s : verticalPlayableWordsMatched) {
-                //System.out.println(wordListOfPlayableWords.size());
-                List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(s, language);
-                WordInterface word;
-                if (playedWord.isHorizontal()) {
-                    wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, playedWord, s, player, language));
-                } else {
-                    word = new Word(player, conversion, true, (short) (playedWord.getStartLine() - findSizePrefix(conversion, playedWord)), playedWord.getStartColumn());
-                    if (PlayedTurnValidityChecker_Alternatif.isPlayable(board, word, dictionary)) {
-                        wordListOfPlayableWords.add(word);
-                    }
-                }
+            
+            //Conversion of a word from String to Word depending of its position and the position of the played word
+            for (String word : horizontalPlayableWords) {
+            	List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(word, language);
+            	WordInterface wordToPlay;
+            	if (playedWord.isHorizontal()) {
+            		wordToPlay = new Word(player, conversion, true, playedWord.getStartLine(), (short) (playedWord.getStartColumn() - findSizePrefix(conversion, playedWord)));
+            		//Check if the word can be played on the board
+            		if (PlayedTurnValidityChecker_Alternatif.isPlayable(board, wordToPlay, dictionary)) {
+            			wordListOfPlayableWords.add(wordToPlay);
+            		}
+            	} else {
+            		//Add all the possible placement for the word on the board
+            		wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, playedWord, word, player, language));
+            	}
             }
-            //System.out.println(horizontalPlayableWordsMatched.size());
-            //System.out.println(verticalPlayableWordsMatched.size());
-            //System.out.println(wordListOfPlayableWords.size());
+            for (String word : verticalPlayableWords) {
+            	List<LetterInterface> conversion = LetterListToStringTransformer.reverseTransform(word, language);
+            	WordInterface wordToPlay;
+            	//Add all the possible placement for the word on the board
+            	if (playedWord.isHorizontal()) {
+            		wordListOfPlayableWords.addAll(possiblePlacement(board, dictionary, playedWord, word, player, language));
+            	} 
+            	//Check if the word can be played on the board
+            	else {
+            		wordToPlay = new Word(player, conversion, true, (short) (playedWord.getStartLine() - findSizePrefix(conversion, playedWord)), playedWord.getStartColumn());
+            		if (PlayedTurnValidityChecker_Alternatif.isPlayable(board, wordToPlay, dictionary)) {
+            			wordListOfPlayableWords.add(wordToPlay);
+            		}
+            	}
+            }
         }
 
         for (WordInterface wordBasedOnPlayedWords : wordListOfPlayableWords) {
@@ -364,8 +251,13 @@ public class WordFinder {
         return finalListWithPoints;
     }
 
-    //TODO La taille du préfixe est toujours égale à 0
-    //Return the size of a word's prefix
+    /**
+     * Return the size of a word's prefix
+     * 
+     * @param letters	Letters of a word, can be played on an already played word
+     * @param word		A played word
+     * @return			The size of the prefix
+     */
     private static short findSizePrefix(List<LetterInterface> letters, WordInterface word) {
         short size = 0;
         List<LetterInterface> listToCheck = new ArrayList<>();
@@ -419,12 +311,13 @@ public class WordFinder {
         return possibility;
     }
 
-    protected boolean occurrencesOfPlayerLettersAreEquivalentToWordLetters(Map<LetterInterface, Integer> occurrencesOfPlayerLetters, Map<LetterInterface, Integer> occurrencesOfWordLetters) {
-        for (Map.Entry<LetterInterface, Integer> m : occurrencesOfPlayerLetters.entrySet()) {
-            if (occurrencesOfWordLetters.containsKey(m.getKey()) && m.getValue() < occurrencesOfWordLetters.get(m.getKey())) {
-                return false;
-            }
-        }
+    protected static boolean occurrencesOfPlayerLettersAreEquivalentToWordLetters(Map<LetterInterface, Integer> occurrencesOfPlayerLetters, Map<LetterInterface, Integer> occurrencesOfWordLetters) {
+    	for (Map.Entry<LetterInterface, Integer> m : occurrencesOfWordLetters.entrySet()) {
+    		if(!occurrencesOfPlayerLetters.containsKey(m.getKey()) || m.getValue() > occurrencesOfPlayerLetters.get(m.getKey()))
+    		{
+    			return false;
+    		}
+    	}
 
         return true;
     }
@@ -444,5 +337,24 @@ public class WordFinder {
         }
 
         return nbLetters;
+    }
+    
+    /**
+     * Remove a list of letters from a word
+     * 
+     * @param word				Word which letters will be removed
+     * @param lettersToRemove	Letters to remove
+     * @return
+     */
+    private static List<LetterInterface> removeAllLetters(List<LetterInterface> word, List<LetterInterface> lettersToRemove)
+    {
+    	List<LetterInterface> newWord = word;
+    	
+    	for (int i = 0; i < lettersToRemove.size(); i++) 
+    	{
+    		newWord.remove(lettersToRemove.get(i));
+    	}
+    	
+    	return newWord;
     }
 }
