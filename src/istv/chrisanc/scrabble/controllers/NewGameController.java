@@ -7,6 +7,8 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.languages.English.English;
 import istv.chrisanc.scrabble.model.languages.French.French;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -121,16 +123,29 @@ public class NewGameController extends BaseController {
 	protected void handleStartGame() {
         List<PlayerInterface> players = new ArrayList<>();
 
-        for (int i = 0; i < this.numberPlayers; i++) {
-            HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
-            String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText();
-            boolean playerIsHuman = ((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected();
+        if(this.numberPlayers<=1 || this.numberPlayers>4) {
 
-            players.add(new Player(playerName.trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i+1) : playerName, playerIsHuman));
+        	Alert alert = new Alert(AlertType.ERROR);
+        	alert.setTitle("Ouups !");
+        	alert.setHeaderText(null);
+        	alert.setContentText("The minimum of players is 2 and the maximum is 4 !");
+
+        	alert.showAndWait();
+
+        } else {
+
+            for (int i = 0; i < this.numberPlayers; i++) {
+                HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
+                String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText();
+                boolean playerIsHuman = ((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected();
+
+                players.add(new Player(playerName.trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i+1) : playerName, playerIsHuman));
+            }
+
+            this.scrabble.initializeScrabbleGame(this.languageChoiceBox.getValue(), players);
+            this.scrabble.showGame();
+
         }
-
-        this.scrabble.initializeScrabbleGame(this.languageChoiceBox.getValue(), players);
-        this.scrabble.showGame();
 	}
 
 	/**
