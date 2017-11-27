@@ -123,29 +123,22 @@ public class NewGameController extends BaseController {
 	protected void handleStartGame() {
         List<PlayerInterface> players = new ArrayList<>();
 
-        if(this.numberPlayers<=1 || this.numberPlayers>4) {
+        if(!this.numberOfPlayersMatchesScrabbleRules()) {
+            this.showErrorInvalidPlayersNumber();
 
-        	Alert alert = new Alert(AlertType.ERROR);
-        	alert.setTitle("Ouups !");
-        	alert.setHeaderText(null);
-        	alert.setContentText("The minimum of players is 2 and the maximum is 4 !");
-
-        	alert.showAndWait();
-
-        } else {
-
-            for (int i = 0; i < this.numberPlayers; i++) {
-                HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
-                String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText();
-                boolean playerIsHuman = ((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected();
-
-                players.add(new Player(playerName.trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i+1) : playerName, playerIsHuman));
-            }
-
-            this.scrabble.initializeScrabbleGame(this.languageChoiceBox.getValue(), players);
-            this.scrabble.showGame();
-
+            return;
         }
+
+        for (int i = 0; i < this.numberPlayers; i++) {
+            HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
+            String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText();
+            boolean playerIsHuman = ((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected();
+
+            players.add(new Player(playerName.trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i+1) : playerName, playerIsHuman));
+        }
+
+        this.scrabble.initializeScrabbleGame(this.languageChoiceBox.getValue(), players);
+        this.scrabble.showGame();
 	}
 
 	/**
@@ -155,6 +148,15 @@ public class NewGameController extends BaseController {
 	protected void handleCancel() {
 		this.scrabble.showHome();
 	}
+
+	protected void showErrorInvalidPlayersNumber() {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(this.scrabble.getI18nMessages().getString("error"));
+        alert.setHeaderText(this.scrabble.getI18nMessages().getString("incorrectNumberOfPlayers"));
+        alert.setContentText(this.scrabble.getI18nMessages().getString("numberOfPlayersMustFitRules"));
+
+        alert.showAndWait();
+    }
 
 	protected boolean numberOfPlayersMatchesScrabbleRules() {
         return Scrabble.MIN_PLAYERS <= this.numberPlayers && this.numberPlayers <= Scrabble.MAX_PLAYERS;

@@ -5,8 +5,6 @@ import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -96,16 +94,7 @@ public class Player implements PlayerInterface, Serializable {
 
     @Override
     public void decreaseAvailableHelps() {
-    	if(availableHelps.get()==0) {
-    		Alert alert = new Alert(AlertType.INFORMATION);
-    		alert.setTitle("Ouuups !");
-    		alert.setHeaderText(null);
-    		alert.setContentText("You have used all the available helps !");
-
-    		alert.showAndWait();
-    	} else {
-    		this.setAvailableHelps(this.getAvailableHelps() - 1);
-    	}
+        this.setAvailableHelps(this.getAvailableHelps() - 1);
     }
 
     /**
