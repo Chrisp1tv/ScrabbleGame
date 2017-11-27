@@ -98,7 +98,7 @@ public class Player implements PlayerInterface, Serializable {
     public void decreaseAvailableHelps() {
     	if(availableHelps.get()==0) {
     		Alert alert = new Alert(AlertType.INFORMATION);
-    		alert.setTitle("Ouuups !");
+    		alert.setTitle("Ouups !");
     		alert.setHeaderText(null);
     		alert.setContentText("You have used all the available helps !");
 
