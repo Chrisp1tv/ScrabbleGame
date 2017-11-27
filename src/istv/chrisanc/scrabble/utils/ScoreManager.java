@@ -58,7 +58,7 @@ public class ScoreManager {
                         currentWordMultiplier *= board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).getWordMultiplier();
 
                         if (updateMultipliers) {
-                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j));
+                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j));
                         }
                     } else {
                         currentWordScore += currentLetter.getValue();
