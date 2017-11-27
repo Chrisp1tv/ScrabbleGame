@@ -53,26 +53,26 @@ public class ScoreManager {
                 LetterInterface currentLetter = currentWord.getLetters().get(j);
 
                 if (currentWord.isHorizontal()) {
-                    if (!board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).isMultiplierUsed()) {
-                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).getLetterMultiplier();
-                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()).getWordMultiplier();
-
-                        if (updateMultipliers) {
-                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartColumn() + j).get(currentWord.getStartLine()));
-                        }
-                    } else {
-                        currentWordScore += (currentLetter.getValue());
-                    }
-                } else {
-                    if (!board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).isMultiplierUsed()) {
-                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).getLetterMultiplier();
-                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j).getWordMultiplier();
+                    if (!board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).isMultiplierUsed()) {
+                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).getLetterMultiplier();
+                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).getWordMultiplier();
 
                         if (updateMultipliers) {
                             squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartColumn()).get(currentWord.getStartLine() + j));
                         }
                     } else {
                         currentWordScore += currentLetter.getValue();
+                    }
+                } else {
+                    if (!board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).isMultiplierUsed()) {
+                        currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).getLetterMultiplier();
+                        currentWordMultiplier *= board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).getWordMultiplier();
+
+                        if (updateMultipliers) {
+                            squaresToMakeUsed.add(board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()));
+                        }
+                    } else {
+                        currentWordScore += (currentLetter.getValue());
                     }
                 }
             }

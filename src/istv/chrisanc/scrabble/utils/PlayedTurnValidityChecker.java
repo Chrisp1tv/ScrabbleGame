@@ -385,7 +385,7 @@ abstract public class PlayedTurnValidityChecker {
                 currentLine++;
             } while (currentLine < BoardInterface.BOARD_SIZE);
 
-            PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, verticalWordLetters, true, (short) startLine, (short) column);
+            PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, verticalWordLetters, false, (short) startLine, (short) column);
         }
     }
 
@@ -470,6 +470,6 @@ abstract public class PlayedTurnValidityChecker {
             currentColumn++;
         } while (currentColumn < BoardInterface.BOARD_SIZE);
 
-        PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, false, playedLetter.getKey().getLine(), startColumn);
+        PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, true, playedLetter.getKey().getLine(), startColumn);
     }
 }
