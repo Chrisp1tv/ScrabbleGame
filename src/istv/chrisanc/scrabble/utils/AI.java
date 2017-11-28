@@ -58,7 +58,7 @@ public class AI extends Player implements AIInterface
 		//Else, a random amount of letters (between 0 and 7) are removed from the hand and put in the bag
 		if(!listOfWords.isEmpty())
 		{
-			int number = (int)(Math.random()*(listOfWords.size()+1));
+			int number = (int)(Math.random()*(listOfWords.size()));
 			Set<WordInterface> wordsSet = listOfWords.keySet();
 			WordInterface[] words = wordsSet.toArray(new WordInterface[0]);
 			WordInterface wordToPlay = words[number];
