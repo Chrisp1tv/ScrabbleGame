@@ -10,6 +10,7 @@
     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Text text="%loadGame" styleClass="title" />
         <ListView fx:id="filesList" />
+        <Text text="%noGameSaveFound" fx:id="noGameSaveFoundText" visible="false"/>
       <ButtonBar>
          <buttons>
                <Button mnemonicParsing="false" onAction="#handleQuit" text="%getBackHome" ButtonBar.buttonData="LEFT"/>

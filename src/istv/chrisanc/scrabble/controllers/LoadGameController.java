@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -17,10 +18,18 @@ import java.io.IOException;
  */
 public class LoadGameController extends BaseController {
     /**
-     * ListView showing the files available in the game saves directory
+     * The ListView showing the files available in the game saves directory
      */
     @FXML
-    private ListView<File> filesList;
+    protected ListView<File> filesList;
+
+    @FXML
+    protected Text noGameSaveFoundText;
+
+    /**
+     * The files found in the game saves directory
+     */
+    protected File[] gameSaves;
 
     /**
      * Initializes the controller, constructs the ListView and listen for any user choice
@@ -28,9 +37,18 @@ public class LoadGameController extends BaseController {
     @FXML
     protected void initialize() {
         try {
-            this.filesList.setItems(FXCollections.observableArrayList(GameSaver.findGameSaves()));
+            this.gameSaves = GameSaver.findGameSaves();
         } catch (IOException e) {
             showErrorWhileLoadingGameSaves();
+        }
+
+
+        if (this.gameSaves.length > 0) {
+            this.filesList.setItems(FXCollections.observableArrayList(this.gameSaves));
+        } else {
+            this.filesList.setVisible(false);
+            this.filesList.setManaged(false);
+            this.noGameSaveFoundText.setVisible(true);
         }
 
         this.filesList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> this.handleLoadGame(newValue));

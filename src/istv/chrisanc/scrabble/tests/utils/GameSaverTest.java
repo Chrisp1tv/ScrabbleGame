@@ -24,15 +24,15 @@ import static org.junit.Assert.assertEquals;
 public class GameSaverTest {
     protected static GameSaveInterface gameSave;
 
-    protected static String testSavePath = "testSave" + GameSaver.GAME_SAVES_FILES_EXTENSION;
+    protected static String testSaveName = "testSave";
 
     /**
      * Tests if a game can be save to the dedicated directory
      */
     @Test
     public void saveGameToGameSavesDirectory() throws Exception {
-        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSavePath);
-        GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSavePath));
+        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSaveName);
+        GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSaveName + GameSaver.GAME_SAVES_FILES_EXTENSION));
     }
 
     /**
@@ -40,7 +40,7 @@ public class GameSaverTest {
      */
     @Test
     public void findGameSaves() throws Exception {
-        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, GameSaverTest.testSavePath);
+        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, GameSaverTest.testSaveName);
         File[] saves = GameSaver.findGameSaves();
 
         assertEquals(1, saves.length);
@@ -53,14 +53,14 @@ public class GameSaverTest {
      */
     @Test
     public void loadGame() throws Exception {
-        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSavePath);
+        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSaveName);
         File saveFile = GameSaver.findGameSaves()[0];
 
         GameSaveInterface gameSave = GameSaver.loadGameSave(saveFile);
 
         assertEquals("Christopher Anciaux", gameSave.getPlayers().get(0).getName());
 
-        GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSavePath));
+        GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSaveName + GameSaver.GAME_SAVES_FILES_EXTENSION));
     }
 
     @BeforeClass

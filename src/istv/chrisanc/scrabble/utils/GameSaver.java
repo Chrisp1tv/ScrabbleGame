@@ -37,7 +37,7 @@ public class GameSaver {
      * @see #saveGame
      */
     public static void saveGameToGameSavesDirectory(GameSaveInterface gameSave, String fileName) throws UnableToWriteSaveException {
-        GameSaver.saveGame(gameSave, new File(GAME_SAVES_DIRECTORY + File.separator + fileName));
+        GameSaver.saveGame(gameSave, new File(GAME_SAVES_DIRECTORY + File.separator + fileName + GameSaver.GAME_SAVES_FILES_EXTENSION));
     }
 
     /**
