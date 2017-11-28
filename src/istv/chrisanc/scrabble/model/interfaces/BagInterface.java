@@ -55,4 +55,6 @@ public interface BagInterface {
      * @return true if the bag hasn't any letter anymore, false otherwise
      */
     boolean isEmpty();
+
+    int getNbLetters();
 }

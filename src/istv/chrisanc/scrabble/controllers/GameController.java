@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -29,6 +30,9 @@ import java.util.TreeMap;
  * @author Christopher Anciaux
  */
 public class GameController extends BaseController {
+
+	@FXML
+	protected Label lettersLeft = new Label();
     /**
      * The container of the Scrabble game
      */
@@ -130,6 +134,9 @@ public class GameController extends BaseController {
     protected void handleValidatePlayedLetters() {
         try {
             this.scrabble.playLetters(this.playedLetters);
+            lettersLeft.setText(""+this.scrabble.getBag().getNbLetters());
+            System.out.println(this.scrabble.getBag().getNbLetters());
+
         } catch (InvalidPlayedTurnException e) {
             this.showAlertOfInvalidTurn(e);
             this.refreshScrabbleInterface();

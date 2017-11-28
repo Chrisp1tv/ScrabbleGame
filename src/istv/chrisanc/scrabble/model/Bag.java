@@ -74,4 +74,9 @@ public class Bag implements BagInterface, Serializable {
     public boolean isEmpty() {
         return this.letters.isEmpty();
     }
+
+	@Override
+	public int getNbLetters() {
+		return this.letters.size();
+	}
 }
