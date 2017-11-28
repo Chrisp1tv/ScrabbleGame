@@ -46,11 +46,6 @@ public class AITest {
 		bag = new Bag(language.getBagLettersDistribution());
 		board = new Board();
 		player = new Player("test", false);
-		List<LetterInterface> letters =  new ArrayList<LetterInterface>();
-		letters = Arrays.asList(LetterToStringTransformer.reverseTransform("B", language),
-				LetterToStringTransformer.reverseTransform("O", language),
-				LetterToStringTransformer.reverseTransform("N", language));
-		board.addWord(new Word(player, letters, true, (short)7, (short)7));
 	}
 
 	@Test
@@ -62,7 +57,10 @@ public class AITest {
 
 	@Test
 	public void testPlayTurn() {
+		assertEquals(0, board.getPlayedWords().size());
 		AI.drawLetters(bag);
+		AI.playTurn(board, bag, dictionary, language);
+		assertEquals(1, board.getPlayedWords().size());
 		AI.playTurn(board, bag, dictionary, language);
 		assertEquals(2, board.getPlayedWords().size());
 	}
