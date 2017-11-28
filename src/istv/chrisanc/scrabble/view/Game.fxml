@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view"
-            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="istv.chrisanc.scrabble.controllers.GameController">
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.GameController">
     <center>
-        <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid"/>
+        <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid" />
     </center>
     <left>
-        <VBox fx:id="playersListContainer" styleClass="players-list"/>
+        <VBox fx:id="playersListContainer" styleClass="players-list" />
     </left>
     <right>
-        <VBox fx:id="controlButtons" styleClass="scrabble-control-buttons">
-            <Button fx:id="validatePlayedLettersButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters"
-                    text="%validatePlayedLetters"/>
-            <Button fx:id="takeBackLettersButton" mnemonicParsing="false" onAction="#handleTakeBackLetters"
-                    text="%takeBackLetters"/>
-            <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag"
-                    text="%exchangeLettersWithTheBag"/>
-            <Button fx:id="askHelpButton" onAction="#handleAskHelp" text="%playTheBestTurn"/>
-            <Button onAction="#handleSkipTurn" text="%skipMyTurn"/>
-            <Button onAction="#handleSaveGame" text="%save"/>
-            <Button onAction="#handleQuitGame" text="%quit"/>
+        <VBox fx:id="controlButtons" prefHeight="416.0" prefWidth="177.0" styleClass="scrabble-control-buttons">
+         <Label text="Letters Left : ">
+            <VBox.margin>
+               <Insets bottom="5.0" />
+            </VBox.margin>
+            <font>
+               <Font name="System Bold" size="19.0" />
+            </font>
+         </Label>
+         <Label fx:id="lettersLeft" text="Label">
+            <VBox.margin>
+               <Insets bottom="40.0" />
+            </VBox.margin>
+            <font>
+               <Font size="31.0" />
+            </font>
+         </Label>
+            <Button fx:id="validatePlayedLettersButton" mnemonicParsing="false" onAction="#handleValidatePlayedLetters" text="%validatePlayedLetters" />
+            <Button fx:id="takeBackLettersButton" mnemonicParsing="false" onAction="#handleTakeBackLetters" text="%takeBackLetters" />
+            <Button fx:id="exchangeLetterButton" mnemonicParsing="false" onAction="#handleExchangeLetterWithBag" text="%exchangeLettersWithTheBag" />
+            <Button fx:id="askHelpButton" onAction="#handleAskHelp" text="%playTheBestTurn" />
+            <Button onAction="#handleSkipTurn" text="%skipMyTurn" />
+            <Button onAction="#handleSaveGame" text="%save" />
+            <Button onAction="#handleQuitGame" text="%quit" />
         </VBox>
     </right>
     <bottom>
-        <HBox fx:id="playerLettersContainer" styleClass="tiles"/>
+        <HBox fx:id="playerLettersContainer" styleClass="tiles" />
     </bottom>
 </BorderPane>

@@ -103,6 +103,7 @@ public class GameController extends BaseController {
      */
     public void initializeInterface() {
         this.initializePlayedLetters();
+        lettersLeft.setText(""+this.scrabble.getBag().getNbLetters());
         Templates.displayPlayers(this.playersListContainer, this.scrabble.currentPlayerProperty(), this.scrabble.getPlayers(), this.scrabble.getI18nMessages());
         this.initializeBoardGrid();
         this.displayBoardGrid();
