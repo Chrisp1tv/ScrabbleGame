@@ -22,8 +22,6 @@ import java.util.TreeMap;
 /**
  * This class handles the research of the words that could be played on the given {@link BoardInterface}.
  *
- * TODO: Remove all unnecessary comments, clean up the code
- * TODO: Add comments explaining what is done, and why it's done
  *
  * @author Christopher Anciaux
  * @author Anthony Delétré
@@ -93,7 +91,7 @@ public class WordFinder {
             {
             	List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform(wordToAdd, language);
 
-            	//If the words are in the same position (if the played word is included in the word s)
+            	//If the words are in the same position
             	if (wordsContainingLetters.contains(wordToAdd)) 
             	{
             		//Letters from the played word are removed from the word to keep only letters that need to be played
@@ -108,7 +106,7 @@ public class WordFinder {
             				wordsToUse.add(wordToAdd);
             		}
             	}
-                //If the words are not in the same position (if the played word is not included in the word s but at least one letter is present in the two words)
+                //If the words are not in the same position
                 else {
                     boolean removed = false;
                     int i = 0;
@@ -157,8 +155,6 @@ public class WordFinder {
             List<String> verticalPlayableWords = new ArrayList<>();
 
             Set<Entry<String, List<LetterInterface>>> listOfPlayableWordsToCheck = listOfPlayableWordsWithLetters.entrySet();
-            //If the played word is horizontal
-            //If the possible word is horizontal (letters added before and/or after the played word) and bigger than the played word
             for(Entry<String, List<LetterInterface>> word : listOfPlayableWordsToCheck)
             {
             	//If the played word is horizontal
@@ -169,7 +165,10 @@ public class WordFinder {
             		} else {
             			verticalPlayableWords.add(word.getKey());
             		}
-            	} else {
+            	} 
+            	//If the played word is vertical
+            	else {
+            		//If the possible word is vertical (letters added before and/or after the played word) and bigger than the played word
             		if (wordsContainingLetters.contains(word.getKey())) {
             			verticalPlayableWords.add(word.getKey());
             		} else {
@@ -265,7 +264,6 @@ public class WordFinder {
             size++;
         }
 
-        //Return the size of the playable word's prefix
         return (short) (letters.size() - size);
     }
 
