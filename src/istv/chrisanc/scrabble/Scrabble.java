@@ -342,8 +342,8 @@ public class Scrabble extends Application {
      * @throws EmptyBagException if the bag is empty
      */
     public void exchangeLetters(List<LetterInterface> letters) throws EmptyBagException, NotEnoughLettersException {
-        this.getCurrentPlayer().removeLetters(letters);
         this.getCurrentPlayer().addLetters(this.getBag().exchangeLetters(letters));
+        this.getCurrentPlayer().removeLetters(letters);
 
         this.reinitializeSkippedTurns();
         this.nextTurn();
