@@ -4,6 +4,7 @@ import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class LetterListToStringTransformer {
      *
      * @return the transformed {@link List} to {@link String}
      */
-    public static String transform(List<LetterInterface> letters) {
+    public static String transform(Collection<LetterInterface> letters) {
         StringBuilder stringBuilder = new StringBuilder();
         letters.forEach(stringBuilder::append);
 

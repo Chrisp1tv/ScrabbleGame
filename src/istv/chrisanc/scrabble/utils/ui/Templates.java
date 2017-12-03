@@ -1,6 +1,6 @@
 package istv.chrisanc.scrabble.utils.ui;
 
-import istv.chrisanc.scrabble.controllers.GameController;
+import istv.chrisanc.scrabble.model.BoardPosition;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
@@ -149,7 +149,7 @@ public class Templates {
         });
     }
 
-    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid) {
+    public static void displayBoardGrid(ResourceBundle i18nMessages, List<List<SquareInterface>> squares, SortedMap<BoardPosition, LetterInterface> playedLetters, List<List<LetterInterface>> boardLetters, HBox playerLettersContainer, GridPane scrabbleGrid) {
         for (int i = 0, squaresSize = squares.size(); i < squaresSize; i++) {
             List<SquareInterface> squaresLine = squares.get(i);
 
@@ -183,7 +183,7 @@ public class Templates {
                     DraggableLetterManager.makeElementReadyToReceiveLetter(square, true, (letter, event) -> {
                         square.getChildren().add((Node) event.getGestureSource());
                         playerLettersContainer.getChildren().remove(event.getGestureSource());
-                        playedLetters.put(new GameController.BoardPosition((short) finalI, (short) finalJ), letter);
+                        playedLetters.put(new BoardPosition((short) finalI, (short) finalJ), letter);
                     });
                 } else {
                     Templates.displayLetter(square, boardLetters.get(i).get(j), false);

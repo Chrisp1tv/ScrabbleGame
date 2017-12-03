@@ -1,6 +1,6 @@
 package istv.chrisanc.scrabble.model.interfaces;
 
-import istv.chrisanc.scrabble.controllers.GameController;
+import istv.chrisanc.scrabble.model.BoardPosition;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -45,7 +45,7 @@ public interface BoardInterface {
      *
      * @param letters The letters to add
      */
-    void addLetters(SortedMap<GameController.BoardPosition, LetterInterface> letters);
+    void addLetters(SortedMap<BoardPosition, LetterInterface> letters);
 
     /**
      * @return true if the board hasn't any letter in it, false otherwise

@@ -1,6 +1,5 @@
 package istv.chrisanc.scrabble.model;
 
-import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
@@ -60,8 +59,8 @@ public class Board implements BoardInterface, Serializable {
     }
 
     @Override
-    public void addLetters(SortedMap<GameController.BoardPosition, LetterInterface> letters) {
-        for (SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedEntry : letters.entrySet()) {
+    public void addLetters(SortedMap<BoardPosition, LetterInterface> letters) {
+        for (SortedMap.Entry<BoardPosition, LetterInterface> playedEntry : letters.entrySet()) {
             this.letters.get(playedEntry.getKey().getLine()).set(playedEntry.getKey().getColumn(), playedEntry.getValue());
         }
     }

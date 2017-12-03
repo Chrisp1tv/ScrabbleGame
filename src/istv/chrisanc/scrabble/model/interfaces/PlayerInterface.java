@@ -49,9 +49,4 @@ public interface PlayerInterface {
     void removeLetters(Collection<LetterInterface> letters);
 
     void removeLetter(short index);
-
-    /**
-     * @return true if the player is human, false otherwise
-     */
-    boolean isHuman();
 }

@@ -1,7 +1,8 @@
 package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.Scrabble;
-import istv.chrisanc.scrabble.model.Player;
+import istv.chrisanc.scrabble.model.ArtificialIntelligencePlayer;
+import istv.chrisanc.scrabble.model.HumanPlayer;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.languages.English.English;
@@ -114,34 +115,39 @@ public class NewGameController extends BaseController {
         this.numberPlayersField.setText(NewGameController.DEFAULT_NUMBER_OF_PLAYERS.toString());
     }
 
-	/**
-	 * Initializes the game and redirects to the created game.
-	 */
-	@FXML
-	protected void handleStartGame() {
+    /**
+     * Initializes the game and redirects to the created game.
+     */
+    @FXML
+    protected void handleStartGame() {
         List<PlayerInterface> players = new ArrayList<>();
 
         for (int i = 0; i < this.numberPlayers; i++) {
             HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
-            String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText();
+            String playerName = ((TextField) playerInformationHBox.getChildren().get(0)).getText().trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i + 1) : ((TextField) playerInformationHBox.getChildren().get(0)).getText();
             boolean playerIsHuman = ((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected();
 
-            players.add(new Player(playerName.trim().isEmpty() ? this.scrabble.getI18nMessages().getString("player") + " " + (i+1) : playerName, playerIsHuman));
+            if (playerIsHuman) {
+                players.add(new HumanPlayer(playerName));
+            } else {
+                // TODO: AI level
+                players.add(new ArtificialIntelligencePlayer(playerName, (short) 1));
+            }
         }
 
         this.scrabble.initializeScrabbleGame(this.languageChoiceBox.getValue(), players);
         this.scrabble.showGame();
-	}
+    }
 
-	/**
-	 * Redirects to Home action
-	 */
-	@FXML
-	protected void handleCancel() {
-		this.scrabble.showHome();
-	}
+    /**
+     * Redirects to Home action
+     */
+    @FXML
+    protected void handleCancel() {
+        this.scrabble.showHome();
+    }
 
-	protected boolean numberOfPlayersMatchesScrabbleRules() {
+    protected boolean numberOfPlayersMatchesScrabbleRules() {
         return Scrabble.MIN_PLAYERS <= this.numberPlayers && this.numberPlayers <= Scrabble.MAX_PLAYERS;
     }
 
@@ -173,7 +179,7 @@ public class NewGameController extends BaseController {
         HBox playerInformationHBox = new HBox();
         playerInformationHBox.getStyleClass().add("player");
 
-        TextField playerNameTextField = new TextField(this.scrabble.getI18nMessages().getString("player") + " " + (i+1));
+        TextField playerNameTextField = new TextField(this.scrabble.getI18nMessages().getString("player") + " " + (i + 1));
         playerNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > NewGameController.PLAYER_NAME_MAX_CHARACTERS) {
                 playerNameTextField.setText(newValue.substring(0, NewGameController.PLAYER_NAME_MAX_CHARACTERS));

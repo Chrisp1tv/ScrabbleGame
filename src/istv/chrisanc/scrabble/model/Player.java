@@ -20,7 +20,7 @@ import java.util.List;
  * @author Eguinane Chavatte
  * @see PlayerInterface
  */
-public class Player implements PlayerInterface, Serializable {
+public abstract class Player implements PlayerInterface, Serializable {
     /**
      * The name of the player
      */
@@ -38,14 +38,8 @@ public class Player implements PlayerInterface, Serializable {
      */
     protected List<LetterInterface> letters;
 
-    /**
-     * If the player is a human player, the value is set to true, false otherwise
-     */
-    protected boolean human;
-
-    public Player(String name, boolean human) {
+    protected Player(String name) {
         this.initialize();
-        this.human = human;
         this.name = name;
     }
 
@@ -109,11 +103,6 @@ public class Player implements PlayerInterface, Serializable {
         this.letters.remove(index);
     }
 
-    @Override
-    public boolean isHuman() {
-        return this.human;
-    }
-
     protected void setName(String name) {
         this.name = name;
     }
@@ -122,17 +111,12 @@ public class Player implements PlayerInterface, Serializable {
         this.score.set(score);
     }
 
-    protected void setHuman(boolean human) {
-        this.human = human;
-    }
-
     protected void initialize() {
         this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        objectOutputStream.writeBoolean(this.human);
         objectOutputStream.writeObject(this.name);
         objectOutputStream.writeInt(this.score.getValue());
         objectOutputStream.writeObject(this.letters);
@@ -141,7 +125,6 @@ public class Player implements PlayerInterface, Serializable {
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         this.initialize();
 
-        this.setHuman(objectInputStream.readBoolean());
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
 
