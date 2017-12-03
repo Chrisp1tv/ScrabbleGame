@@ -13,6 +13,7 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Julien Basquin
  */
 public abstract class ArtificialIntelligenceHelper {
-    public static void playTurnForArtificialIntelligencePlayer(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) {
+    public static void playTurn(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) {
         // First, try to find the possible words
         List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(scrabble.getLanguage(), scrabble.getBoard(), player);
 
@@ -94,7 +95,7 @@ public abstract class ArtificialIntelligenceHelper {
 
     protected static void exchangeLettersWithBag(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) throws NotEnoughLettersException, EmptyBagException {
         // First, let's find the letters the player will exchange, randomly
-        List<LetterInterface> lettersToExchange = player.getLetters().subList(0, ThreadLocalRandom.current().nextInt(1, player.getLetters().size()));
+        List<LetterInterface> lettersToExchange = new ArrayList<>(player.getLetters().subList(0, ThreadLocalRandom.current().nextInt(1, player.getLetters().size())));
 
         // Then, let's proceed to the exchange
         scrabble.exchangeLetters(lettersToExchange);

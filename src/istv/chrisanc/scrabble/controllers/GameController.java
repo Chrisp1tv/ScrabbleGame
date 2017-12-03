@@ -5,6 +5,7 @@ import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
 import istv.chrisanc.scrabble.model.BoardPosition;
 import istv.chrisanc.scrabble.model.interfaces.HumanPlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
+import istv.chrisanc.scrabble.utils.ArtificialIntelligenceHelper;
 import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -119,9 +120,19 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleAskHelp() {
-        this.scrabble.getCurrentPlayer().decreaseAvailableHelps();
+        ((HumanPlayerInterface) this.scrabble.getCurrentPlayer()).decreaseAvailableHelps();
 
-        // TODO: ask IA to play for the current player
+        SortedMap<BoardPosition, LetterInterface> bestTurnPossible = ArtificialIntelligenceHelper.getBestTurnPossible(this.scrabble.getLanguage(), this.scrabble.getBoard(), this.scrabble.getCurrentPlayer());
+
+        if (null != bestTurnPossible) {
+            try {
+                this.scrabble.playLetters(bestTurnPossible);
+                return;
+            } catch (InvalidPlayedTurnException ignored) {
+            }
+        }
+
+        this.showAlertOfNoBestTurnPossible();
     }
 
     /**
@@ -283,6 +294,18 @@ public class GameController extends BaseController {
     }
 
     /**
+     * Shows an alert when the user tries to ask for the best turn, but the Artificial Intelligence couldn't find one
+     */
+    protected void showAlertOfNoBestTurnPossible() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(this.scrabble.getI18nMessages().getString("error"));
+        alert.setHeaderText(this.scrabble.getI18nMessages().getString("noBestTurnPossible"));
+        alert.setContentText(this.scrabble.getI18nMessages().getString("noBestTurnIsPossible"));
+
+        alert.showAndWait();
+    }
+
+    /**
      * Shows a confirmation dialog when the player is leaving the game
      */
     protected Optional<ButtonType> showQuitConfirmationDialog() {
@@ -327,10 +350,10 @@ public class GameController extends BaseController {
      */
     protected void listenCurrentPlayer() {
         this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
-            this.controlButtons.setDisable(!newValue instanceof  HumanPlayerInterface);
-            this.askHelpButton.setDisable(0 >= newValue.getAvailableHelps());
+            this.controlButtons.setDisable(!(newValue instanceof HumanPlayerInterface));
 
             if (newValue instanceof HumanPlayerInterface) {
+                this.askHelpButton.setDisable(0 >= ((HumanPlayerInterface) newValue).getAvailableHelps());
                 this.playerLettersContainer.setDisable(false);
                 this.refreshScrabbleInterface();
             } else {

@@ -49,10 +49,4 @@ public interface PlayerInterface {
     void removeLetters(Collection<LetterInterface> letters);
 
     void removeLetter(short index);
-
-    int getAvailableHelps();
-
-    void decreaseAvailableHelps();
-
-    ReadOnlyIntegerProperty availableHelpsProperty();
 }

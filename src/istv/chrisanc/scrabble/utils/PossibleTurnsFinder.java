@@ -26,12 +26,11 @@ import java.util.stream.Collectors;
  * @author Julien Basquin
  */
 public class PossibleTurnsFinder {
-    /*
+    /**
      * Searches and returns all the words which can be played on a given board
      *
      * @param board      The board of the game
      * @param player     The player, used to get his letters
-     * @param dictionary A dictionary containing all the words
      *
      * @return a list of playable turns
     */
@@ -196,9 +195,6 @@ public class PossibleTurnsFinder {
 
         // TODO: optimize all !
         List<SortedMap<BoardPosition, LetterInterface>> finalReturn = finalList.stream().map(wordToBeTransformed -> transformWordIntoPlayedTurn(wordToBeTransformed, board)).collect(Collectors.toList());
-
-        System.out.println(finalReturn);
-
         return finalReturn;
     }
 

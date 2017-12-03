@@ -21,8 +21,6 @@ import java.util.List;
  * @see PlayerInterface
  */
 public abstract class Player implements PlayerInterface, Serializable {
-    protected static final int NUMBER_OF_HELPS_FOR_HUMAN_PLAYER = 5;
-
     /**
      * The name of the player
      */
@@ -40,15 +38,9 @@ public abstract class Player implements PlayerInterface, Serializable {
      */
     protected List<LetterInterface> letters;
 
-    /**
-     * The available helps of the player
-     */
-    protected IntegerProperty availableHelps;
-
     protected Player(String name) {
         this.initialize();
         this.name = name;
-        this.availableHelps = new SimpleIntegerProperty(Player.NUMBER_OF_HELPS_FOR_HUMAN_PLAYER);
     }
 
     public String getName() {
@@ -73,20 +65,6 @@ public abstract class Player implements PlayerInterface, Serializable {
     @Override
     public ReadOnlyIntegerProperty scoreProperty() {
         return IntegerProperty.readOnlyIntegerProperty(this.score);
-    }
-
-    public int getAvailableHelps() {
-        return availableHelps.get();
-    }
-
-    @Override
-    public ReadOnlyIntegerProperty availableHelpsProperty() {
-        return IntegerProperty.readOnlyIntegerProperty(this.availableHelps);
-    }
-
-    @Override
-    public void decreaseAvailableHelps() {
-        this.setAvailableHelps(this.getAvailableHelps() - 1);
     }
 
     /**
@@ -133,29 +111,21 @@ public abstract class Player implements PlayerInterface, Serializable {
         this.score.set(score);
     }
 
-    protected void setAvailableHelps(int availableHelps) {
-        this.availableHelps.set(availableHelps);
-    }
-
     protected void initialize() {
         this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
-        this.availableHelps = new SimpleIntegerProperty(0);
     }
 
     private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
         objectOutputStream.writeObject(this.name);
         objectOutputStream.writeInt(this.score.getValue());
-        objectOutputStream.writeInt(this.getAvailableHelps());
         objectOutputStream.writeObject(this.letters);
     }
 
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
         this.initialize();
-
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
-        this.setAvailableHelps(objectInputStream.readInt());
 
         List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);

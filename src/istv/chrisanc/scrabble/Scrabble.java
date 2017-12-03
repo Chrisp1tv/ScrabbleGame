@@ -517,7 +517,7 @@ public class Scrabble extends Application {
     protected void listenForArtificialIntelligenceTurns() {
         this.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof ArtificialIntelligencePlayerInterface) {
-                ArtificialIntelligenceHelper.playTurnForArtificialIntelligencePlayer(this, (ArtificialIntelligencePlayerInterface) newValue);
+                ArtificialIntelligenceHelper.playTurn(this, (ArtificialIntelligencePlayerInterface) newValue);
             }
         });
     }

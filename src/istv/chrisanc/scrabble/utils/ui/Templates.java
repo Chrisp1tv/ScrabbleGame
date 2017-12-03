@@ -1,7 +1,9 @@
 package istv.chrisanc.scrabble.utils.ui;
 
 import istv.chrisanc.scrabble.model.BoardPosition;
+import istv.chrisanc.scrabble.model.interfaces.ArtificialIntelligencePlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
+import istv.chrisanc.scrabble.model.interfaces.HumanPlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.SquareInterface;
@@ -91,17 +93,21 @@ public class Templates {
         Text playerPointsLegend = new Text(" " + i18nMessages.getString("points"));
         playerPoints.getChildren().addAll(boundPlayerPoints, playerPointsLegend);
 
-        TextFlow numberOfAvailableHelps = new TextFlow();
-        numberOfAvailableHelps.getStyleClass().add("player-available-helps");
+        TextFlow playerStatusInformation = new TextFlow();
 
-        Text boundPlayerAvailableHelps = new Text();
-        boundPlayerAvailableHelps.textProperty().bind(player.availableHelpsProperty().asString());
-        //boundPlayerHelp.textProperty().set(""+player.getAvailableHelps());
-        Text playerAvailableHelpsLegend = new Text(" " + i18nMessages.getString("availableHelps"));
-        numberOfAvailableHelps.getChildren().addAll(boundPlayerAvailableHelps, playerAvailableHelpsLegend);
+        if (player instanceof HumanPlayerInterface) {
+            Text boundPlayerAvailableHelps = new Text();
+            boundPlayerAvailableHelps.textProperty().bind(((HumanPlayerInterface) player).availableHelpsProperty().asString());
+
+            Text playerAvailableHelpsLegend = new Text(" " + i18nMessages.getString("availableHelps"));
+            playerStatusInformation.getChildren().addAll(boundPlayerAvailableHelps, playerAvailableHelpsLegend);
+        } else if (player instanceof ArtificialIntelligencePlayerInterface) {
+            Text artificalIntelligenceLevelInformation = new Text(i18nMessages.getString("computer") + " - " + i18nMessages.getString("artificialIntelligenceLevels." + ((ArtificialIntelligencePlayerInterface) player).getLevel()));
+            playerStatusInformation.getChildren().add(artificalIntelligenceLevelInformation);
+        }
 
         // Assembling all elements of the player frame and adding it to the list of players
-        innerVBox.getChildren().addAll(playerName, playerPoints, numberOfAvailableHelps);
+        innerVBox.getChildren().addAll(playerName, playerPoints, playerStatusInformation);
         innerHBox.getChildren().addAll(playerNumber, innerVBox);
 
         playerContainer.getChildren().add(innerHBox);

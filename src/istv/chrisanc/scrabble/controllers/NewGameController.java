@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 /**
  * This controller handles the creation of a new Scrabble game. It asks the player for the number of players, the language
  * of the game and more, to start a new game.
+ * TODO: Check if game saving works with both player types
  *
  * @author Christopher Anciaux
  * @author Abdessamade Bouaggad
