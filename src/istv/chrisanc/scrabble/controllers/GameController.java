@@ -2,6 +2,8 @@ package istv.chrisanc.scrabble.controllers;
 
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
+import istv.chrisanc.scrabble.model.BoardPosition;
+import istv.chrisanc.scrabble.model.interfaces.HumanPlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.utils.ui.Templates;
 import javafx.fxml.FXML;
@@ -104,7 +106,7 @@ public class GameController extends BaseController {
         this.displayBoardGrid();
         this.listenCurrentPlayer();
 
-        if (this.scrabble.getCurrentPlayer().isHuman()) {
+        if (this.scrabble.getCurrentPlayer() instanceof HumanPlayerInterface) {
             this.displayPlayerLettersList();
         } else {
             this.playerLettersContainer.setDisable(true);
@@ -125,7 +127,6 @@ public class GameController extends BaseController {
     /**
      * Validates the letters played by the player
      */
-
     @FXML
     protected void handleValidatePlayedLetters() {
         try {
@@ -326,76 +327,15 @@ public class GameController extends BaseController {
      */
     protected void listenCurrentPlayer() {
         this.scrabble.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
-            this.controlButtons.setDisable(!newValue.isHuman());
+            this.controlButtons.setDisable(!newValue instanceof  HumanPlayerInterface);
             this.askHelpButton.setDisable(0 >= newValue.getAvailableHelps());
 
-            if (newValue.isHuman()) {
+            if (newValue instanceof HumanPlayerInterface) {
                 this.playerLettersContainer.setDisable(false);
                 this.refreshScrabbleInterface();
             } else {
                 this.playerLettersContainer.setDisable(true);
             }
         });
-    }
-
-    /**
-     * This class is used to send a board position to other objects during turn validation only, and only in this case.
-     *
-     * @author Christopher Anciaux
-     */
-    public static class BoardPosition implements Comparable<BoardPosition> {
-        /**
-         * The line on which the letter has been played
-         */
-        protected short line;
-
-        /**
-         * The column on which the letter has been played
-         */
-        protected short column;
-
-        public BoardPosition(short line, short column) {
-            this.line = line;
-            this.column = column;
-        }
-
-        public short getLine() {
-            return line;
-        }
-
-        public short getColumn() {
-            return column;
-        }
-
-        @Override
-        public int compareTo(BoardPosition o) {
-            if (o.getLine() == this.getLine()) {
-                return this.getColumn() - o.getColumn();
-            }
-
-            return this.getLine() - o.getLine();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            BoardPosition that = (BoardPosition) o;
-
-            return line == that.line && column == that.column;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = (int) line;
-            result = 31 * result + (int) column;
-
-            return result;
-        }
     }
 }

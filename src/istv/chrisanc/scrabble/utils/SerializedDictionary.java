@@ -9,14 +9,10 @@ import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,18 +37,18 @@ abstract public class SerializedDictionary implements DictionaryInterface {
     public boolean wordExists(String word) {
         return this.words.contains(word);
     }
-    
-	@Override
-	public NavigableSet<String> getWords() {
-		return words;
-	}
+
+    @Override
+    public NavigableSet<String> getWords() {
+        return words;
+    }
 
     @Override
     public List<String> findWordsHavingLetters(List<LetterInterface> letters) {
         List<String> words = new ArrayList<>();
 
         // First, we count how many letters we have of each unique letter in the given letters and store this info in a Map
-        Map<LetterInterface, Integer> nbLettersAvailable = countOccurrencesOfEachLetter(letters);
+        Map<LetterInterface, Integer> nbLettersAvailable = LettersCounter.countOccurrencesOfEachLetter(letters);
         int nbJokers = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
         Pattern pattern = Pattern.compile("[" + LetterListToStringTransformer.transform(letters) + "]+");
 
@@ -83,47 +79,39 @@ abstract public class SerializedDictionary implements DictionaryInterface {
 
         return words;
     }
-    
+
     @Override
-    public List<String> findWordsHavingLettersInOrder(List<LetterInterface> letters)
-    {
-    	int i, j;
-    	List<String> words = new ArrayList<>();
-    	String word = LetterListToStringTransformer.transform(letters);
-    	
-    	for(String w:this.words)
-    	{
-    		i = 0;
-    		j = 0;
-    		while(w.length() >= word.length() && i < w.length() && j < word.length())
-    		{
-    			//Check if the letters are equals
-    			if(w.charAt(i) == word.charAt(j))
-    			{
-    				i++;
-    				j++;
-    			}
-    			//If the letters are not equals, we return at the beginning of word and check again
-    			else
-    			{
-    				j = 0;
-    				if(w.charAt(i) == word.charAt(j))
-    				{
-    					i++;
-    					j++;
-    				}
-    				//If the letters are still not equals, we continue in the word of the dictionary
-    				else
-    					i++;
-    			}
-    			//If the word is included in the word of the dictionary, it is added to the list
-    			if(j == word.length())
-    				words.add(w);
-    		}
-    	}
-    	
-    	//Return the list of words from the dictionary which contains the word
-    	return words;
+    public List<String> findWordsHavingLettersInOrder(List<LetterInterface> letters) {
+        List<String> words = new ArrayList<>();
+        String word = LetterListToStringTransformer.transform(letters);
+
+        for (String currentWord : this.words) {
+            int i = 0, j = 0;
+            while (currentWord.length() >= word.length() && i < currentWord.length() && j < word.length()) {
+                if (currentWord.charAt(i) == word.charAt(j)) {
+                    // Check if the letters are equals
+                    i++;
+                    j++;
+                } else {
+                    // If the letters are not equals, we return at the beginning of word and check again
+                    j = 0;
+                    if (currentWord.charAt(i) == word.charAt(j)) {
+                        i++;
+                        j++;
+                    } else {
+                        // If the letters are still not equals, we continue in the word of the dictionary
+                        i++;
+                    }
+                }
+
+                if (j == word.length()) {
+                    // If the word is included in the word of the dictionary, it is added to the list
+                    words.add(currentWord);
+                }
+            }
+        }
+
+        return words;
     }
 
     @Override
@@ -131,7 +119,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         List<String> words = new ArrayList<>();
 
         // First, we count how many letters we have of each unique letter in the given letters and store this info in a Map
-        Map<LetterInterface, Integer> nbLettersAvailable = countOccurrencesOfEachLetter(availableLetters);
+        Map<LetterInterface, Integer> nbLettersAvailable = LettersCounter.countOccurrencesOfEachLetter(availableLetters);
         int nbJokersAvailable = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
 
         // We define the regular expression pattern, which depends on joker's presence
@@ -163,7 +151,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         List<String> words = new ArrayList<>();
 
         // First, we count how many letters we have of each unique letter in the given letters and store this info in a Map
-        Map<LetterInterface, Integer> nbLettersAvailable = countOccurrencesOfEachLetter(availableLetters);
+        Map<LetterInterface, Integer> nbLettersAvailable = LettersCounter.countOccurrencesOfEachLetter(availableLetters);
         int nbJokersAvailable = nbLettersAvailable.containsKey(new Joker()) ? nbLettersAvailable.get(new Joker()) : 0;
 
         // We define the regular expression pattern, which depends on joker's presence
@@ -206,7 +194,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         boolean wordMatches = true;
 
         // First, we count how many of each letter is present in the word and store it into an array
-        Map<Character, Integer> nbLettersOfCurrentWord = countOccurrencesOfEachLetter(word);
+        Map<Character, Integer> nbLettersOfCurrentWord = LettersCounter.countOccurrencesOfEachLetter(word);
 
         // Then, we check if we have enough of each letter, among the given letters, to write the word
         for (Map.Entry<Character, Integer> nbCurrentLetter : nbLettersOfCurrentWord.entrySet()) {
@@ -228,7 +216,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         boolean wordMatches = true;
 
         // First, we count how many of each letter is present in the word and store it into an array
-        Map<Character, Integer> nbLettersOfCurrentWord = countOccurrencesOfEachLetter(word);
+        Map<Character, Integer> nbLettersOfCurrentWord = LettersCounter.countOccurrencesOfEachLetter(word);
 
         // Then, we check if we have enough of each letter, among the given letters, to write the word
         for (Map.Entry<Character, Integer> nbCurrentLetter : nbLettersOfCurrentWord.entrySet()) {
@@ -252,43 +240,6 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         }
 
         return wordMatches;
-    }
-
-    /**
-     * @param word The word for which we want to count occurrences of each letter
-     *
-     * @return a map having for key the letter of the word, and for value the number of occurrences of the letter
-     */
-    protected Map<Character, Integer> countOccurrencesOfEachLetter(String word) {
-        Map<Character, Integer> nbLettersOfCurrentWord = new HashMap<>();
-
-        for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
-            if (nbLettersOfCurrentWord.containsKey(c)) {
-                int cnt = nbLettersOfCurrentWord.get(c);
-                nbLettersOfCurrentWord.put(c, ++cnt);
-            } else {
-                nbLettersOfCurrentWord.put(c, 1);
-            }
-        }
-
-        return nbLettersOfCurrentWord;
-    }
-
-    /**
-     * @param letters The given letters we have to count
-     *
-     * @return a map having for key the {@link LetterInterface}, and for value the number of occurrences of the {@link LetterInterface}
-     */
-    protected Map<LetterInterface, Integer> countOccurrencesOfEachLetter(List<LetterInterface> letters) {
-        Set<LetterInterface> uniqueLetters = new HashSet<>(letters);
-        Map<LetterInterface, Integer> nbLetters = new HashMap<>();
-
-        for (LetterInterface uniqueLetter : uniqueLetters) {
-            nbLetters.put(uniqueLetter, Collections.frequency(letters, uniqueLetter));
-        }
-
-        return nbLetters;
     }
 
     /**

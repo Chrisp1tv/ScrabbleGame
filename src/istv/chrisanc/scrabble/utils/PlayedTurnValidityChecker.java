@@ -1,7 +1,7 @@
 package istv.chrisanc.scrabble.utils;
 
-import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.exceptions.InvalidPlayedTurnException;
+import istv.chrisanc.scrabble.model.BoardPosition;
 import istv.chrisanc.scrabble.model.Word;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * This class manages the checking of played words on the Scrabble game. It checks if played words on a turn are valid, that is
@@ -21,14 +22,34 @@ import java.util.SortedMap;
  * TODO: Some optimization of the code is possible, would be interesting to do it once other tasks have been done
  *
  * @author Christopher Anciaux
- * @author Julien Basquin
- * @author Anthony Delétré
  */
 abstract public class PlayedTurnValidityChecker {
     /**
      * The minimal number of letters in a word
      */
     protected final static short MINIMAL_NUMBER_OF_LETTERS_IN_WORD = 2;
+
+    /**
+     * Tells if the given word (actually, the letters of the given word) can be used to form new words, by checking its validity with the actual game
+     *
+     * @param word       The word to check
+     * @param dictionary The dictionary used to check words existence
+     * @param board      The actual board
+     * @param player     The player who play this turn
+     *
+     * @return true if the turn is possible, false otherwise
+     */
+    public static boolean turnIsPossible(WordInterface word, DictionaryInterface dictionary, BoardInterface board, PlayerInterface player) {
+        SortedMap<BoardPosition, LetterInterface> playedLetters = PlayedTurnValidityChecker.transformWordIntoPlayedTurn(word, board);
+
+        try {
+            PlayedTurnValidityChecker.findPlayedWords(dictionary, board, playedLetters, player);
+
+            return true;
+        } catch (InvalidPlayedTurnException e) {
+            return false;
+        }
+    }
 
     /**
      * Finds all the played words of the current if the turn is valid
@@ -41,7 +62,7 @@ abstract public class PlayedTurnValidityChecker {
      * @return The played words of the current turn
      * @throws InvalidPlayedTurnException if the turn isn't valid, that is to say it doesn't respect all Scrabble rules
      */
-    public static List<WordInterface> findPlayedWords(DictionaryInterface dictionary, BoardInterface board, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, PlayerInterface player) throws InvalidPlayedTurnException {
+    public static List<WordInterface> findPlayedWords(DictionaryInterface dictionary, BoardInterface board, SortedMap<BoardPosition, LetterInterface> playedLetters, PlayerInterface player) throws InvalidPlayedTurnException {
         boolean horizontal;
         List<WordInterface> playedWords = new ArrayList<>();
 
@@ -87,17 +108,17 @@ abstract public class PlayedTurnValidityChecker {
      * @return True if the letters have been played horizontally, false otherwise
      * @throws InvalidPlayedTurnException if the letters haven't been played horizontally, nor vertically
      */
-    protected static boolean playedLettersAreDisposedHorizontally(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
-        Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
+    protected static boolean playedLettersAreDisposedHorizontally(SortedMap<BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
+        Iterator<SortedMap.Entry<BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
 
-        Map.Entry<GameController.BoardPosition, LetterInterface> firstLetter = playedLettersIterator.next();
+        Map.Entry<BoardPosition, LetterInterface> firstLetter = playedLettersIterator.next();
 
         // If there is only one letter played
         if (!playedLettersIterator.hasNext()) {
             return true;
         }
 
-        Map.Entry<GameController.BoardPosition, LetterInterface> nextLetter = playedLettersIterator.next();
+        Map.Entry<BoardPosition, LetterInterface> nextLetter = playedLettersIterator.next();
 
         boolean horizontal;
         if (firstLetter.getKey().getLine() == nextLetter.getKey().getLine()) {
@@ -134,10 +155,10 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if one of the played letters have been played on the center square, false otherwise
      */
-    protected static boolean isTurnPlayedOnTheCenterSquare(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) {
+    protected static boolean isTurnPlayedOnTheCenterSquare(SortedMap<BoardPosition, LetterInterface> playedLetters) {
         int centerSquarePosition = BoardInterface.BOARD_SIZE / 2;
 
-        for (GameController.BoardPosition playedLetterPosition : playedLetters.keySet()) {
+        for (BoardPosition playedLetterPosition : playedLetters.keySet()) {
             if (playedLetterPosition.getLine() == centerSquarePosition && playedLetterPosition.getColumn() == centerSquarePosition) {
                 return true;
             }
@@ -155,10 +176,10 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the played letters are all next to each other, false otherwise
      */
-    protected static boolean allPlayedLettersAreNextToEachOther(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
-        Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
-        Map.Entry<GameController.BoardPosition, LetterInterface> currentLetter;
-        Map.Entry<GameController.BoardPosition, LetterInterface> nextLetter;
+    protected static boolean allPlayedLettersAreNextToEachOther(SortedMap<BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
+        Iterator<SortedMap.Entry<BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
+        Map.Entry<BoardPosition, LetterInterface> currentLetter;
+        Map.Entry<BoardPosition, LetterInterface> nextLetter;
 
         currentLetter = playedLettersIterator.next();
         while (playedLettersIterator.hasNext()) {
@@ -187,10 +208,10 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the played letters are all next to each other or to already played letters
      */
-    protected static boolean allPlayedLettersAreDisposedNextToOtherLetters(BoardInterface board, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
+    protected static boolean allPlayedLettersAreDisposedNextToOtherLetters(BoardInterface board, SortedMap<BoardPosition, LetterInterface> playedLetters, boolean horizontal) {
         // First, we check that all played letters are linked to other letters, without any "hole" (a square without letter on)
         // between the first and the last played letter
-        Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
+        Iterator<SortedMap.Entry<BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
         if (horizontal) {
             for (int column = playedLetters.firstKey().getColumn(); column < BoardInterface.BOARD_SIZE && playedLettersIterator.hasNext(); column++) {
                 if (null == board.getLetters().get(playedLetters.firstKey().getLine()).get(column) && column != playedLettersIterator.next().getKey().getColumn()) {
@@ -206,7 +227,7 @@ abstract public class PlayedTurnValidityChecker {
         }
 
         // Finally, we check that at least one letter is played next to a board letter (played in a previous turn)
-        for (SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter : playedLetters.entrySet()) {
+        for (SortedMap.Entry<BoardPosition, LetterInterface> playedLetter : playedLetters.entrySet()) {
             if (PlayedTurnValidityChecker.hasAdjacentBoardLetter(board, playedLetter)) {
                 return true;
             }
@@ -223,7 +244,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the letter has an adjacent board letter, false otherwise
      */
-    protected static boolean hasAdjacentBoardLetter(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
+    protected static boolean hasAdjacentBoardLetter(BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) {
         return PlayedTurnValidityChecker.playedLetterHasBoardLetterAbove(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterAtRight(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterBelow(board, playedLetter) || PlayedTurnValidityChecker.playedLetterHasBoardLetterAtLeft(board, playedLetter);
     }
 
@@ -235,7 +256,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the latter has a letter to its left, false otherwise
      */
-    protected static boolean playedLetterHasBoardLetterAtLeft(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
+    protected static boolean playedLetterHasBoardLetterAtLeft(BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getColumn() > 0 && null != board.getLetters().get(playedLetter.getKey().getLine()).get(playedLetter.getKey().getColumn() - 1);
     }
 
@@ -247,7 +268,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the latter has a letter to its right, false otherwise
      */
-    protected static boolean playedLetterHasBoardLetterAtRight(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
+    protected static boolean playedLetterHasBoardLetterAtRight(BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getColumn() < BoardInterface.BOARD_SIZE - 1 && null != board.getLetters().get(playedLetter.getKey().getLine()).get(playedLetter.getKey().getColumn() + 1);
     }
 
@@ -259,7 +280,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the latter has a letter above, false otherwise
      */
-    protected static boolean playedLetterHasBoardLetterAbove(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
+    protected static boolean playedLetterHasBoardLetterAbove(BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getLine() > 0 && null != board.getLetters().get(playedLetter.getKey().getLine() - 1).get(playedLetter.getKey().getColumn());
     }
 
@@ -271,7 +292,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @return true if the latter has a letter below, false otherwise
      */
-    protected static boolean playedLetterHasBoardLetterBelow(BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) {
+    protected static boolean playedLetterHasBoardLetterBelow(BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) {
         return playedLetter.getKey().getLine() < BoardInterface.BOARD_SIZE - 1 && null != board.getLetters().get(playedLetter.getKey().getLine() + 1).get(playedLetter.getKey().getColumn());
     }
 
@@ -309,17 +330,17 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @throws InvalidPlayedTurnException if one of the formed words don't exist
      */
-    protected static void findAllFormedWords(DictionaryInterface dictionary, BoardInterface board, boolean boardEmpty, SortedMap<GameController.BoardPosition, LetterInterface> playedLetters, List<WordInterface> playedWords, PlayerInterface player, boolean horizontal) throws InvalidPlayedTurnException {
+    protected static void findAllFormedWords(DictionaryInterface dictionary, BoardInterface board, boolean boardEmpty, SortedMap<BoardPosition, LetterInterface> playedLetters, List<WordInterface> playedWords, PlayerInterface player, boolean horizontal) throws InvalidPlayedTurnException {
         if (boardEmpty) {
             PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, new ArrayList<>(playedLetters.values()), horizontal, playedLetters.firstKey().getLine(), playedLetters.firstKey().getColumn());
 
             return;
         }
 
-        Iterator<SortedMap.Entry<GameController.BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
+        Iterator<SortedMap.Entry<BoardPosition, LetterInterface>> playedLettersIterator = playedLetters.entrySet().iterator();
 
         if (1 == playedLetters.size()) {
-            SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+            SortedMap.Entry<BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
 
             PlayedTurnValidityChecker.addHorizontalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
             PlayedTurnValidityChecker.addVerticalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
@@ -343,7 +364,7 @@ abstract public class PlayedTurnValidityChecker {
                 if (null != board.getLetters().get(line).get(currentColumn)) {
                     currentLetter = board.getLetters().get(line).get(currentColumn);
                 } else if (playedLettersIterator.hasNext()) {
-                    SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+                    SortedMap.Entry<BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
                     currentLetter = currentLetterEntry.getValue();
 
                     PlayedTurnValidityChecker.addVerticalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
@@ -373,7 +394,7 @@ abstract public class PlayedTurnValidityChecker {
                 if (null != board.getLetters().get(currentLine).get(column)) {
                     currentLetter = board.getLetters().get(currentLine).get(column);
                 } else if (playedLettersIterator.hasNext()) {
-                    SortedMap.Entry<GameController.BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
+                    SortedMap.Entry<BoardPosition, LetterInterface> currentLetterEntry = playedLettersIterator.next();
                     currentLetter = currentLetterEntry.getValue();
 
                     PlayedTurnValidityChecker.addHorizontalWordFormedFromOnePlayedLetter(dictionary, player, playedWords, board, currentLetterEntry);
@@ -401,7 +422,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @throws InvalidPlayedTurnException if the formed word doesn't exist
      */
-    protected static void addVerticalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
+    protected static void addVerticalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
         if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAbove(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterBelow(board, playedLetter)) {
             return;
         }
@@ -443,7 +464,7 @@ abstract public class PlayedTurnValidityChecker {
      *
      * @throws InvalidPlayedTurnException if the formed word doesn't exist
      */
-    protected static void addHorizontalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<GameController.BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
+    protected static void addHorizontalWordFormedFromOnePlayedLetter(DictionaryInterface dictionary, PlayerInterface player, List<WordInterface> playedWords, BoardInterface board, SortedMap.Entry<BoardPosition, LetterInterface> playedLetter) throws InvalidPlayedTurnException {
         if (!PlayedTurnValidityChecker.playedLetterHasBoardLetterAtLeft(board, playedLetter) && !PlayedTurnValidityChecker.playedLetterHasBoardLetterAtRight(board, playedLetter)) {
             return;
         }
@@ -471,5 +492,22 @@ abstract public class PlayedTurnValidityChecker {
         } while (currentColumn < BoardInterface.BOARD_SIZE);
 
         PlayedTurnValidityChecker.addWordAfterChecking(dictionary, playedWords, player, wordLetters, true, playedLetter.getKey().getLine(), startColumn);
+    }
+
+    protected static SortedMap<BoardPosition, LetterInterface> transformWordIntoPlayedTurn(WordInterface word, BoardInterface board) {
+        SortedMap<BoardPosition, LetterInterface> playedLetters = new TreeMap<>();
+
+        List<LetterInterface> letters = word.getLetters();
+        for (int i = 0, lettersSize = letters.size(); i < lettersSize; i++) {
+            LetterInterface letter = letters.get(i);
+
+            if (word.isHorizontal() && board.getLetters().get(word.getStartLine()).get(word.getStartColumn() + i) == null) {
+                playedLetters.put(new BoardPosition(word.getStartLine(), (short) (word.getStartColumn() + i)), letter);
+            } else if (board.getLetters().get(word.getStartLine() + i).get(word.getStartColumn()) == null) {
+                playedLetters.put(new BoardPosition((short) (word.getStartLine() + i), word.getStartColumn()), letter);
+            }
+        }
+
+        return  playedLetters;
     }
 }

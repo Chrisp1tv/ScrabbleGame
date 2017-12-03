@@ -12,6 +12,8 @@ import istv.chrisanc.scrabble.exceptions.model.Bag.NotEnoughLettersException;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.Bag;
 import istv.chrisanc.scrabble.model.Board;
+import istv.chrisanc.scrabble.model.BoardPosition;
+import istv.chrisanc.scrabble.model.interfaces.ArtificialIntelligencePlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.BagInterface;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;
 import istv.chrisanc.scrabble.model.interfaces.GameSaveInterface;
@@ -20,6 +22,7 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
 import istv.chrisanc.scrabble.model.languages.Global.letters.Joker;
+import istv.chrisanc.scrabble.utils.ArtificialIntelligenceHelper;
 import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import istv.chrisanc.scrabble.utils.PlayedTurnValidityChecker;
 import istv.chrisanc.scrabble.utils.ScoreManager;
@@ -305,7 +308,7 @@ public class Scrabble extends Application {
      *
      * @param playedLetters All the letters of the board, with the new letters placed by the user
      */
-    public void playLetters(SortedMap<GameController.BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
+    public void playLetters(SortedMap<BoardPosition, LetterInterface> playedLetters) throws InvalidPlayedTurnException {
         for (LetterInterface playedLetter : playedLetters.values()) {
             if (!(playedLetter instanceof Joker)) {
                 continue;
@@ -374,10 +377,6 @@ public class Scrabble extends Application {
         }
 
         this.currentPlayer.setValue(this.getPlayers().get(currentPlayerIndex));
-
-        if (!this.getCurrentPlayer().isHuman()) {
-            // TODO: ask IA to play
-        }
     }
 
     /**
@@ -509,8 +508,18 @@ public class Scrabble extends Application {
         this.language = language;
         this.board = board;
         this.players = new ArrayList<>(players);
-        this.currentPlayer = new SimpleObjectProperty<>(currentPlayer);
         this.bag = bag;
+        this.currentPlayer = new SimpleObjectProperty<>();
+        this.listenForArtificialIntelligenceTurns();
+        this.currentPlayer.setValue(currentPlayer);
+    }
+
+    protected void listenForArtificialIntelligenceTurns() {
+        this.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue instanceof ArtificialIntelligencePlayerInterface) {
+                ArtificialIntelligenceHelper.playTurnForArtificialIntelligencePlayer(this, (ArtificialIntelligencePlayerInterface) newValue);
+            }
+        });
     }
 
     protected void increaseNumberOfSkippedTurns() {

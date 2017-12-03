@@ -55,9 +55,4 @@ public interface PlayerInterface {
     void decreaseAvailableHelps();
 
     ReadOnlyIntegerProperty availableHelpsProperty();
-
-    /**
-     * @return true if the player is human, false otherwise
-     */
-    boolean isHuman();
 }
