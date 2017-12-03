@@ -3,6 +3,7 @@ package istv.chrisanc.scrabble.controllers;
 import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.model.ArtificialIntelligencePlayer;
 import istv.chrisanc.scrabble.model.HumanPlayer;
+import istv.chrisanc.scrabble.model.interfaces.ArtificialIntelligencePlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.languages.English.English;
@@ -25,7 +26,6 @@ import java.util.ResourceBundle;
 /**
  * This controller handles the creation of a new Scrabble game. It asks the player for the number of players, the language
  * of the game and more, to start a new game.
- * TODO: Check if game saving works with both player types
  *
  * @author Christopher Anciaux
  * @author Abdessamade Bouaggad
@@ -125,7 +125,7 @@ public class NewGameController extends BaseController {
     protected void handleStartGame() {
         List<PlayerInterface> players = new ArrayList<>();
 
-        if(!this.numberOfPlayersMatchesScrabbleRules()) {
+        if (!this.numberOfPlayersMatchesScrabbleRules() || !this.numberOfHumanPlayerMatchesTheRules()) {
             this.showErrorInvalidPlayersNumber();
 
             return;
@@ -139,8 +139,7 @@ public class NewGameController extends BaseController {
             if (playerIsHuman) {
                 players.add(new HumanPlayer(playerName));
             } else {
-                // TODO: AI level
-                players.add(new ArtificialIntelligencePlayer(playerName, (short) 1));
+                players.add(new ArtificialIntelligencePlayer(playerName, ((ChoiceBox<Short>) playerInformationHBox.getChildren().get(2)).getValue()));
             }
         }
 
@@ -156,7 +155,7 @@ public class NewGameController extends BaseController {
         this.scrabble.showHome();
     }
 
-	protected void showErrorInvalidPlayersNumber() {
+    protected void showErrorInvalidPlayersNumber() {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(this.scrabble.getI18nMessages().getString("error"));
         alert.setHeaderText(this.scrabble.getI18nMessages().getString("incorrectNumberOfPlayers"));
@@ -167,6 +166,20 @@ public class NewGameController extends BaseController {
 
     protected boolean numberOfPlayersMatchesScrabbleRules() {
         return Scrabble.MIN_PLAYERS <= this.numberPlayers && this.numberPlayers <= Scrabble.MAX_PLAYERS;
+    }
+
+    protected boolean numberOfHumanPlayerMatchesTheRules() {
+        int numberOfHumanPlayers = 0;
+
+        for (int i = 0; i < this.numberPlayers; i++) {
+            HBox playerInformationHBox = (HBox) this.playersInformationVBox.getChildren().get(i);
+
+            if (((CheckBox) playerInformationHBox.getChildren().get(1)).isSelected()) {
+                numberOfHumanPlayers++;
+            }
+        }
+
+        return numberOfHumanPlayers >= 1;
     }
 
     /**
@@ -194,6 +207,8 @@ public class NewGameController extends BaseController {
      * @return the form containing the fields that can be inputted about the player
      */
     protected HBox getPlayerInformationForm(int i) {
+        ResourceBundle i18nMessages = this.scrabble.getI18nMessages();
+
         HBox playerInformationHBox = new HBox();
         playerInformationHBox.getStyleClass().add("player");
 
@@ -206,7 +221,30 @@ public class NewGameController extends BaseController {
 
         CheckBox playerIsHumanCheckBox = new CheckBox(this.scrabble.getI18nMessages().getString("isPlayerHuman"));
 
-        playerInformationHBox.getChildren().addAll(playerNameTextField, playerIsHumanCheckBox);
+        ChoiceBox<Short> levelChoiceBox = new ChoiceBox<>();
+        List<Short> levels = Arrays.asList(ArtificialIntelligencePlayerInterface.LEVEL_VERY_EASY,
+                ArtificialIntelligencePlayerInterface.LEVEL_EASY,
+                ArtificialIntelligencePlayerInterface.LEVEL_MEDIUM,
+                ArtificialIntelligencePlayerInterface.LEVEL_HARD,
+                ArtificialIntelligencePlayerInterface.LEVEL_VERY_HARD);
+
+        levelChoiceBox.getItems().addAll(levels);
+        levelChoiceBox.setValue(levels.get(2));
+        levelChoiceBox.setConverter(new StringConverter<Short>() {
+            @Override
+            public String toString(Short object) {
+                return i18nMessages.getString("artificialIntelligenceLevels." + object.toString());
+            }
+
+            @Override
+            public Short fromString(String string) {
+                return null;
+            }
+        });
+
+        levelChoiceBox.disableProperty().bind(playerIsHumanCheckBox.selectedProperty());
+
+        playerInformationHBox.getChildren().addAll(playerNameTextField, playerIsHumanCheckBox, levelChoiceBox);
 
         return playerInformationHBox;
     }

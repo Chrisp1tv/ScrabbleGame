@@ -39,7 +39,6 @@ public abstract class Player implements PlayerInterface, Serializable {
     protected List<LetterInterface> letters;
 
     protected Player(String name) {
-        this.initialize();
         this.name = name;
     }
 

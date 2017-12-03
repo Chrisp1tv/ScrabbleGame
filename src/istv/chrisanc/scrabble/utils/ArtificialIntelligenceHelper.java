@@ -27,6 +27,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * @author Julien Basquin
  */
 public abstract class ArtificialIntelligenceHelper {
+    /**
+     * Plays the turn for the given player
+     *
+     * @param scrabble The actual game state
+     * @param player   The player that should play his turn
+     */
     public static void playTurn(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) {
         // First, try to find the possible words
         List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(scrabble.getLanguage(), scrabble.getBoard(), player);
@@ -48,6 +54,15 @@ public abstract class ArtificialIntelligenceHelper {
         }
     }
 
+    /**
+     * Finds the best turn possible and if exists, returns it
+     *
+     * @param language The game language
+     * @param board    The actual board
+     * @param player   The player who wants to play the best turn possible
+     *
+     * @return the best turn possible if exists, null otherwise
+     */
     public static SortedMap<BoardPosition, LetterInterface> getBestTurnPossible(LanguageInterface language, BoardInterface board, PlayerInterface player) {
         List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(language, board, player);
 
@@ -64,13 +79,22 @@ public abstract class ArtificialIntelligenceHelper {
         }
     }
 
+    /**
+     * Chooses a turn to be played between all the possible turns, according to the artificial intelligence difficulty and plays it
+     *
+     * @param scrabble         The actual game state
+     * @param player           The played who should play
+     * @param sortedFoundTurns The possible turns for the current, sorted by ascending score
+     *
+     * @throws InvalidPlayedTurnException if the played turn isn't valid
+     */
     protected static void playTurn(Scrabble scrabble, ArtificialIntelligencePlayerInterface player, List<SortedMap<BoardPosition, LetterInterface>> sortedFoundTurns) throws InvalidPlayedTurnException {
         SortedMap<BoardPosition, LetterInterface> turnToPlay;
 
         // First, let's choose the word which will be played
         if (sortedFoundTurns.size() > ArtificialIntelligencePlayerInterface.LEVEL_VERY_HARD) {
-            int fromIndex = ArtificialIntelligencePlayerInterface.LEVEL_VERY_EASY == player.getLevel() ? 0 : (player.getLevel() - 1) / ArtificialIntelligencePlayerInterface.LEVEL_VERY_HARD * sortedFoundTurns.size();
-            int toIndex = 1 / player.getLevel() * sortedFoundTurns.size();
+            int fromIndex = ArtificialIntelligencePlayerInterface.LEVEL_VERY_EASY == player.getLevel() ? 0 : (player.getLevel() - 1) * sortedFoundTurns.size() / ArtificialIntelligencePlayerInterface.LEVEL_VERY_HARD;
+            int toIndex = (player.getLevel() * sortedFoundTurns.size()) / ArtificialIntelligencePlayerInterface.LEVEL_VERY_HARD;
 
             List<SortedMap<BoardPosition, LetterInterface>> foundTurnsForPlayerLevel = sortedFoundTurns.subList(fromIndex, toIndex);
             turnToPlay = foundTurnsForPlayerLevel.get(ThreadLocalRandom.current().nextInt(0, foundTurnsForPlayerLevel.size()));
@@ -93,6 +117,15 @@ public abstract class ArtificialIntelligenceHelper {
         scrabble.playLetters(turnToPlay);
     }
 
+    /**
+     * Chooses letters to be exchanged with the bag and proceeds to the exchange
+     *
+     * @param scrabble The actual game state
+     * @param player   The played who should exchange his letters
+     *
+     * @throws NotEnoughLettersException if the bag hasn't enough letters to proceed to the exchange
+     * @throws EmptyBagException         if the bag is empty
+     */
     protected static void exchangeLettersWithBag(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) throws NotEnoughLettersException, EmptyBagException {
         // First, let's find the letters the player will exchange, randomly
         List<LetterInterface> lettersToExchange = new ArrayList<>(player.getLetters().subList(0, ThreadLocalRandom.current().nextInt(1, player.getLetters().size())));
@@ -101,6 +134,16 @@ public abstract class ArtificialIntelligenceHelper {
         scrabble.exchangeLetters(lettersToExchange);
     }
 
+    /**
+     * Sorts the possible turns by their respective hypothetical scores
+     *
+     * @param dictionary    The dictionary
+     * @param board         The actual board
+     * @param player        The player who should play this turn
+     * @param possibleTurns The possible turns
+     *
+     * @throws InvalidPlayedTurnException if one of the turn is invalid
+     */
     protected static void sortTurnsByScore(DictionaryInterface dictionary, BoardInterface board, PlayerInterface player, List<SortedMap<BoardPosition, LetterInterface>> possibleTurns) throws InvalidPlayedTurnException {
         // First, we simulate the playing of each possible turn to find the words resulting of each of these possible turns
         // The key is the played turn, and the value is the score we obtained by playing it

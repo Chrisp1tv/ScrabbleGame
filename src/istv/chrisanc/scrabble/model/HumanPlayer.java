@@ -5,8 +5,13 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * @author Christopher Anciaux
+ * @see HumanPlayerInterface
  */
 public class HumanPlayer extends Player implements HumanPlayerInterface {
     /**
@@ -16,7 +21,7 @@ public class HumanPlayer extends Player implements HumanPlayerInterface {
 
     public HumanPlayer(String name) {
         super(name);
-        this.availableHelps = new SimpleIntegerProperty(HumanPlayerInterface.NUMBER_OF_HELPS);
+        this.initialize();
     }
 
     public int getAvailableHelps() {
@@ -35,5 +40,18 @@ public class HumanPlayer extends Player implements HumanPlayerInterface {
 
     protected void setAvailableHelps(int availableHelps) {
         this.availableHelps.set(availableHelps);
+    }
+
+    protected void initialize() {
+        super.initialize();
+        this.availableHelps = new SimpleIntegerProperty(HumanPlayerInterface.NUMBER_OF_HELPS);
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        objectOutputStream.writeInt(this.getAvailableHelps());
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        this.setAvailableHelps(objectInputStream.readInt());
     }
 }

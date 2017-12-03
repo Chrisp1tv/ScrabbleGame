@@ -19,7 +19,6 @@ import java.util.TreeMap;
 /**
  * This class manages the checking of played words on the Scrabble game. It checks if played words on a turn are valid, that is
  * to say if these words respect the Scrabble rules.
- * TODO: Some optimization of the code is possible, would be interesting to do it once other tasks have been done
  *
  * @author Christopher Anciaux
  */
@@ -32,16 +31,14 @@ abstract public class PlayedTurnValidityChecker {
     /**
      * Tells if the given word (actually, the letters of the given word) can be used to form new words, by checking its validity with the actual game
      *
-     * @param word       The word to check
-     * @param dictionary The dictionary used to check words existence
-     * @param board      The actual board
-     * @param player     The player who play this turn
+     * @param playedLetters The letters played in the current turn
+     * @param dictionary    The dictionary used to check words existence
+     * @param board         The actual board
+     * @param player        The player who play this turn
      *
      * @return true if the turn is possible, false otherwise
      */
-    public static boolean turnIsPossible(WordInterface word, DictionaryInterface dictionary, BoardInterface board, PlayerInterface player) {
-        SortedMap<BoardPosition, LetterInterface> playedLetters = PlayedTurnValidityChecker.transformWordIntoPlayedTurn(word, board);
-
+    public static boolean isTurnPlayable(SortedMap<BoardPosition, LetterInterface> playedLetters, DictionaryInterface dictionary, BoardInterface board, PlayerInterface player) {
         try {
             PlayedTurnValidityChecker.findPlayedWords(dictionary, board, playedLetters, player);
 
@@ -65,6 +62,10 @@ abstract public class PlayedTurnValidityChecker {
     public static List<WordInterface> findPlayedWords(DictionaryInterface dictionary, BoardInterface board, SortedMap<BoardPosition, LetterInterface> playedLetters, PlayerInterface player) throws InvalidPlayedTurnException {
         boolean horizontal;
         List<WordInterface> playedWords = new ArrayList<>();
+
+        if (!PlayedTurnValidityChecker.allLettersArePlayedOnTheBoard(playedLetters)) {
+            throw new InvalidPlayedTurnException();
+        }
 
         // If the board is empty, that is to say that no turn has been played yet
         if (board.isEmpty()) {
@@ -98,6 +99,23 @@ abstract public class PlayedTurnValidityChecker {
         }
 
         return playedWords;
+    }
+
+    /**
+     * Checks whether the played letters have been played on the board
+     *
+     * @param playedLetters The letters played in the current turn
+     *
+     * @return true if the letters have been played on the board, false otherwise
+     */
+    protected static boolean allLettersArePlayedOnTheBoard(SortedMap<BoardPosition, LetterInterface> playedLetters) {
+        for (BoardPosition boardPosition : playedLetters.keySet()) {
+            if (boardPosition.getLine() < 0 || boardPosition.getLine() >= BoardInterface.BOARD_SIZE || boardPosition.getColumn() < 0 || boardPosition.getColumn() >= BoardInterface.BOARD_SIZE) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -508,6 +526,6 @@ abstract public class PlayedTurnValidityChecker {
             }
         }
 
-        return  playedLetters;
+        return playedLetters;
     }
 }

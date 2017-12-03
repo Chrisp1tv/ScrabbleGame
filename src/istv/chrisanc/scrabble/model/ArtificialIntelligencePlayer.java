@@ -14,6 +14,7 @@ public class ArtificialIntelligencePlayer extends Player implements ArtificialIn
 
     public ArtificialIntelligencePlayer(String name, short level) {
         super(name);
+        super.initialize();
 
         this.level = level;
     }
