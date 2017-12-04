@@ -37,7 +37,7 @@ public class GameSaver {
      * @see #saveGame
      */
     public static void saveGameToGameSavesDirectory(GameSaveInterface gameSave, String fileName) throws UnableToWriteSaveException {
-        GameSaver.saveGame(gameSave, new File(GAME_SAVES_DIRECTORY + File.separator + fileName + GameSaver.GAME_SAVES_FILES_EXTENSION));
+        GameSaver.saveGame(gameSave, new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + fileName + GameSaver.GAME_SAVES_FILES_EXTENSION));
     }
 
     /**
@@ -51,7 +51,7 @@ public class GameSaver {
     public static void saveGame(GameSaveInterface gameSave, File file) throws UnableToWriteSaveException {
         // We try to save the game in the file located at the given path, completeFilePath
         try {
-            createGameSavesDirectoryIfNotExists();
+            GameSaver.createGameSavesDirectoryIfNotExists();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
             objectOutputStream.writeObject(gameSave);
@@ -68,7 +68,7 @@ public class GameSaver {
      * @throws IOException if the directory doesn't exist and can't be created
      */
     public static File[] findGameSaves() throws IOException {
-        File gameSavesFolder = new File(GAME_SAVES_DIRECTORY);
+        File gameSavesFolder = new File(GameSaver.GAME_SAVES_DIRECTORY);
 
         GameSaver.createGameSavesDirectoryIfNotExists();
 
@@ -86,7 +86,7 @@ public class GameSaver {
      */
     public static GameSaveInterface loadGameSave(File gameSaveFile) throws UnableToLoadSaveException {
         // We check the file's integrity, if the save is acceptable.
-        if (!gameSaveFile.isFile() || !gameSaveFile.getName().endsWith(GAME_SAVES_FILES_EXTENSION)) {
+        if (!gameSaveFile.isFile() || !gameSaveFile.getName().endsWith(GameSaver.GAME_SAVES_FILES_EXTENSION)) {
             throw new UnableToLoadSaveException();
         }
 
@@ -119,7 +119,7 @@ public class GameSaver {
      * @throws IOException if the directory can't be created
      */
     private static void createGameSavesDirectoryIfNotExists() throws IOException {
-        File gameSavesFolder = new File(GAME_SAVES_DIRECTORY);
+        File gameSavesFolder = new File(GameSaver.GAME_SAVES_DIRECTORY);
 
         // If the folder doesn't exist, we create it. In case it isn't possible to, we throw an Exception
         if (!gameSavesFolder.exists() && !gameSavesFolder.mkdirs()) {

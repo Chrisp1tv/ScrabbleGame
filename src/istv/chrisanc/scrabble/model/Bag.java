@@ -35,7 +35,7 @@ public class Bag implements BagInterface, Serializable {
 
         Collections.shuffle(this.letters);
 
-        LetterInterface letter = letters.get(ThreadLocalRandom.current().nextInt(0, this.letters.size()));
+        LetterInterface letter = this.letters.get(ThreadLocalRandom.current().nextInt(0, this.letters.size()));
         this.letters.remove(letter);
 
         return letter;

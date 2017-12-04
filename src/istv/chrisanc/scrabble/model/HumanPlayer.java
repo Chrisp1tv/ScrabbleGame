@@ -25,7 +25,11 @@ public class HumanPlayer extends Player implements HumanPlayerInterface {
     }
 
     public int getAvailableHelps() {
-        return availableHelps.get();
+        return this.availableHelps.get();
+    }
+
+    protected void setAvailableHelps(int availableHelps) {
+        this.availableHelps.set(availableHelps);
     }
 
     @Override
@@ -36,10 +40,6 @@ public class HumanPlayer extends Player implements HumanPlayerInterface {
     @Override
     public void decreaseAvailableHelps() {
         this.setAvailableHelps(this.getAvailableHelps() - 1);
-    }
-
-    protected void setAvailableHelps(int availableHelps) {
-        this.availableHelps.set(availableHelps);
     }
 
     protected void initialize() {

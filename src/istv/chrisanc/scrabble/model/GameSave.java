@@ -56,7 +56,7 @@ public class GameSave implements Serializable, GameSaveInterface {
     }
 
     public BoardInterface getBoard() {
-        return board;
+        return this.board;
     }
 
     public void setBoard(BoardInterface board) {
@@ -64,7 +64,7 @@ public class GameSave implements Serializable, GameSaveInterface {
     }
 
     public List<PlayerInterface> getPlayers() {
-        return players;
+        return this.players;
     }
 
     public void setPlayers(List<PlayerInterface> players) {
@@ -72,7 +72,7 @@ public class GameSave implements Serializable, GameSaveInterface {
     }
 
     public PlayerInterface getCurrentPlayer() {
-        return currentPlayer;
+        return this.currentPlayer;
     }
 
     public void setCurrentPlayer(PlayerInterface currentPlayer) {
@@ -80,7 +80,7 @@ public class GameSave implements Serializable, GameSaveInterface {
     }
 
     public BagInterface getBag() {
-        return bag;
+        return this.bag;
     }
 
     public void setBag(BagInterface bag) {

@@ -26,12 +26,23 @@ public class GameSaverTest {
 
     protected static String testSaveName = "testSave";
 
+    @BeforeClass
+    public static void setUp() throws Exception {
+        LanguageInterface language = new French();
+        PlayerInterface player = new HumanPlayer("Christopher Anciaux");
+        PlayerInterface player2 = new HumanPlayer("Joueur 2");
+        player.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("A", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("C", language), LetterToStringTransformer.reverseTransform("J", language)));
+        player2.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("D", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("J", language), LetterToStringTransformer.reverseTransform("C", language)));
+
+        GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()));
+    }
+
     /**
      * Tests if a game can be save to the dedicated directory
      */
     @Test
     public void saveGameToGameSavesDirectory() throws Exception {
-        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSaveName);
+        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, GameSaverTest.testSaveName);
         GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSaveName + GameSaver.GAME_SAVES_FILES_EXTENSION));
     }
 
@@ -53,7 +64,7 @@ public class GameSaverTest {
      */
     @Test
     public void loadGame() throws Exception {
-        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, testSaveName);
+        GameSaver.saveGameToGameSavesDirectory(GameSaverTest.gameSave, GameSaverTest.testSaveName);
         File saveFile = GameSaver.findGameSaves()[0];
 
         GameSaveInterface gameSave = GameSaver.loadGameSave(saveFile);
@@ -61,16 +72,5 @@ public class GameSaverTest {
         assertEquals("Christopher Anciaux", gameSave.getPlayers().get(0).getName());
 
         GameSaver.deleteGameSave(new File(GameSaver.GAME_SAVES_DIRECTORY + File.separator + GameSaverTest.testSaveName + GameSaver.GAME_SAVES_FILES_EXTENSION));
-    }
-
-    @BeforeClass
-    public static void setUp() throws Exception {
-        LanguageInterface language = new French();
-        PlayerInterface player = new HumanPlayer("Christopher Anciaux");
-        PlayerInterface player2 = new HumanPlayer("Joueur 2");
-        player.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("A", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("C", language), LetterToStringTransformer.reverseTransform("J", language)));
-        player2.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("D", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("J", language), LetterToStringTransformer.reverseTransform("C", language)));
-
-        GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()));
     }
 }

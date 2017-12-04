@@ -39,11 +39,6 @@ abstract public class SerializedDictionary implements DictionaryInterface {
     }
 
     @Override
-    public NavigableSet<String> getWords() {
-        return words;
-    }
-
-    @Override
     public List<String> findWordsHavingLetters(List<LetterInterface> letters) {
         List<String> words = new ArrayList<>();
 
@@ -69,12 +64,12 @@ abstract public class SerializedDictionary implements DictionaryInterface {
                 String word = wordsIterator.next();
 
                 // If so, we delete the word from the found words
-                if (!nbOfEachLetterMatches(nbLettersAvailable, word, nbJokers)) {
+                if (this.nbOfEachLetterDoesNotMatches(nbLettersAvailable, word, nbJokers)) {
                     wordsIterator.remove();
                 }
             }
         } else {
-            words.addAll(this.words.stream().filter(word -> nbOfEachLetterWithJokerMatches(nbLettersAvailable, word, nbJokers)).collect(Collectors.toList()));
+            words.addAll(this.words.stream().filter(word -> this.nbOfEachLetterWithJokerMatches(nbLettersAvailable, word, nbJokers)).collect(Collectors.toList()));
         }
 
         return words;
@@ -138,7 +133,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         while (wordsIterator.hasNext()) {
             String word = wordsIterator.next();
 
-            if (!nbOfEachLetterMatches(nbLettersAvailable, word.substring(startingLetters.size(), word.length()), nbJokersAvailable)) {
+            if (this.nbOfEachLetterDoesNotMatches(nbLettersAvailable, word.substring(startingLetters.size(), word.length()), nbJokersAvailable)) {
                 wordsIterator.remove();
             }
         }
@@ -171,7 +166,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         while (wordsIterator.hasNext()) {
             String word = wordsIterator.next();
 
-            if (!nbOfEachLetterMatches(nbLettersAvailable, word.substring(0, word.length() - endingLetters.size()), nbJokersAvailable)) {
+            if (this.nbOfEachLetterDoesNotMatches(nbLettersAvailable, word.substring(0, word.length() - endingLetters.size()), nbJokersAvailable)) {
                 wordsIterator.remove();
             }
         }
@@ -186,9 +181,9 @@ abstract public class SerializedDictionary implements DictionaryInterface {
      *
      * @return true if it's possible to write the word with the given letters, false otherwise
      */
-    protected boolean nbOfEachLetterMatches(Map<LetterInterface, Integer> nbLettersAvailable, String word, int nbJokersAvailable) {
+    protected boolean nbOfEachLetterDoesNotMatches(Map<LetterInterface, Integer> nbLettersAvailable, String word, int nbJokersAvailable) {
         if (nbJokersAvailable > 0) {
-            return nbOfEachLetterWithJokerMatches(nbLettersAvailable, word, nbJokersAvailable);
+            return !this.nbOfEachLetterWithJokerMatches(nbLettersAvailable, word, nbJokersAvailable);
         }
 
         boolean wordMatches = true;
@@ -206,11 +201,11 @@ abstract public class SerializedDictionary implements DictionaryInterface {
             }
         }
 
-        return wordMatches;
+        return !wordMatches;
     }
 
     /**
-     * @see #nbOfEachLetterMatches
+     * @see #nbOfEachLetterDoesNotMatches
      */
     protected boolean nbOfEachLetterWithJokerMatches(Map<LetterInterface, Integer> nbLettersAvailable, String word, int nbJokersAvailable) {
         boolean wordMatches = true;
@@ -255,6 +250,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
 
             // We open the language and load it in the corresponding object
             ObjectInputStream OIS = new ObjectInputStream(dictionaryFile);
+            //noinspection unchecked
             this.words = (TreeSet<String>) OIS.readObject();
         } catch (Exception e) {
             throw new ErrorLoadingDictionaryException();

@@ -5,8 +5,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0" styleClass="root-container,game-view"
-            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="scrabbleContainer" prefHeight="615.0" prefWidth="902.0"
+            styleClass="root-container,game-view" xmlns="http://javafx.com/javafx/8.0.111"
             fx:controller="istv.chrisanc.scrabble.controllers.GameController">
     <center>
         <GridPane fx:id="scrabbleGrid" prefHeight="476.0" prefWidth="529.0" styleClass="scrabble-grid"/>

@@ -1,5 +1,6 @@
 package istv.chrisanc.scrabble;
 
+import istv.chrisanc.scrabble.controllers.BaseController;
 import istv.chrisanc.scrabble.controllers.GameController;
 import istv.chrisanc.scrabble.controllers.GameEndedController;
 import istv.chrisanc.scrabble.controllers.HomeController;
@@ -29,13 +30,12 @@ import istv.chrisanc.scrabble.utils.ScoreManager;
 import javafx.application.Application;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -114,15 +114,15 @@ public class Scrabble extends Application {
     protected short consecutiveTurnsSkipped = 0;
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(args);
     }
 
     public ResourceBundle getI18nMessages() {
-        return i18nMessages;
+        return this.i18nMessages;
     }
 
     public Stage getPrimaryStage() {
-        return primaryStage;
+        return this.primaryStage;
     }
 
     @Override
@@ -144,85 +144,64 @@ public class Scrabble extends Application {
      * Shows the Homepage of the Scrabble, the page allowing the player to choose between "New Game", "Load Game" etc
      */
     public void showHome() {
-        try {
-            // Load home
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/Home.fxml"));
-            VBox home = loader.load();
+        HomeController homeController = (HomeController) this.getControllerByView("view/Home.fxml");
 
-            // Set home into the center of the root layout
-            rootLayout.setCenter(home);
-
-            HomeController controller = loader.getController();
-            controller.setScrabble(this);
-        } catch (IOException e) {
-            this.showGeneralApplicationError(e);
-        }
+        homeController.setScrabble(this);
     }
 
     /**
      * Shows the NewGame wizard, allowing the player to enter his name, the number of players etc
      */
     public void showNewGame() {
-        try {
-            // New game
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/NewGame.fxml"));
-            VBox newGame = loader.load();
+        NewGameController newGameController = (NewGameController) this.getControllerByView("view/NewGame.fxml");
 
-            // Set home into the center of the root layout
-            rootLayout.setCenter(newGame);
-
-            NewGameController controller = loader.getController();
-            controller.setScrabble(this);
-            controller.initializeInterface();
-        } catch (IOException e) {
-            this.showGeneralApplicationError(e);
-        }
+        newGameController.setScrabble(this);
+        newGameController.initializeInterface();
     }
 
     /**
      * Shows the LoadGame wizard, allowing the player to load an externally saved game or choose one save between the stored ones
      */
     public void showLoadGame() {
-        try {
-            // Load home
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/LoadGame.fxml"));
-            AnchorPane loadGame = loader.load();
+        LoadGameController loadGameController = (LoadGameController) this.getControllerByView("view/LoadGame.fxml");
 
-            // Set home into the center of the root layout
-            rootLayout.setCenter(loadGame);
-
-            LoadGameController controller = loader.getController();
-            controller.setScrabble(this);
-        } catch (IOException e) {
-            this.showGeneralApplicationError(e);
-        }
+        loadGameController.setScrabble(this);
     }
 
     /**
      * Shows the Game, that is to say the Scrabble Game itself. It opens the main controller, dealing with all the Scrabble logic
      */
     public void showGame() {
+        GameController gameController = (GameController) this.getControllerByView("view/Game.fxml");
+
+        gameController.setScrabble(this);
+        gameController.initializeInterface();
+    }
+
+    /**
+     * Shows the EndGame, that is to say the message congratulating the player or encouraging him to retry wby playing a new game.
+     */
+    public void showEndGame() {
+        GameEndedController gameEndedController = (GameEndedController) this.getControllerByView("view/GameEnded.fxml");
+
+        gameEndedController.setScrabble(this);
+        gameEndedController.initializeInterface();
+    }
+
+    public BaseController getControllerByView(String viewName) {
         try {
-            // Load game
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/Game.fxml"));
-            BorderPane game = loader.load();
+            loader.setLocation(Scrabble.class.getResource(viewName));
+            Node view = loader.load();
 
-            // Set home into the center of the root layout
-            rootLayout.setCenter(game);
+            this.rootLayout.setCenter(view);
 
-            GameController controller = loader.getController();
-            controller.setScrabble(this);
-            controller.initializeInterface();
+            return loader.getController();
         } catch (IOException e) {
             this.showGeneralApplicationError(e);
+
+            return null;
         }
     }
 
@@ -238,28 +217,6 @@ public class Scrabble extends Application {
             this.showGame();
         } catch (ErrorLoadingDictionaryException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Shows the EndGame, that is to say the message congratulating the player or encouraging him to retry wby playing a new game.
-     */
-    public void showEndGame() {
-        try {
-            // End game
-            FXMLLoader loader = new FXMLLoader();
-            loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/GameEnded.fxml"));
-            VBox gameEnded = loader.load();
-
-            // Set home into the center of the root layout
-            rootLayout.setCenter(gameEnded);
-
-            GameEndedController controller = loader.getController();
-            controller.setScrabble(this);
-            controller.initializeInterface();
-        } catch (IOException e) {
-            this.showGeneralApplicationError(e);
         }
     }
 
@@ -377,6 +334,7 @@ public class Scrabble extends Application {
         }
 
         this.currentPlayer.setValue(this.getPlayers().get(currentPlayerIndex));
+        this.checkIfArtificialIntelligenceShouldPlay();
     }
 
     /**
@@ -449,12 +407,18 @@ public class Scrabble extends Application {
 
         // If the players skipped their turns too many times, the game stops
         if (this.getPlayers().size() * Scrabble.MAX_SKIPPED_TURNS_PER_USER <= this.consecutiveTurnsSkipped) {
-            ScoreManager.updateScoreAfterPlayersSkippedTheirTurnsTooManyTimes(players);
+            ScoreManager.updateScoreAfterPlayersSkippedTheirTurnsTooManyTimes(this.players);
 
             return true;
         }
 
         return false;
+    }
+
+    protected void checkIfArtificialIntelligenceShouldPlay() {
+        if (this.getCurrentPlayer() instanceof ArtificialIntelligencePlayerInterface) {
+            ArtificialIntelligenceHelper.playTurn(this, (ArtificialIntelligencePlayerInterface) this.getCurrentPlayer());
+        }
     }
 
     /**
@@ -470,12 +434,12 @@ public class Scrabble extends Application {
 
             // Show the scene containing the root layout
             Scene scene = new Scene(this.rootLayout);
-            primaryStage.setScene(scene);
+            this.primaryStage.setScene(scene);
 
             RootLayoutController controller = loader.getController();
             controller.setScrabble(this);
 
-            primaryStage.show();
+            this.primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -508,18 +472,9 @@ public class Scrabble extends Application {
         this.language = language;
         this.board = board;
         this.players = new ArrayList<>(players);
+        this.currentPlayer = new SimpleObjectProperty<>(currentPlayer);
         this.bag = bag;
-        this.currentPlayer = new SimpleObjectProperty<>();
-        this.listenForArtificialIntelligenceTurns();
-        this.currentPlayer.setValue(currentPlayer);
-    }
-
-    protected void listenForArtificialIntelligenceTurns() {
-        this.currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue instanceof ArtificialIntelligencePlayerInterface) {
-                ArtificialIntelligenceHelper.playTurn(this, (ArtificialIntelligencePlayerInterface) newValue);
-            }
-        });
+        this.checkIfArtificialIntelligenceShouldPlay();
     }
 
     protected void increaseNumberOfSkippedTurns() {

@@ -39,7 +39,7 @@ public class PossibleTurnsFinder {
 
         if (board.isEmpty()) {
             // If no word has been played, a list of word is created with only letters of the player
-            possibleTurns.addAll(language.getDictionary().findWordsHavingLetters(player.getLetters()).stream().map(word -> transformStringIntoTurn(word, BoardInterface.BOARD_SIZE / 2, BoardInterface.BOARD_SIZE / 2, true, language, false, board)).collect(Collectors.toList()));
+            possibleTurns.addAll(language.getDictionary().findWordsHavingLetters(player.getLetters()).stream().map(word -> PossibleTurnsFinder.transformStringIntoTurn(word, BoardInterface.BOARD_SIZE / 2, BoardInterface.BOARD_SIZE / 2, true, language, false, board)).collect(Collectors.toList()));
 
             return possibleTurns;
         }
@@ -69,7 +69,7 @@ public class PossibleTurnsFinder {
 
                     // Remaining letters are compared with the player's letters to know if the word can be played
                     if (player.getLetters().size() >= lettersOfFeasibleWordWithPlayerLetters.size()
-                            && occurrencesOfPlayerLettersAreEquivalentToWordLetters(LettersCounter.countOccurrencesOfEachLetter(player.getLetters()), LettersCounter.countOccurrencesOfEachLetter(lettersOfFeasibleWordWithPlayerLetters))) {
+                            && PossibleTurnsFinder.occurrencesOfPlayerLettersAreEquivalentToWordLetters(LettersCounter.countOccurrencesOfEachLetter(player.getLetters()), LettersCounter.countOccurrencesOfEachLetter(lettersOfFeasibleWordWithPlayerLetters))) {
                         wordsToUse.add(feasibleWordWithPlayerLetters);
                     }
                 } else {
@@ -142,7 +142,7 @@ public class PossibleTurnsFinder {
                 SortedMap<BoardPosition, LetterInterface> wordToPlay;
 
                 if (alreadyPlayedWord.isHorizontal()) {
-                    wordToPlay = PossibleTurnsFinder.transformStringIntoTurn(word, alreadyPlayedWord.getStartLine(), (short) (alreadyPlayedWord.getStartColumn() - findSizePrefix(conversion, alreadyPlayedWord)), true, language, true, board);
+                    wordToPlay = PossibleTurnsFinder.transformStringIntoTurn(word, alreadyPlayedWord.getStartLine(), (short) (alreadyPlayedWord.getStartColumn() - PossibleTurnsFinder.findSizePrefix(conversion, alreadyPlayedWord)), true, language, true, board);
 
                     // Check if the word can be played on the board
                     if (null != wordToPlay && PlayedTurnValidityChecker.isTurnPlayable(wordToPlay, language.getDictionary(), board, player)) {
@@ -163,7 +163,7 @@ public class PossibleTurnsFinder {
                     SortedMap<BoardPosition, LetterInterface> wordToPlay;
                     List<LetterInterface> wordToPlayLetters = LetterListToStringTransformer.reverseTransform(word, language);
 
-                    wordToPlay = transformLettersListIntoTurn(wordToPlayLetters, (short) (alreadyPlayedWord.getStartLine() - findSizePrefix(wordToPlayLetters, alreadyPlayedWord)), alreadyPlayedWord.getStartColumn(), true, true, board);
+                    wordToPlay = PossibleTurnsFinder.transformLettersListIntoTurn(wordToPlayLetters, (short) (alreadyPlayedWord.getStartLine() - PossibleTurnsFinder.findSizePrefix(wordToPlayLetters, alreadyPlayedWord)), alreadyPlayedWord.getStartColumn(), true, true, board);
 
                     if (null != wordToPlay && PlayedTurnValidityChecker.isTurnPlayable(wordToPlay, language.getDictionary(), board, player)) {
                         possibleTurns.add(wordToPlay);
@@ -300,6 +300,6 @@ public class PossibleTurnsFinder {
             }
         }
 
-        return turn.size() > 0 ? turn : null;
+        return !turn.isEmpty() ? turn : null;
     }
 }

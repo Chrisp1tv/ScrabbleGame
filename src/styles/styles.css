@@ -111,6 +111,10 @@
     -fx-font-size: 250%;
 }
 
+.game-view .player .player-progress-indicator {
+    -fx-progress-color: #333333;
+}
+
 .game-view .player .player-information {
     -fx-padding: 0 0 0 15;
     -fx-alignment: center-left;

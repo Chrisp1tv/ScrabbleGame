@@ -18,7 +18,7 @@ public interface SquareInterface {
     /**
      * @return true if the multiplier of the square has already been used, false otherwise
      */
-    boolean isMultiplierUsed();
+    boolean isMultiplierUnused();
 
     /**
      * Makes the multiplier used

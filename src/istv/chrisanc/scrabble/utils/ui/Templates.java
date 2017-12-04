@@ -11,6 +11,7 @@ import istv.chrisanc.scrabble.utils.LetterToStringTransformer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -77,6 +78,11 @@ public class Templates {
         playerNumber.getStyleClass().add("player-number");
         HBox.setHgrow(playerNumber, Priority.NEVER);
 
+        // Spinner indicating that player is "thinking" (only for non-local and non-human players)
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.getStyleClass().add("player-progress-indicator");
+        HBox.setHgrow(progressIndicator, Priority.NEVER);
+
         VBox innerVBox = new VBox();
         innerVBox.getStyleClass().add("player-information");
         HBox.setHgrow(innerVBox, Priority.ALWAYS);
@@ -121,8 +127,17 @@ public class Templates {
         currentPlayerProperty.addListener((ObservableValue<? extends PlayerInterface> observable, PlayerInterface oldValue, PlayerInterface newValue) -> {
             if (player.equals(newValue)) {
                 playerContainer.getStyleClass().add("active");
+
+                if (player instanceof ArtificialIntelligencePlayerInterface) {
+                    innerHBox.getChildren().set(innerHBox.getChildren().indexOf(playerNumber), progressIndicator);
+                }
             } else {
                 playerContainer.getStyleClass().remove("active");
+                int indexOfProgressIndicator = innerHBox.getChildren().indexOf(progressIndicator);
+
+                if (-1 != indexOfProgressIndicator && player instanceof ArtificialIntelligencePlayerInterface) {
+                    innerHBox.getChildren().set(indexOfProgressIndicator, playerNumber);
+                }
             }
         });
 

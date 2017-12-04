@@ -12,6 +12,7 @@ import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.model.interfaces.PlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.WordInterface;
+import javafx.concurrent.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,48 +36,64 @@ public abstract class ArtificialIntelligenceHelper {
      */
     public static void playTurn(Scrabble scrabble, ArtificialIntelligencePlayerInterface player) {
         // First, try to find the possible words
-        List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(scrabble.getLanguage(), scrabble.getBoard(), player);
-
-        if (!foundTurns.isEmpty()) {
-            try {
-                ArtificialIntelligenceHelper.sortTurnsByScore(scrabble.getLanguage().getDictionary(), scrabble.getBoard(), player, foundTurns);
-                ArtificialIntelligenceHelper.playTurn(scrabble, player, foundTurns);
-
-                return;
-            } catch (InvalidPlayedTurnException ignored) {
+        Task<List<SortedMap<BoardPosition, LetterInterface>>> turnsFindingTask = new Task<List<SortedMap<BoardPosition, LetterInterface>>>() {
+            @Override
+            protected List<SortedMap<BoardPosition, LetterInterface>> call() throws Exception {
+                return PossibleTurnsFinder.findPossibleTurns(scrabble.getLanguage(), scrabble.getBoard(), player);
             }
-        }
+        };
 
-        try {
-            ArtificialIntelligenceHelper.exchangeLettersWithBag(scrabble, player);
-        } catch (NotEnoughLettersException | EmptyBagException e) {
-            scrabble.skipTurn();
-        }
+        turnsFindingTask.setOnSucceeded(event -> {
+            List<SortedMap<BoardPosition, LetterInterface>> foundTurns = turnsFindingTask.getValue();
+
+            if (!foundTurns.isEmpty()) {
+                try {
+                    ArtificialIntelligenceHelper.sortTurnsByScore(scrabble.getLanguage().getDictionary(), scrabble.getBoard(), player, foundTurns);
+                    ArtificialIntelligenceHelper.playTurn(scrabble, player, foundTurns);
+
+                    return;
+                } catch (InvalidPlayedTurnException ignored) {
+                }
+            }
+
+            try {
+                ArtificialIntelligenceHelper.exchangeLettersWithBag(scrabble, player);
+            } catch (NotEnoughLettersException | EmptyBagException e) {
+                scrabble.skipTurn();
+            }
+        });
+
+        new Thread(turnsFindingTask).start();
     }
 
     /**
-     * Finds the best turn possible and if exists, returns it
+     * Creates a task to find the best turn possible if it exists
      *
      * @param language The game language
      * @param board    The actual board
      * @param player   The player who wants to play the best turn possible
      *
-     * @return the best turn possible if exists, null otherwise
+     * @return the task that will return the best turn possible if exists, null otherwise
      */
-    public static SortedMap<BoardPosition, LetterInterface> getBestTurnPossible(LanguageInterface language, BoardInterface board, PlayerInterface player) {
-        List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(language, board, player);
+    public static Task<SortedMap<BoardPosition, LetterInterface>> getBestTurnPossible(LanguageInterface language, BoardInterface board, PlayerInterface player) {
+        return new Task<SortedMap<BoardPosition, LetterInterface>>() {
+            @Override
+            protected SortedMap<BoardPosition, LetterInterface> call() throws Exception {
+                List<SortedMap<BoardPosition, LetterInterface>> foundTurns = PossibleTurnsFinder.findPossibleTurns(language, board, player);
 
-        if (foundTurns.isEmpty()) {
-            return null;
-        }
+                if (foundTurns.isEmpty()) {
+                    return null;
+                }
 
-        try {
-            ArtificialIntelligenceHelper.sortTurnsByScore(language.getDictionary(), board, player, foundTurns);
+                try {
+                    ArtificialIntelligenceHelper.sortTurnsByScore(language.getDictionary(), board, player, foundTurns);
 
-            return foundTurns.get(foundTurns.size() - 1);
-        } catch (InvalidPlayedTurnException e) {
-            return null;
-        }
+                    return foundTurns.get(foundTurns.size() - 1);
+                } catch (InvalidPlayedTurnException e) {
+                    return null;
+                }
+            }
+        };
     }
 
     /**

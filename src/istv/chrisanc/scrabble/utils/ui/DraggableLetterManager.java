@@ -14,10 +14,6 @@ import javafx.scene.layout.Pane;
  * @author Christopher Anciaux
  */
 abstract public class DraggableLetterManager {
-    public interface DraggedLetterHandler {
-        void manipulateLetter(LetterInterface letter, DragEvent dragEvent);
-    }
-
     /**
      * Adds to the letter the possibility to be dragged on another element.
      *
@@ -40,9 +36,7 @@ abstract public class DraggableLetterManager {
         });
 
         // When the user has dropped the letter
-        letterElement.setOnDragDone(event -> {
-            letterElement.setVisible(true);
-        });
+        letterElement.setOnDragDone(event -> letterElement.setVisible(true));
     }
 
     /**
@@ -52,7 +46,7 @@ abstract public class DraggableLetterManager {
      * @param allowOneLetterOnly True if one letter only can be dragged on the element
      * @param onLetterDragDone   Action when a letter has been dragged on the element
      */
-    public static void makeElementReadyToReceiveLetter(Pane lettersReceiver, boolean allowOneLetterOnly, DraggedLetterHandler onLetterDragDone) {
+    public static void makeElementReadyToReceiveLetter(Pane lettersReceiver, boolean allowOneLetterOnly, DraggableLetterManager.DraggedLetterHandler onLetterDragDone) {
         // Determines if the user can drag the element on the lettersReceiver
         lettersReceiver.setOnDragOver(event -> {
             if (event.getGestureSource() != lettersReceiver && event.getDragboard().hasContent(LetterInterface.DATA_FORMAT)) {
@@ -83,5 +77,9 @@ abstract public class DraggableLetterManager {
             event.setDropCompleted(success);
             event.consume();
         });
+    }
+
+    public interface DraggedLetterHandler {
+        void manipulateLetter(LetterInterface letter, DragEvent dragEvent);
     }
 }

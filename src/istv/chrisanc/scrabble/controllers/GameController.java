@@ -7,6 +7,7 @@ import istv.chrisanc.scrabble.model.interfaces.HumanPlayerInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
 import istv.chrisanc.scrabble.utils.ArtificialIntelligenceHelper;
 import istv.chrisanc.scrabble.utils.ui.Templates;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -120,19 +121,32 @@ public class GameController extends BaseController {
      */
     @FXML
     protected void handleAskHelp() {
-        ((HumanPlayerInterface) this.scrabble.getCurrentPlayer()).decreaseAvailableHelps();
+        this.controlButtons.setDisable(true);
+        this.playerLettersContainer.setDisable(true);
 
-        SortedMap<BoardPosition, LetterInterface> bestTurnPossible = ArtificialIntelligenceHelper.getBestTurnPossible(this.scrabble.getLanguage(), this.scrabble.getBoard(), this.scrabble.getCurrentPlayer());
+        HumanPlayerInterface currentPlayer = (HumanPlayerInterface) this.scrabble.getCurrentPlayer();
 
-        if (null != bestTurnPossible) {
-            try {
-                this.scrabble.playLetters(bestTurnPossible);
-                return;
-            } catch (InvalidPlayedTurnException ignored) {
+        Task<SortedMap<BoardPosition, LetterInterface>> bestTurnTaskFinder = ArtificialIntelligenceHelper.getBestTurnPossible(this.scrabble.getLanguage(), this.scrabble.getBoard(), currentPlayer);
+
+        bestTurnTaskFinder.setOnSucceeded(event -> {
+            if (null != bestTurnTaskFinder.getValue()) {
+                try {
+                    this.scrabble.playLetters(bestTurnTaskFinder.getValue());
+                    currentPlayer.decreaseAvailableHelps();
+
+                    return;
+                } catch (InvalidPlayedTurnException ignored) {
+                }
             }
-        }
 
-        this.showAlertOfNoBestTurnPossible();
+            this.askHelpButton.setDisable(true);
+            this.controlButtons.setDisable(false);
+            this.playerLettersContainer.setDisable(false);
+
+            this.showAlertOfNoBestTurnPossible();
+        });
+
+        new Thread(bestTurnTaskFinder).start();
     }
 
     /**

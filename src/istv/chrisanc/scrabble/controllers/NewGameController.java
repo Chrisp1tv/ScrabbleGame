@@ -10,7 +10,6 @@ import istv.chrisanc.scrabble.model.languages.English.English;
 import istv.chrisanc.scrabble.model.languages.French.French;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -139,6 +138,7 @@ public class NewGameController extends BaseController {
             if (playerIsHuman) {
                 players.add(new HumanPlayer(playerName));
             } else {
+                //noinspection unchecked
                 players.add(new ArtificialIntelligencePlayer(playerName, ((ChoiceBox<Short>) playerInformationHBox.getChildren().get(2)).getValue()));
             }
         }
@@ -156,7 +156,7 @@ public class NewGameController extends BaseController {
     }
 
     protected void showErrorInvalidPlayersNumber() {
-        Alert alert = new Alert(AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(this.scrabble.getI18nMessages().getString("error"));
         alert.setHeaderText(this.scrabble.getI18nMessages().getString("incorrectNumberOfPlayers"));
         alert.setContentText(this.scrabble.getI18nMessages().getString("numberOfPlayersMustFitRules"));

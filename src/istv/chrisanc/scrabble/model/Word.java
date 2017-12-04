@@ -50,38 +50,38 @@ public class Word implements WordInterface, Serializable {
     }
 
     public PlayerInterface getPlayer() {
-        return player;
+        return this.player;
     }
 
     public List<LetterInterface> getLetters() {
-        return Collections.unmodifiableList(letters);
+        return Collections.unmodifiableList(this.letters);
     }
 
     public boolean isHorizontal() {
-        return horizontal;
+        return this.horizontal;
     }
 
     public short getStartLine() {
-        return startLine;
+        return this.startLine;
     }
 
     public short getEndLine() {
-        if (isHorizontal()) {
-            return getStartLine();
+        if (this.isHorizontal()) {
+            return this.getStartLine();
         } else {
-            return (short) (getStartLine() + this.letters.size() - 1);
+            return (short) (this.getStartLine() + this.letters.size() - 1);
         }
     }
 
     public short getStartColumn() {
-        return startColumn;
+        return this.startColumn;
     }
 
     public short getEndColumn() {
-        if (isHorizontal()) {
-            return (short) (getStartColumn() + (this.letters.size() - 1));
+        if (this.isHorizontal()) {
+            return (short) (this.getStartColumn() + (this.letters.size() - 1));
         } else {
-            return getStartColumn();
+            return this.getStartColumn();
         }
     }
 }

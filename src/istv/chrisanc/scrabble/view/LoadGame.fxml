@@ -6,7 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<AnchorPane styleClass="root-container,load-game-view" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.LoadGameController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" styleClass="root-container,load-game-view"
+            xmlns="http://javafx.com/javafx/8.0.112-ea"
+            fx:controller="istv.chrisanc.scrabble.controllers.LoadGameController">
     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <Text text="%loadGame" styleClass="title" />
         <ListView fx:id="filesList" />

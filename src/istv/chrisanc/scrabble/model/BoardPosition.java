@@ -22,11 +22,11 @@ public class BoardPosition implements Comparable<BoardPosition> {
     }
 
     public short getLine() {
-        return line;
+        return this.line;
     }
 
     public short getColumn() {
-        return column;
+        return this.column;
     }
 
     @Override
@@ -43,19 +43,19 @@ public class BoardPosition implements Comparable<BoardPosition> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
 
         BoardPosition that = (BoardPosition) o;
 
-        return line == that.line && column == that.column;
+        return this.line == that.line && this.column == that.column;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) line;
-        result = 31 * result + (int) column;
+        int result = (int) this.line;
+        result = 31 * result + (int) this.column;
 
         return result;
     }

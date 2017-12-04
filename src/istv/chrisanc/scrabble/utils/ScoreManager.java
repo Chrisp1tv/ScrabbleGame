@@ -53,7 +53,7 @@ public class ScoreManager {
                 LetterInterface currentLetter = currentWord.getLetters().get(j);
 
                 if (currentWord.isHorizontal()) {
-                    if (!board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).isMultiplierUsed()) {
+                    if (board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).isMultiplierUnused()) {
                         currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).getLetterMultiplier();
                         currentWordMultiplier *= board.getSquares().get(currentWord.getStartLine()).get(currentWord.getStartColumn() + j).getWordMultiplier();
 
@@ -64,7 +64,7 @@ public class ScoreManager {
                         currentWordScore += currentLetter.getValue();
                     }
                 } else {
-                    if (!board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).isMultiplierUsed()) {
+                    if (board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).isMultiplierUnused()) {
                         currentWordScore += currentLetter.getValue() * board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).getLetterMultiplier();
                         currentWordMultiplier *= board.getSquares().get(currentWord.getStartLine() + j).get(currentWord.getStartColumn()).getWordMultiplier();
 

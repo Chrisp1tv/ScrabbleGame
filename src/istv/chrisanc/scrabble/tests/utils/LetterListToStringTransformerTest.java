@@ -22,6 +22,12 @@ public class LetterListToStringTransformerTest {
 
     private static List<LetterInterface> letters;
 
+    @BeforeClass
+    public static void setUp() throws Exception {
+        LetterListToStringTransformerTest.language = new French();
+        LetterListToStringTransformerTest.letters = Arrays.asList(LetterListToStringTransformerTest.language.getLetter("A"), LetterListToStringTransformerTest.language.getLetter("C"), LetterListToStringTransformerTest.language.getLetter("W"));
+    }
+
     /**
      * Tests if transforming a letters list to a {@link String} works as expected
      */
@@ -40,11 +46,5 @@ public class LetterListToStringTransformerTest {
         List<LetterInterface> letters = LetterListToStringTransformer.reverseTransform("ACW", new French());
 
         assertThat(letters, is(LetterListToStringTransformerTest.letters));
-    }
-
-    @BeforeClass
-    public static void setUp() throws Exception {
-        LetterListToStringTransformerTest.language = new French();
-        LetterListToStringTransformerTest.letters = Arrays.asList(language.getLetter("A"), language.getLetter("C"), language.getLetter("W"));
     }
 }

@@ -7,17 +7,17 @@ import istv.chrisanc.scrabble.model.interfaces.LetterInterface;
  * @author Christopher Anciaux
  */
 public class Joker extends Letter {
-    public Joker() {
-        super(" ", (byte) 0);
-    }
-
     /**
      * The letter represented by the joker
      */
     protected LetterInterface representedLetter = null;
 
+    public Joker() {
+        super(" ", (byte) 0);
+    }
+
     public LetterInterface getRepresentedLetter() {
-        return representedLetter;
+        return this.representedLetter;
     }
 
     public void setRepresentedLetter(LetterInterface representedLetter) {
@@ -26,11 +26,11 @@ public class Joker extends Letter {
 
     @Override
     public String toString() {
-        if (null == representedLetter) {
+        if (null == this.representedLetter) {
             return this.letter;
         }
 
-        return representedLetter.toString();
+        return this.representedLetter.toString();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Joker extends Letter {
 
     @Override
     public boolean equals(Object o) {
-        return this == o || !(o == null || getClass() != o.getClass());
+        return this == o || !(o == null || this.getClass() != o.getClass());
     }
 
     @Override

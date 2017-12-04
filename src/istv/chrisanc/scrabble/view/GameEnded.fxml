@@ -4,8 +4,9 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<VBox styleClass="root-container,game-ended-view" xmlns="http://javafx.com/javafx/8.0.112-ea"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="istv.chrisanc.scrabble.controllers.GameEndedController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" styleClass="root-container,game-ended-view"
+      xmlns="http://javafx.com/javafx/8.0.112-ea"
+      fx:controller="istv.chrisanc.scrabble.controllers.GameEndedController">
     <Text text="%gameEnded" styleClass="title"/>
     <Text styleClass="winner" fx:id="winnerText"/>
     <VBox styleClass="scoreboard" fx:id="scoreboardVBox"/>

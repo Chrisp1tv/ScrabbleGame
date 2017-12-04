@@ -40,7 +40,7 @@ public class Square implements SquareInterface, Serializable {
     }
 
     @Override
-    public boolean isMultiplierUsed() {
-        return multiplierUsed;
+    public boolean isMultiplierUnused() {
+        return !this.multiplierUsed;
     }
 }

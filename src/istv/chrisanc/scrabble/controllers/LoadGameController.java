@@ -39,7 +39,7 @@ public class LoadGameController extends BaseController {
         try {
             this.gameSaves = GameSaver.findGameSaves();
         } catch (IOException e) {
-            showErrorWhileLoadingGameSaves();
+            this.showErrorWhileLoadingGameSaves();
         }
 
 

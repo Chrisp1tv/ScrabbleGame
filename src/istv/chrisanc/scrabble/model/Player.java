@@ -46,9 +46,17 @@ public abstract class Player implements PlayerInterface, Serializable {
         return this.name;
     }
 
+    protected void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public int getScore() {
-        return score.get();
+        return this.score.get();
+    }
+
+    protected void setScore(int score) {
+        this.score.set(score);
     }
 
     @Override
@@ -102,14 +110,6 @@ public abstract class Player implements PlayerInterface, Serializable {
         this.letters.remove(index);
     }
 
-    protected void setName(String name) {
-        this.name = name;
-    }
-
-    protected void setScore(int score) {
-        this.score.set(score);
-    }
-
     protected void initialize() {
         this.letters = new ArrayList<>();
         this.score = new SimpleIntegerProperty(0);
@@ -126,7 +126,7 @@ public abstract class Player implements PlayerInterface, Serializable {
         this.setName((String) objectInputStream.readObject());
         this.setScore(objectInputStream.readInt());
 
-        List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
+        @SuppressWarnings("unchecked") List<LetterInterface> letters = (List<LetterInterface>) objectInputStream.readObject();
         this.letters.addAll(letters);
     }
 }

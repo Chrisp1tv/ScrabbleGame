@@ -93,7 +93,7 @@ public class ExchangeLettersController extends BaseController {
     protected void initializeButtonValidateExchangeEvents() {
         this.lettersToPutBackInTheBag.addListener((ListChangeListener.Change<? extends LetterInterface> c) -> {
             // If the user puts a letter in the bag, we enable the button to validate the exchange
-            validateExchangeButton.setDisable(0 == c.getList().size());
+            this.validateExchangeButton.setDisable(c.getList().isEmpty());
         });
     }
 
@@ -106,6 +106,7 @@ public class ExchangeLettersController extends BaseController {
 
         DraggableLetterManager.makeElementReadyToReceiveLetter(this.lettersReceiver, false, (letter, event) -> {
             this.lettersToPutBackInTheBag.add(letter);
+            //noinspection RedundantCast
             this.playerLettersContainer.getChildren().remove((Node) event.getGestureSource());
         });
     }

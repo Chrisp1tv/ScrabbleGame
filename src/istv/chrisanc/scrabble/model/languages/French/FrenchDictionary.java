@@ -15,11 +15,11 @@ public class FrenchDictionary extends SerializedDictionary {
     }
 
     public static FrenchDictionary getInstance() throws ErrorLoadingDictionaryException {
-        if (null == instance) {
-            instance = new FrenchDictionary();
+        if (null == FrenchDictionary.instance) {
+            FrenchDictionary.instance = new FrenchDictionary();
         }
 
-        return instance;
+        return FrenchDictionary.instance;
     }
 
     @Override
