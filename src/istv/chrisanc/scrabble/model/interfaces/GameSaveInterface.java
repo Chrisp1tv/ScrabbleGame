@@ -27,4 +27,8 @@ public interface GameSaveInterface {
     BagInterface getBag();
 
     void setBag(BagInterface bag);
+
+    short getConsecutiveTurnsSkipped();
+
+    void setConsecutiveTurnsSkipped(short consecutiveTurnsSkipped);
 }

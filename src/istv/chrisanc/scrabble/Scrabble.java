@@ -469,6 +469,7 @@ public class Scrabble extends Application {
      * @param board    The board
      */
     protected void initializeScrabbleGame(LanguageInterface language, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, BoardInterface board) {
+        this.consecutiveTurnsSkipped = 0;
         this.language = language;
         this.board = board;
         this.players = new ArrayList<>(players);
@@ -510,6 +511,10 @@ public class Scrabble extends Application {
 
     public BagInterface getBag() {
         return this.bag;
+    }
+
+    public short getConsecutiveTurnsSkipped() {
+        return this.consecutiveTurnsSkipped;
     }
 }
 

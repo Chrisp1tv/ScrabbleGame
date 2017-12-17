@@ -66,7 +66,11 @@ public abstract class Player implements PlayerInterface, Serializable {
 
     @Override
     public void decreaseScore(int decrement) {
-        this.score.set(this.score.get() - decrement);
+        if (decrement > this.score.get()) {
+            this.score.set(0);
+        } else {
+            this.score.set(this.score.get() - decrement);
+        }
     }
 
     @Override

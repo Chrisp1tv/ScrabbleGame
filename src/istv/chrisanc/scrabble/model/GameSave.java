@@ -35,16 +35,22 @@ public class GameSave implements Serializable, GameSaveInterface {
     protected PlayerInterface currentPlayer;
 
     /**
+     * The number of consecutive turns skipped by all the players (without distinction)
+     */
+    protected short consecutiveTurnsSkipped;
+
+    /**
      * The actual state of the bag
      */
     protected BagInterface bag;
 
-    public GameSave(LanguageInterface language, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag) {
+    public GameSave(LanguageInterface language, BoardInterface board, List<PlayerInterface> players, PlayerInterface currentPlayer, BagInterface bag, short consecutiveTurnsSkipped) {
         this.language = language;
         this.board = board;
         this.players = players;
         this.currentPlayer = currentPlayer;
         this.bag = bag;
+        this.consecutiveTurnsSkipped = consecutiveTurnsSkipped;
     }
 
     public LanguageInterface getLanguage() {
@@ -85,5 +91,13 @@ public class GameSave implements Serializable, GameSaveInterface {
 
     public void setBag(BagInterface bag) {
         this.bag = bag;
+    }
+
+    public short getConsecutiveTurnsSkipped() {
+        return this.consecutiveTurnsSkipped;
+    }
+
+    public void setConsecutiveTurnsSkipped(short consecutiveTurnsSkipped) {
+        this.consecutiveTurnsSkipped = consecutiveTurnsSkipped;
     }
 }

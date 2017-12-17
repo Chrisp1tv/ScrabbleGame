@@ -12,7 +12,7 @@ public class Square implements SquareInterface, Serializable {
     /**
      * This boolean states whether the multiplier has already been used or not
      */
-    protected boolean multiplierUsed = false;
+    protected boolean multiplierUnused = true;
 
     @Override
     public byte getLetterMultiplier() {
@@ -36,11 +36,11 @@ public class Square implements SquareInterface, Serializable {
 
     @Override
     public void makeMultiplierUsed() {
-        this.multiplierUsed = true;
+        this.multiplierUnused = false;
     }
 
     @Override
     public boolean isMultiplierUnused() {
-        return !this.multiplierUsed;
+        return this.multiplierUnused;
     }
 }

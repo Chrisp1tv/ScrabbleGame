@@ -34,7 +34,7 @@ public class GameSaverTest {
         player.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("A", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("C", language), LetterToStringTransformer.reverseTransform("J", language)));
         player2.addLetters(Arrays.asList(LetterToStringTransformer.reverseTransform("D", language), LetterToStringTransformer.reverseTransform("B", language), LetterToStringTransformer.reverseTransform("J", language), LetterToStringTransformer.reverseTransform("C", language)));
 
-        GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()));
+        GameSaverTest.gameSave = new GameSave(language, new Board(), Arrays.asList(player, player2), player, new Bag(language.getBagLettersDistribution()), (short) 0);
     }
 
     /**

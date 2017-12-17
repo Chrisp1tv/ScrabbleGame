@@ -62,7 +62,7 @@ public class SaveGameController extends BaseController {
      */
     @FXML
     protected void handleOk() {
-        GameSaveInterface gameSave = new GameSave(this.scrabble.getLanguage(), this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getCurrentPlayer(), this.scrabble.getBag());
+        GameSaveInterface gameSave = new GameSave(this.scrabble.getLanguage(), this.scrabble.getBoard(), this.scrabble.getPlayers(), this.scrabble.getCurrentPlayer(), this.scrabble.getBag(), this.scrabble.getConsecutiveTurnsSkipped());
 
         try {
             // If the user entered a filename
