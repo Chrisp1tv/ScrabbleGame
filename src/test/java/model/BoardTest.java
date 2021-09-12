@@ -1,4 +1,4 @@
-package istv.chrisanc.scrabble.tests.model;
+package model;
 
 import istv.chrisanc.scrabble.model.Board;
 import istv.chrisanc.scrabble.model.interfaces.BoardInterface;

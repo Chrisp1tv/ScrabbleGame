@@ -1,4 +1,4 @@
-package istv.chrisanc.scrabble.tests.utils;
+package utils;
 
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
 import istv.chrisanc.scrabble.model.interfaces.LetterInterface;

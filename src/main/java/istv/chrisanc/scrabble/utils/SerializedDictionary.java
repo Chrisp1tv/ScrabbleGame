@@ -246,7 +246,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
         try {
             // We find the language's file in the resources folder of the project
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            InputStream dictionaryFile = classloader.getResourceAsStream("dictionaries/" + this.getSourceFileName());
+            InputStream dictionaryFile = classloader.getResourceAsStream("/dictionaries/" + this.getSourceFileName());
 
             // We open the language and load it in the corresponding object
             ObjectInputStream OIS = new ObjectInputStream(dictionaryFile);
