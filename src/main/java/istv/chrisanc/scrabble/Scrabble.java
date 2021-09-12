@@ -134,7 +134,7 @@ public class Scrabble extends Application {
         this.primaryStage.setMinHeight(686);
 
         this.primaryStage.setTitle(this.i18nMessages.getString("Scrabble"));
-        this.primaryStage.getIcons().add(new Image("file:resources/icon/icon.png"));
+        this.primaryStage.getIcons().add(new Image("file:/icon/icon.png"));
 
         this.initializeRootLayout();
         this.showHome();
@@ -144,7 +144,7 @@ public class Scrabble extends Application {
      * Shows the Homepage of the Scrabble, the page allowing the player to choose between "New Game", "Load Game" etc
      */
     public void showHome() {
-        HomeController homeController = (HomeController) this.getControllerByView("view/Home.fxml");
+        HomeController homeController = (HomeController) this.getControllerByView("/view/Home.fxml");
 
         homeController.setScrabble(this);
     }
@@ -153,7 +153,7 @@ public class Scrabble extends Application {
      * Shows the NewGame wizard, allowing the player to enter his name, the number of players etc
      */
     public void showNewGame() {
-        NewGameController newGameController = (NewGameController) this.getControllerByView("view/NewGame.fxml");
+        NewGameController newGameController = (NewGameController) this.getControllerByView("/view/NewGame.fxml");
 
         newGameController.setScrabble(this);
         newGameController.initializeInterface();
@@ -163,7 +163,7 @@ public class Scrabble extends Application {
      * Shows the LoadGame wizard, allowing the player to load an externally saved game or choose one save between the stored ones
      */
     public void showLoadGame() {
-        LoadGameController loadGameController = (LoadGameController) this.getControllerByView("view/LoadGame.fxml");
+        LoadGameController loadGameController = (LoadGameController) this.getControllerByView("/view/LoadGame.fxml");
 
         loadGameController.setScrabble(this);
     }
@@ -172,7 +172,7 @@ public class Scrabble extends Application {
      * Shows the Game, that is to say the Scrabble Game itself. It opens the main controller, dealing with all the Scrabble logic
      */
     public void showGame() {
-        GameController gameController = (GameController) this.getControllerByView("view/Game.fxml");
+        GameController gameController = (GameController) this.getControllerByView("/view/Game.fxml");
 
         gameController.setScrabble(this);
         gameController.initializeInterface();
@@ -182,7 +182,7 @@ public class Scrabble extends Application {
      * Shows the EndGame, that is to say the message congratulating the player or encouraging him to retry wby playing a new game.
      */
     public void showEndGame() {
-        GameEndedController gameEndedController = (GameEndedController) this.getControllerByView("view/GameEnded.fxml");
+        GameEndedController gameEndedController = (GameEndedController) this.getControllerByView("/view/GameEnded.fxml");
 
         gameEndedController.setScrabble(this);
         gameEndedController.initializeInterface();
@@ -429,7 +429,7 @@ public class Scrabble extends Application {
             // Load root layout from fxml file
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.i18nMessages);
-            loader.setLocation(Scrabble.class.getResource("view/RootLayout.fxml"));
+            loader.setLocation(Scrabble.class.getResource("/view/RootLayout.fxml"));
             this.rootLayout = loader.load();
 
             // Show the scene containing the root layout

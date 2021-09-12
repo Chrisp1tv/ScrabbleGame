@@ -181,7 +181,7 @@ public class GameController extends BaseController {
             // Load letters exchanging view
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.scrabble.getI18nMessages());
-            loader.setLocation(Scrabble.class.getResource("view/ExchangeLetter.fxml"));
+            loader.setLocation(Scrabble.class.getResource("/view/ExchangeLetter.fxml"));
             VBox page = loader.load();
 
             // Create the dialog stage
@@ -228,7 +228,7 @@ public class GameController extends BaseController {
             // Load game saving view
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(this.scrabble.getI18nMessages());
-            loader.setLocation(Scrabble.class.getResource("view/SaveGame.fxml"));
+            loader.setLocation(Scrabble.class.getResource("/view/SaveGame.fxml"));
             VBox page = loader.load();
 
             // Create the dialog stage

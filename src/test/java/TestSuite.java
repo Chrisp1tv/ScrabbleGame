@@ -1,11 +1,9 @@
-package istv.chrisanc.scrabble.tests;
-
-import istv.chrisanc.scrabble.tests.model.BoardTest;
-import istv.chrisanc.scrabble.tests.utils.DictionaryTest;
-import istv.chrisanc.scrabble.tests.utils.GameSaverTest;
-import istv.chrisanc.scrabble.tests.utils.LetterListToStringTransformerTest;
+import model.BoardTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import utils.DictionaryTest;
+import utils.GameSaverTest;
+import utils.LetterListToStringTransformerTest;
 
 /**
  * This method regroups all the tests and can be used to execute each one directly.
