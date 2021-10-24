@@ -40,6 +40,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.fxml</include>
+                    <include>**/*.dictionary</include>
                     <include>**/*.css</include>
                     <include>**/*.properties</include>
                 </includes>
@@ -48,11 +49,12 @@
 
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <groupId>com.zenjava</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.8.3</version>
                 <configuration>
                     <mainClass>istv.chrisanc.scrabble.Scrabble</mainClass>
+                    <bundler>EXE</bundler>
                 </configuration>
             </plugin>
         </plugins>
