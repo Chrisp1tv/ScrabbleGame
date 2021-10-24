@@ -1,5 +1,6 @@
 package istv.chrisanc.scrabble.utils;
 
+import istv.chrisanc.scrabble.Scrabble;
 import istv.chrisanc.scrabble.exceptions.utils.dictionaries.ErrorLoadingDictionaryException;
 import istv.chrisanc.scrabble.model.interfaces.DictionaryInterface;
 import istv.chrisanc.scrabble.model.interfaces.LanguageInterface;
@@ -245,8 +246,7 @@ abstract public class SerializedDictionary implements DictionaryInterface {
     private void loadSerializedDictionary() throws ErrorLoadingDictionaryException {
         try {
             // We find the language's file in the resources folder of the project
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            InputStream dictionaryFile = classloader.getResourceAsStream("/dictionaries/" + this.getSourceFileName());
+            InputStream dictionaryFile = Scrabble.class.getResourceAsStream("/dictionaries/" + this.getSourceFileName());
 
             // We open the language and load it in the corresponding object
             ObjectInputStream OIS = new ObjectInputStream(dictionaryFile);
