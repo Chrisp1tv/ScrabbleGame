@@ -22,15 +22,15 @@
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
         </dependency>
     </dependencies>
 
@@ -38,23 +38,16 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.fxml</include>
-                    <include>**/*.dictionary</include>
-                    <include>**/*.css</include>
-                    <include>**/*.properties</include>
-                </includes>
             </resource>
         </resources>
 
         <plugins>
             <plugin>
-                <groupId>com.zenjava</groupId>
+                <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.8.3</version>
+                <version>0.0.8</version>
                 <configuration>
                     <mainClass>istv.chrisanc.scrabble.Scrabble</mainClass>
-                    <bundler>EXE</bundler>
                 </configuration>
             </plugin>
         </plugins>
